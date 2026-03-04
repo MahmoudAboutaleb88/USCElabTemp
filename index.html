@@ -7,12 +7,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--c1:#667eea;--c2:#764ba2;--card:#fff;--sh:0 10px 30px rgba(0,0,0,.15);--tx:#333;--sub:#666;--bd:#ddd;--inp:#fff;--sec:#f5f5f5;--lb:#f5f5f5;--li:#fff}
+:root{--card:#fff;--sh:0 10px 30px rgba(0,0,0,.15);--tx:#333;--sub:#666;--bd:#ddd;--inp:#fff;--sec:#f5f5f5;--lb:#f5f5f5;--li:#fff}
 body.dark{--card:#1e1e2e;--sh:0 10px 30px rgba(0,0,0,.5);--tx:#e0e0e0;--sub:#aaa;--bd:#444;--inp:#2a2a3e;--sec:#2a2a3e;--lb:#2a2a3e;--li:#1a1a28}
 body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:20px;transition:.3s}
 body.dark{background:linear-gradient(135deg,#0f0f1a,#1a1a2e)}
 
-/* TOAST */
 #toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);padding:12px 26px;border-radius:50px;font-size:14px;font-weight:700;color:#fff;opacity:0;transition:.4s;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 #toast.ok{background:linear-gradient(135deg,#4CAF50,#388e3c)}
@@ -20,20 +19,22 @@ body.dark{background:linear-gradient(135deg,#0f0f1a,#1a1a2e)}
 #toast.warn{background:linear-gradient(135deg,#ff9800,#e65100)}
 #toast.info{background:linear-gradient(135deg,#2196F3,#1565c0)}
 
-/* LOADING OVERLAY */
 #loadingOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;align-items:center;justify-content:center;flex-direction:column;gap:16px}
 #loadingOverlay.show{display:flex}
 .spinner{width:56px;height:56px;border:5px solid rgba(255,255,255,.2);border-top-color:#fff;border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 .loading-msg{color:#fff;font-size:16px;font-weight:600}
 
-/* LAYOUT */
 .container{max-width:1200px;margin:0 auto}
 .header{background:var(--card);border-radius:20px;padding:14px 20px;margin-bottom:18px;box-shadow:var(--sh);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
 .header h1{color:#667eea;font-size:22px;font-weight:700}
 .hbtns{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
 
-/* BUTTONS */
+#simBanner{background:linear-gradient(135deg,#ff9800,#e65100);color:#fff;border-radius:14px;padding:10px 18px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(255,152,0,.4)}
+#simBanner.show{display:flex}
+.sim-pulse{width:10px;height:10px;border-radius:50%;background:#fff;animation:simpulse 1s infinite}
+@keyframes simpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
+
 .btn{border:none;padding:9px 15px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
 .btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
 .btn:active{transform:translateY(0)}
@@ -45,59 +46,81 @@ body.dark{background:linear-gradient(135deg,#0f0f1a,#1a1a2e)}
 .bgy{background:linear-gradient(135deg,#607d8b,#37474f);color:#fff}
 .bdk{background:linear-gradient(135deg,#424242,#212121);color:#fff}
 .bt{background:linear-gradient(135deg,#009688,#00695c);color:#fff}
+.bsh{background:linear-gradient(135deg,#0f9d58,#0b7d47);color:#fff}
 .bsm{padding:7px 11px;font-size:12px;border-radius:9px}
 
-/* PILLS */
 .pill{display:flex;background:var(--sec);border-radius:10px;overflow:hidden;border:2px solid var(--bd)}
 .pill button{padding:6px 12px;border:none;background:transparent;color:var(--sub);font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
 .pill button.on{background:#667eea;color:#fff;border-radius:8px}
 
-/* COMPARE BAR */
-#compareBar{background:var(--card);border-radius:16px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--sh);display:none;align-items:center;gap:12px;flex-wrap:wrap}
+#compareBar{background:var(--card);border-radius:16px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:10px}
 #compareBar.show{display:flex}
-#compareBar h3{color:#667eea;font-size:15px;white-space:nowrap}
+.cmp-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
+#compareBar h3{color:#667eea;font-size:15px}
 .chart-wrap{position:relative;height:200px;margin-top:10px}
 
-/* NOTIF BAR */
 #notifBar{display:none;background:#fff3cd;border:2px solid #ffc107;border-radius:12px;padding:10px 16px;margin-bottom:12px;font-size:13px;color:#856404;text-align:center}
 body.dark #notifBar{background:#3e2f00;border-color:#ffc107;color:#ffe082}
 
-/* GRID */
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(265px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
 
-/* DEVICE CARD */
-.card{background:var(--card);border-radius:22px;padding:17px;box-shadow:var(--sh);cursor:pointer;transition:.3s;color:var(--tx);position:relative;user-select:none}
+.card{border-radius:22px;padding:17px;box-shadow:var(--sh);cursor:pointer;transition:.3s;color:var(--tx);position:relative;user-select:none;border:2px solid transparent}
 .card:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(0,0,0,.22)}
-.card.alarm{animation:pulse 1s infinite;border:3px solid #f44336}
-.card.snoozed{border:3px solid #ff9800;animation:none}
-.card.disc{opacity:.62;border:2px dashed #bbb}
+.card.alarm{animation:pulse 1s infinite;border-color:#f44336!important}
+.card.snoozed{border-color:#ff9800!important;animation:none}
+.card.disc{opacity:.65;border:2px dashed #bbb!important}
+.card.sim-card{border-color:#ff9800!important}
 .card.dragging{opacity:.4;transform:scale(.97)}
-.card.drag-over{border:2px dashed #667eea;background:#f0f4ff}
-body.dark .card.drag-over{background:#1a1f3a}
+.card.drag-over{border:2px dashed #667eea!important}
 @keyframes pulse{0%,100%{box-shadow:0 0 18px rgba(244,67,54,.55)}50%{box-shadow:0 0 38px rgba(244,67,54,.9)}}
+.card.temp-cold{background:linear-gradient(160deg,#e3f2fd 0%,var(--card) 60%)}
+.card.temp-cool{background:linear-gradient(160deg,#e8f5e9 0%,var(--card) 60%)}
+.card.temp-warm{background:linear-gradient(160deg,#fff8e1 0%,var(--card) 60%)}
+.card.temp-hot{background:linear-gradient(160deg,#ffebee 0%,var(--card) 60%)}
+.card.temp-normal{background:var(--card)}
+body.dark .card.temp-cold{background:linear-gradient(160deg,#1a237e22 0%,var(--card) 60%)}
+body.dark .card.temp-cool{background:linear-gradient(160deg,#1b5e2022 0%,var(--card) 60%)}
+body.dark .card.temp-warm{background:linear-gradient(160deg,#f57f1722 0%,var(--card) 60%)}
+body.dark .card.temp-hot{background:linear-gradient(160deg,#b71c1c22 0%,var(--card) 60%)}
 
 .card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
 .card-name{font-size:16px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:7px}
 .dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.don{background:#4CAF50}.doff{background:#9e9e9e}.dalarm{background:#f44336}.dsnooze{background:#ff9800}
-.drag-handle{cursor:grab;color:var(--sub);font-size:18px;padding:2px 4px;opacity:.5}
+.don{background:#4CAF50}.doff{background:#9e9e9e}.dalarm{background:#f44336}.dsnooze{background:#ff9800}.dsim{background:#ff9800}
+.drag-handle{cursor:grab;color:var(--sub);font-size:18px;padding:2px 4px;opacity:.45}
 .drag-handle:hover{opacity:1}
 
-.data-box{background:linear-gradient(135deg,#e3f2fd,#bbdefb);border-radius:16px;padding:14px;text-align:center}
-body.dark .data-box{background:linear-gradient(135deg,#1a237e33,#0d47a133)}
-.big-temp{font-size:36px;font-weight:700;color:#1976d2;line-height:1}
-.big-hum{font-size:20px;color:#0288d1;margin:5px 0}
-.bat-txt{font-size:12px;color:var(--sub)}
+.data-box{border-radius:16px;padding:14px;text-align:center}
+.db-cold{background:linear-gradient(135deg,#bbdefb,#90caf9)}
+.db-cool{background:linear-gradient(135deg,#c8e6c9,#a5d6a7)}
+.db-normal{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
+.db-warm{background:linear-gradient(135deg,#fff9c4,#fff176)}
+.db-hot{background:linear-gradient(135deg,#ffccbc,#ff8a65)}
+body.dark .data-box{background:linear-gradient(135deg,#1a237e33,#0d47a133)!important}
+.big-temp{font-size:36px;font-weight:700;line-height:1}
+.big-hum{font-size:20px;margin:5px 0}
+.bat-txt{font-size:12px;color:var(--sub);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:3px}
+.bat-bar{width:40px;height:8px;background:#ddd;border-radius:4px;overflow:hidden;display:inline-block}
+.bat-fill{height:100%;border-radius:4px;transition:.4s}
+.bat-ok{background:#4CAF50}.bat-mid{background:#ff9800}.bat-low{background:#f44336;animation:batblink .8s infinite}
+@keyframes batblink{0%,100%{opacity:1}50%{opacity:.4}}
 
 .mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:9px}
-.ms{background:var(--sec);border-radius:9px;padding:5px 3px;text-align:center}
+.ms{background:rgba(0,0,0,.05);border-radius:9px;padding:5px 3px;text-align:center}
+body.dark .ms{background:rgba(255,255,255,.07)}
 .msv{font-size:12px;font-weight:700;color:var(--tx)}
 .msl{font-size:10px;color:var(--sub)}
 .alarm-hint{text-align:center;color:#f44336;font-size:11px;font-weight:700;margin-top:5px}
 .snooze-hint{text-align:center;color:#ff9800;font-size:11px;font-weight:700;margin-top:5px}
 .disc-hint{text-align:center;color:#999;font-size:11px;margin-top:5px}
+.last-seen{text-align:center;font-size:10px;color:var(--sub);margin-top:4px}
+.bat-warn{text-align:center;font-size:11px;color:#f44336;font-weight:700;margin-top:4px;animation:batblink .8s infinite}
 
-/* MODAL */
+/* Limit lines legend */
+.limit-legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px;padding:6px 10px;background:var(--sec);border-radius:9px;font-size:11px}
+.ll-item{display:flex;align-items:center;gap:5px;color:var(--tx);font-weight:600}
+.ll-dot{width:22px;height:3px;border-radius:2px}
+
 .modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;padding:18px;overflow-y:auto}
 .mc{background:var(--card);max-width:680px;margin:32px auto;border-radius:22px;padding:24px;position:relative;color:var(--tx)}
 .mc h2{color:#667eea;margin-bottom:14px;font-size:20px}
@@ -105,22 +128,19 @@ body.dark .data-box{background:linear-gradient(135deg,#1a237e33,#0d47a133)}
 [dir=ltr] .xbtn{right:auto;left:13px}
 .xbtn:hover{color:var(--tx)}
 
-/* TABS */
 .tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
 .tab{padding:7px 13px;border:2px solid var(--bd);border-radius:10px;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
 .tab.on{background:#667eea;color:#fff;border-color:#667eea}
 .tc{display:none}.tc.on{display:block}
 
-/* FORM */
 .sec{background:var(--sec);border-radius:13px;padding:15px;margin:9px 0}
 .sec h3{margin-bottom:9px;color:var(--tx);font-size:14px}
 .fg{margin:9px 0}
 .fg label{display:block;margin-bottom:5px;font-weight:600;color:var(--tx);font-size:13px}
-.fg input,.fg select{width:100%;padding:9px 11px;border:2px solid var(--bd);border-radius:9px;font-size:14px;background:var(--inp);color:var(--tx);transition:.2s}
-.fg input:focus,.fg select:focus{outline:none;border-color:#667eea}
+.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;border:2px solid var(--bd);border-radius:9px;font-size:14px;background:var(--inp);color:var(--tx);transition:.2s;font-family:inherit}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#667eea}
 .ag{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 
-/* LIVE */
 .live-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
 .live-box{border-radius:15px;padding:17px;text-align:center}
 .lbt{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
@@ -131,66 +151,74 @@ body.dark .lbh{background:linear-gradient(135deg,#1b5e2033,#00600033)}
 .lvt{color:#1976d2}.lvh{color:#388e3c}
 .ll{font-size:12px;color:var(--sub);margin-top:3px}
 
-/* STATS */
 .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:9px}
 .sb{background:var(--card);border-radius:11px;padding:11px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}
 .sbv{font-size:19px;font-weight:700;color:#667eea}
 .sbl{font-size:11px;color:var(--sub);margin-top:3px}
+.period-tabs{display:flex;gap:6px;margin-bottom:12px}
+.ptab{padding:6px 14px;border:2px solid var(--bd);border-radius:9px;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
+.ptab.on{background:#667eea;color:#fff;border-color:#667eea}
 
-/* LOG */
 .lf{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
 .lf input,.lf select{flex:1;min-width:85px;padding:7px 9px;border:2px solid var(--bd);border-radius:8px;font-size:12px;background:var(--inp);color:var(--tx)}
 .logbox{max-height:240px;overflow-y:auto;background:var(--lb);border-radius:10px;padding:9px}
-.le{background:var(--li);padding:7px 10px;margin:4px 0;border-radius:8px;font-family:monospace;font-size:11px;color:var(--tx)}
+.le{background:var(--li);padding:7px 10px;margin:4px 0;border-radius:8px;font-family:monospace;font-size:11px;color:var(--tx);position:relative}
 [dir=rtl] .le{border-right:4px solid #667eea}
 [dir=ltr] .le{border-left:4px solid #667eea}
 .le.ale{background:#ffebee}
 body.dark .le.ale{background:#3e1a1a}
 [dir=rtl] .le.ale{border-right-color:#f44336}
 [dir=ltr] .le.ale{border-left-color:#f44336}
+.le-note{font-style:italic;color:#667eea;font-size:10px;margin-top:3px}
+.add-note-btn{position:absolute;top:6px;right:6px;background:none;border:1px solid var(--bd);border-radius:6px;color:var(--sub);font-size:10px;padding:2px 6px;cursor:pointer}
+[dir=ltr] .add-note-btn{right:auto;left:6px}
+.add-note-btn:hover{border-color:#667eea;color:#667eea}
 
-/* ALARM HISTORY */
 .alarm-hist-item{background:var(--li);padding:9px 12px;margin:4px 0;border-radius:9px;border-right:4px solid #f44336;font-size:12px;color:var(--tx)}
 [dir=ltr] .alarm-hist-item{border-right:none;border-left:4px solid #f44336}
 
-/* SNOOZE TIMER */
 .snooze-bar{background:#fff3cd;border:2px solid #ffc107;border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#856404}
 body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 .snooze-count{font-weight:700;font-size:16px;color:#e65100}
 
-/* EMPTY */
+#fullChartModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9000;padding:24px;flex-direction:column;gap:14px}
+#fullChartModal.show{display:flex}
+.fc-header{display:flex;justify-content:space-between;align-items:center;color:#fff}
+.fc-header h3{font-size:18px}
+.fc-body{flex:1;display:grid;grid-template-rows:1fr 1fr;gap:14px;min-height:0}
+.fc-chart{position:relative;background:rgba(255,255,255,.05);border-radius:16px;padding:14px}
+
+/* Google Sheets upload status */
+.sheets-status{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#1b5e20;display:none}
+.sheets-status.show{display:block}
+
+.sound-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.sound-opt{padding:8px 14px;border:2px solid var(--bd);border-radius:10px;cursor:pointer;font-size:13px;background:transparent;color:var(--tx);transition:.2s}
+.sound-opt.on{border-color:#667eea;background:#667eea22;color:#667eea;font-weight:700}
+
 .empty{text-align:center;padding:55px 20px;color:#fff}
 .empty h2{font-size:26px;margin-bottom:7px}
-
-/* BACKUP */
 .backup-zone{border:2px dashed var(--bd);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:.2s;color:var(--sub)}
 .backup-zone:hover{border-color:#667eea;color:#667eea}
 </style>
 </head>
 <body>
 <div id="toast"></div>
-
-<!-- LOADING OVERLAY -->
-<div id="loadingOverlay">
-  <div class="spinner"></div>
-  <div class="loading-msg" id="loadingMsg">جارٍ الاتصال...</div>
-</div>
-
+<div id="loadingOverlay"><div class="spinner"></div><div class="loading-msg" id="loadingMsg"></div></div>
 <div id="notifBar"></div>
+<div id="simBanner">
+  <div style="display:flex;align-items:center;gap:10px"><div class="sim-pulse"></div><span id="simBannerMsg"></span></div>
+  <button class="btn bdk bsm" onclick="stopSimulation()" id="stopSimBtn"></button>
+</div>
 
 <div class="container">
   <div class="header">
     <h1 id="appTitle">📊 USCE Lab Data Loggers</h1>
     <div class="hbtns">
-      <div class="pill" id="unitPill">
-        <button class="on" onclick="setUnit('C')">°C</button>
-        <button onclick="setUnit('F')">°F</button>
-      </div>
-      <div class="pill" id="langPill">
-        <button class="on" onclick="setLang('ar')">عربي</button>
-        <button onclick="setLang('en')">EN</button>
-      </div>
+      <div class="pill" id="unitPill"><button class="on" onclick="setUnit('C')">°C</button><button onclick="setUnit('F')">°F</button></div>
+      <div class="pill" id="langPill"><button class="on" onclick="setLang('ar')">عربي</button><button onclick="setLang('en')">EN</button></div>
       <button class="btn bdk" onclick="toggleDark()" id="darkBtn">🌙</button>
+      <button class="btn bo" onclick="startSimulation()" id="simBtn"></button>
       <button class="btn bt" onclick="openCompare()" id="compareBtn" style="display:none"></button>
       <button class="btn bgy" onclick="openBackup()" id="backupBtn"></button>
       <button class="btn bg" id="reconnBtn" style="display:none" onclick="reconnectAll()"></button>
@@ -198,19 +226,20 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     </div>
   </div>
 
-  <!-- COMPARE CHART BAR -->
   <div id="compareBar">
-    <h3 id="compareTitle">📊</h3>
-    <div style="flex:1;min-width:200px">
-      <div class="chart-wrap" style="height:160px"><canvas id="compareChart"></canvas></div>
+    <div class="cmp-header">
+      <h3 id="compareTitle"></h3>
+      <div style="display:flex;gap:7px;align-items:center;flex-wrap:wrap">
+        <div class="pill" id="cmpTypePill"><button class="on" onclick="setCmpType('temp')">🌡️</button><button onclick="setCmpType('hum')">💧</button></div>
+        <button class="btn bsm bo" onclick="refreshCompare()" id="refreshCmpBtn"></button>
+        <button class="btn bsm br" onclick="closeCompare()" id="closeCompareBtn"></button>
+      </div>
     </div>
-    <button class="btn br bsm" onclick="closeCompare()" id="closeCompareBtn">✕</button>
+    <div><div class="chart-wrap" style="height:170px"><canvas id="compareChart"></canvas></div></div>
   </div>
 
   <div class="grid" id="devGrid"></div>
-  <div class="empty" id="emptyState" style="display:none">
-    <h2 id="emptyTitle"></h2><p id="emptySub"></p>
-  </div>
+  <div class="empty" id="emptyState" style="display:none"><h2 id="emptyTitle"></h2><p id="emptySub"></p></div>
 </div>
 
 <!-- ADD MODAL -->
@@ -219,10 +248,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     <button class="xbtn" onclick="closeAddModal()">×</button>
     <h2 id="addTitle"></h2>
     <div id="addTip" style="background:#e3f2fd;padding:12px;border-radius:10px;margin-bottom:13px;font-size:13px"></div>
-    <div id="scanState" style="text-align:center;padding:20px;display:none">
-      <div style="font-size:42px">🔍</div>
-      <h3 id="scanMsg" style="margin-top:8px"></h3>
-    </div>
+    <div id="scanState" style="text-align:center;padding:20px;display:none"><div style="font-size:42px">🔍</div><h3 id="scanMsg" style="margin-top:8px"></h3></div>
     <div id="nameState" style="display:none">
       <div class="fg"><label id="nameLabel"></label><input type="text" id="newName"></div>
       <button class="btn bg" style="width:100%;margin-top:8px;justify-content:center" onclick="finalizeDevice()" id="addFinalBtn"></button>
@@ -238,24 +264,23 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     <h2 id="detailName"></h2>
     <div class="tabs" id="tabBar"></div>
 
-    <!-- LIVE -->
+    <!-- TAB: LIVE -->
     <div class="tc" id="tc-live">
       <div id="connStatus" style="display:none;background:#ffebee;padding:12px;border-radius:10px;margin-bottom:11px;text-align:center">
         <div style="font-size:18px;margin-bottom:7px" id="discMsg"></div>
         <button class="btn bg" onclick="connectFromDetail()" id="connBtn"></button>
       </div>
       <div id="snoozeBar" class="snooze-bar" style="display:none">
-        <span id="snoozeMsg">🔕</span>
-        <span class="snooze-count" id="snoozeCount"></span>
+        <span id="snoozeMsg"></span><span class="snooze-count" id="snoozeCount"></span>
         <button class="btn br bsm" onclick="cancelSnooze()" id="cancelSnoozeBtn"></button>
       </div>
       <div class="live-grid">
         <div class="live-box lbt"><div class="lv lvt" id="dTemp">--</div><div class="ll" id="dTempLbl"></div></div>
         <div class="live-box lbh"><div class="lv lvh" id="dHum">--%</div><div class="ll" id="dHumLbl"></div></div>
       </div>
-      <div style="text-align:center;color:var(--sub);font-size:13px;margin-top:8px" id="dBat"></div>
+      <div style="text-align:center;font-size:13px;margin-top:8px" id="dBat"></div>
       <div style="text-align:center;font-size:11px;color:#aaa;margin-top:4px" id="dLast"></div>
-      <div id="alarmActions" style="display:none;margin-top:12px;display:none">
+      <div id="alarmActions" style="display:none;margin-top:12px">
         <div style="background:#ffebee;border-radius:12px;padding:12px;text-align:center">
           <div style="color:#f44336;font-weight:700;margin-bottom:9px" id="alarmActMsg"></div>
           <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
@@ -267,50 +292,52 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
       </div>
     </div>
 
-    <!-- CHART -->
+    <!-- TAB: CHART -->
     <div class="tc" id="tc-chart">
-      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px">
+      <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;align-items:center">
         <button class="btn bsm bp" onclick="setChartRange(30)" id="cr30"></button>
         <button class="btn bsm bp" onclick="setChartRange(60)" id="cr60"></button>
         <button class="btn bsm bgy" onclick="setChartRange(0)" id="crAll"></button>
         <button class="btn bsm bt" onclick="exportChartPNG()" id="chartPngBtn"></button>
+        <button class="btn bsm bdk" onclick="openFullChart()" id="fullscreenBtn"></button>
       </div>
+      <!-- Temperature Chart -->
       <div class="chart-wrap"><canvas id="cTemp"></canvas></div>
+      <div class="limit-legend" id="tempLimitLegend">
+        <span class="ll-item"><span class="ll-dot" style="background:#f44336"></span><span id="llMaxT"></span></span>
+        <span class="ll-item"><span class="ll-dot" style="background:#2196F3"></span><span id="llMinT"></span></span>
+        <span class="ll-item"><span class="ll-dot" style="background:#1976d2;height:2px;width:22px;opacity:.6"></span><span id="llTempLine"></span></span>
+      </div>
+      <!-- Humidity Chart -->
       <div class="chart-wrap" style="margin-top:12px"><canvas id="cHum"></canvas></div>
+      <div class="limit-legend" id="humLimitLegend">
+        <span class="ll-item"><span class="ll-dot" style="background:#e91e63"></span><span id="llMaxH"></span></span>
+        <span class="ll-item"><span class="ll-dot" style="background:#00bcd4"></span><span id="llMinH"></span></span>
+        <span class="ll-item"><span class="ll-dot" style="background:#388e3c;height:2px;width:22px;opacity:.6"></span><span id="llHumLine"></span></span>
+      </div>
     </div>
 
-    <!-- STATS -->
-    <div class="tc" id="tc-stats"><div id="statsContent"></div></div>
+    <!-- TAB: STATS -->
+    <div class="tc" id="tc-stats">
+      <div class="period-tabs">
+        <button class="ptab on" onclick="setPeriod('all',event)" id="pAll"></button>
+        <button class="ptab" onclick="setPeriod('day',event)" id="pDay"></button>
+        <button class="ptab" onclick="setPeriod('week',event)" id="pWeek"></button>
+        <button class="ptab" onclick="setPeriod('month',event)" id="pMonth"></button>
+      </div>
+      <div id="statsContent"></div>
+    </div>
 
-    <!-- ALARM -->
+    <!-- TAB: ALARM -->
     <div class="tc" id="tc-alarm">
       <div class="sec">
-        <h3 id="alarmTempTitle"></h3>
-        <div class="ag">
-          <div class="fg"><label id="maxTLabel"></label><input type="number" id="maxT" value="27" step="0.5"></div>
-          <div class="fg"><label id="minTLabel"></label><input type="number" id="minT" value="18" step="0.5"></div>
-        </div>
-        <h3 id="alarmHumTitle" style="margin-top:12px"></h3>
-        <div class="ag">
-          <div class="fg"><label id="maxHLabel"></label><input type="number" id="maxH" value="70" min="0" max="100"></div>
-          <div class="fg"><label id="minHLabel"></label><input type="number" id="minH" value="30" min="0" max="100"></div>
-        </div>
-        <label style="display:flex;align-items:center;gap:9px;margin-top:12px;cursor:pointer">
-          <input type="checkbox" id="alarmChk" checked style="width:17px;height:17px">
-          <span id="alarmChkLbl"></span>
-        </label>
-        <button class="btn bp" style="width:100%;justify-content:center;margin-top:12px" onclick="saveAlarm()" id="saveAlarmBtn"></button>
-      </div>
-      <!-- ALARM HISTORY -->
-      <div class="sec">
         <h3 id="alarmHistTitle"></h3>
-        <div class="logbox" id="alarmHistBox" style="max-height:180px"></div>
+        <div class="logbox" id="alarmHistBox" style="max-height:320px"></div>
       </div>
     </div>
 
-    <!-- LOG -->
+    <!-- TAB: LOG -->
     <div class="tc" id="tc-log">
-      <!-- INTERVAL SETTING -->
       <div class="sec" style="margin-bottom:10px">
         <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
           <label style="font-weight:600;font-size:13px;color:var(--tx)" id="intervalLabel"></label>
@@ -329,12 +356,15 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <button class="btn bsm bo" onclick="exportPDF()" id="pdfBtn"></button>
         <button class="btn bsm bgy" onclick="clearLog()" id="clearBtn"></button>
       </div>
+      <!-- Sheets status -->
+      <div class="sheets-status" id="sheetsStatus"></div>
       <div class="lf">
         <input type="text" id="logSearch" oninput="renderLog()">
         <select id="logFilter" onchange="renderLog()">
           <option value="all" id="fAll"></option>
           <option value="alarm" id="fAlarm"></option>
           <option value="normal" id="fNormal"></option>
+          <option value="noted" id="fNoted"></option>
         </select>
         <input type="date" id="logDate" onchange="renderLog()">
       </div>
@@ -342,15 +372,76 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
       <div style="font-size:11px;color:var(--sub);margin-top:4px" id="logCount"></div>
     </div>
 
-    <!-- SETTINGS -->
+    <!-- TAB: SETTINGS -->
     <div class="tc" id="tc-settings">
       <div class="sec">
         <h3 id="editNameTitle"></h3>
         <div class="fg"><label id="editNameLabel"></label><input type="text" id="editName"></div>
         <button class="btn bp" style="width:100%;justify-content:center;margin-top:8px" onclick="saveName()" id="saveNameBtn"></button>
       </div>
+      <div class="sec">
+        <h3 id="alarmTempTitle"></h3>
+        <div class="ag">
+          <div class="fg"><label id="maxTLabel"></label><input type="number" id="maxT" value="27" step="0.5"></div>
+          <div class="fg"><label id="minTLabel"></label><input type="number" id="minT" value="18" step="0.5"></div>
+        </div>
+        <h3 id="alarmHumTitle" style="margin-top:12px"></h3>
+        <div class="ag">
+          <div class="fg"><label id="maxHLabel"></label><input type="number" id="maxH" value="70" min="0" max="100"></div>
+          <div class="fg"><label id="minHLabel"></label><input type="number" id="minH" value="30" min="0" max="100"></div>
+        </div>
+        <label style="display:flex;align-items:center;gap:9px;margin-top:12px;cursor:pointer">
+          <input type="checkbox" id="alarmChk" checked style="width:17px;height:17px">
+          <span id="alarmChkLbl"></span>
+        </label>
+        <div style="margin-top:14px">
+          <label style="font-weight:600;font-size:13px;color:var(--tx)" id="soundLabel"></label>
+          <div class="sound-options" id="soundOptions"></div>
+        </div>
+        <button class="btn bp" style="width:100%;justify-content:center;margin-top:12px" onclick="saveAlarm()" id="saveAlarmBtn"></button>
+      </div>
       <button class="btn br" style="width:100%;justify-content:center;margin-top:9px" onclick="removeDevice()" id="removeBtn"></button>
     </div>
+
+  </div>
+</div>
+
+<!-- FULLSCREEN CHART -->
+<div id="fullChartModal">
+  <div class="fc-header">
+    <h3 id="fcTitle"></h3>
+    <div style="display:flex;gap:8px">
+      <button class="btn bsm bt" onclick="exportChartPNG(true)" id="fcPngBtn"></button>
+      <button class="btn bsm br" onclick="closeFullChart()" id="fcCloseBtn"></button>
+    </div>
+  </div>
+  <div class="fc-body">
+    <div class="fc-chart"><canvas id="fcTemp"></canvas></div>
+    <div class="fc-chart"><canvas id="fcHum"></canvas></div>
+  </div>
+  <!-- Fullscreen legends -->
+  <div style="display:flex;gap:20px;flex-wrap:wrap;padding:0 14px">
+    <div class="limit-legend" style="flex:1;background:rgba(255,255,255,.08)">
+      <span class="ll-item" style="color:#fff"><span class="ll-dot" style="background:#f44336"></span><span id="fcLlMaxT"></span></span>
+      <span class="ll-item" style="color:#fff"><span class="ll-dot" style="background:#2196F3"></span><span id="fcLlMinT"></span></span>
+    </div>
+    <div class="limit-legend" style="flex:1;background:rgba(255,255,255,.08)">
+      <span class="ll-item" style="color:#fff"><span class="ll-dot" style="background:#e91e63"></span><span id="fcLlMaxH"></span></span>
+      <span class="ll-item" style="color:#fff"><span class="ll-dot" style="background:#00bcd4"></span><span id="fcLlMinH"></span></span>
+    </div>
+  </div>
+</div>
+
+<!-- NOTE MODAL -->
+<div class="modal" id="noteModal" style="z-index:2000">
+  <div class="mc" style="max-width:400px">
+    <button class="xbtn" onclick="closeNoteModal()">×</button>
+    <h2 id="noteTitleH"></h2>
+    <div class="fg" style="margin-top:12px">
+      <label id="noteLabel"></label>
+      <textarea id="noteText" rows="4" style="resize:vertical"></textarea>
+    </div>
+    <button class="btn bp" style="width:100%;justify-content:center;margin-top:10px" onclick="saveNote()" id="saveNoteBtn"></button>
   </div>
 </div>
 
@@ -372,214 +463,381 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 </div>
 
 <script>
-/* ═══════════════════════ TRANSLATIONS ═══════════════════════ */
+// ============================================================
+// GOOGLE SHEETS WEB APP URL
+// ============================================================
+const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5UtuQH817DYpkUWjOTIxfne88jglzTWaRIkuOZOjvYc37Cb/exec';
+
+// ============================================================
+// TRANSLATIONS
+// ============================================================
 const T={
 ar:{
   title:'📊 USCE Lab Data Loggers',addBtn:'➕ إضافة',reconnBtn:'🔄 إعادة اتصال',
-  compareBtn:'📊 مقارنة',backupBtn:'💾 Backup',darkOn:'🌙',darkOff:'☀️',
-  emptyTitle:'🔌 لا توجد أجهزة',emptySub:'اضغط "إضافة" لتوصيل أول حساس',
+  compareBtn:'📊 مقارنة',backupBtn:'💾 Backup',simBtn:' تجربة',stopSimBtn:'⏹️ إيقاف التجربة',
+  simBannerMsg:'وضع المحاكاة نشط — البيانات وهمية',darkOn:'🌙',darkOff:'☀️',
+  emptyTitle:'🔌 لا توجد أجهزة',emptySub:'اضغط "إضافة" أو " تجربة" للبدء',
   addTitle:'🔍 إضافة جهاز',addTip:'<strong>قبل المسح:</strong> Chrome/Edge + بلوتوث مفعّل + الحساس قريب',
   scanBtn:'🔍 مسح البلوتوث',scanMsg:'جارٍ البحث...',
   nameLabel:'اسم الجهاز:',namePH:'مثال: غرفة المختبر',addFinalBtn:'✅ إضافة',
-  tabLive:'📡 حي',tabChart:'📈 رسم',tabStats:'📊 إحصاء',tabAlarm:'🚨 تنبيه',tabLog:'📝 سجل',tabSettings:'⚙️ إعدادات',
+  tabLive:'📡 حي',tabChart:'📈 رسم',tabStats:'📊 تقارير',tabAlarm:'🚨 تنبيهات',tabLog:'📝 سجل',tabSettings:'⚙️ إعدادات',
   discMsg:'⚠️ الجهاز غير متصل',connBtn:'🔗 اتصال الآن',
   tempLbl:'🌡️ الحرارة',humLbl:'💧 الرطوبة',
-  cr30:'آخر 30',cr60:'آخر 60',crAll:'الكل',chartPngBtn:'📷 حفظ PNG',
-  statsEmpty:'لا توجد بيانات كافية. ابدأ التسجيل أولًا.',
+  cr30:'آخر 30',cr60:'آخر 60',crAll:'الكل',chartPngBtn:'📷 PNG',fullscreenBtn:'⛶ تكبير',
+  fcPngBtn:'📷 حفظ',fcCloseBtn:'✕ إغلاق',
+  pAll:'الكل',pDay:'اليوم',pWeek:'الأسبوع',pMonth:'الشهر',
+  statsEmpty:'لا توجد بيانات. ابدأ التسجيل أولًا.',
   statAvg:'متوسط الحرارة',statMin:'أدنى حرارة',statMax:'أقصى حرارة',
-  statAvgH:'متوسط الرطوبة',statMinH:'أدنى رطوبة',statMaxH:'أقصى رطوبة',statCount:'عدد القراءات',
+  statAvgH:'متوسط الرطوبة',statMinH:'أدنى رطوبة',statMaxH:'أقصى رطوبة',
+  statCount:'عدد القراءات',statAlarms:'عدد التنبيهات',
+  alarmHistTitle:'📋 سجل التنبيهات',
   alarmTempTitle:'🌡️ حدود الحرارة',alarmHumTitle:'💧 حدود الرطوبة',
   maxTLabel:'الحد الأقصى (°C):',minTLabel:'الحد الأدنى (°C):',
   maxHLabel:'الحد الأقصى (%):',minHLabel:'الحد الأدنى (%):',
   alarmChkLbl:'تفعيل التنبيهات',saveAlarmBtn:'💾 حفظ الإعدادات',
-  alarmHistTitle:'📋 سجل التنبيهات',
+  soundLabel:'🔊 صوت التنبيه:',
+  sounds:{beep:'صفارة',alarm:'إنذار',ping:'نقرة',triple:'ثلاثي',silent:'صامت'},
   snoozeMsg:'🔕 التنبيه مؤجل',cancelSnoozeBtn:'إلغاء التأجيل',
   alarmActMsg:'⚠️ تنبيه نشط! تأجيل لـ:',
   snooze10:'10 دقائق',snooze30:'30 دقيقة',snooze60:'ساعة',
   intervalLabel:'فترة التسجيل:',
-  int5s:'5 ثوانٍ',int30s:'30 ثانية',int1m:'دقيقة واحدة',int5m:'5 دقائق',
+  int5s:'5 ثوانٍ',int30s:'30 ثانية',int1m:'دقيقة',int5m:'5 دقائق',
   startLogBtn:'▶️ بدء',stopLogBtn:'⏹️ إيقاف',csvBtn:'📥 CSV',pdfBtn:'📄 PDF',clearBtn:'🗑️ مسح',
-  logSearchPH:'بحث...',fAll:'الكل',fAlarm:'تنبيهات',fNormal:'عادي',
-  editNameTitle:'✏️ تعديل الاسم',editNameLabel:'الاسم الجديد:',saveNameBtn:'💾 حفظ',removeBtn:'🗑️ حذف الجهاز',
+  logSearchPH:'بحث...',fAll:'الكل',fAlarm:'تنبيهات',fNormal:'عادي',fNoted:'ملاحظات',
+  editNameTitle:'✏️ اسم الجهاز',editNameLabel:'الاسم:',saveNameBtn:'💾 حفظ الاسم',removeBtn:'🗑️ حذف الجهاز',
   loadingConn:'جارٍ الاتصال بـ',
-  toastAlarmSave:'✅ تم حفظ إعدادات التنبيه',toastNameSave:'✅ تم حفظ الاسم',toastRemoved:'🗑️ تم حذف الجهاز',
+  noteTitleH:'📝 ملاحظة',noteLabel:'أضف ملاحظة:',saveNoteBtn:'💾 حفظ',addNoteBtn:'📝',
+  toastAlarmSave:'✅ تم حفظ الإعدادات',toastNameSave:'✅ تم حفظ الاسم',toastRemoved:'🗑️ تم حذف الجهاز',
   toastDupBLE:'هذا الجهاز مضاف بالفعل',toastNoData:'لا توجد بيانات للتصدير',
   toastLogStart:'▶️ بدأ التسجيل',toastLogStop:'⏹️ توقف التسجيل',toastLogClear:'🗑️ تم مسح السجل',
   toastSnoozed:'🔕 تم تأجيل التنبيه',toastSnoozeCancel:'🔔 تم إلغاء التأجيل',
-  toastExported:'✅ تم تصدير النسخة الاحتياطية',toastImported:'✅ تم استيراد البيانات بنجاح',
-  toastImportErr:'❌ خطأ في الملف',
-  notifAlarm:'🚨 تنبيه: {name}',
-  confirmRemove:'هل أنت متأكد من حذف هذا الجهاز؟',
-  noDataExport:'لا توجد بيانات في السجل',
+  toastExported:'✅ تم تصدير النسخة الاحتياطية',toastImported:'✅ تم استيراد البيانات',
+  toastImportErr:'❌ خطأ في الملف',toastNoteSaved:'📝 تم حفظ الملاحظة',
+  toastSheetsSent:'✅ تم الرفع على Google Sheets',toastSheetsErr:'❌ خطأ في الرفع على Sheets',
+  notifAlarm:'🚨 تنبيه: {name}',confirmRemove:'هل أنت متأكد من حذف هذا الجهاز؟',
   miniMin:'أدنى',miniAvg:'متوسط',miniMax:'أقصى',
-  batLabel:'🔋',lastUpdate:'آخر تحديث:',
+  batLabel:'🔋',batWarn:'⚠️ بطارية منخفضة!',lastUpdate:'آخر تحديث:',
+  agoJust:'الآن',agoMin:'دقيقة',agoMins:'دقائق',agoHour:'ساعة',agoSuffix:'مضت',
   alarmTempHigh:'🌡️ حرارة مرتفعة',alarmTempLow:'🌡️ حرارة منخفضة',
   alarmHumHigh:'💧 رطوبة مرتفعة',alarmHumLow:'💧 رطوبة منخفضة',
   chartTempLabel:'الحرارة',chartHumLabel:'الرطوبة',readingsLabel:'قراءة',
-  compareTitle:'📊 مقارنة الأجهزة',closeCompareBtn:'إغلاق المقارنة',
+  compareTitle:'📊 مقارنة الأجهزة',refreshCmpBtn:'🔄',closeCompareBtn:'✕',
   backupTitle:'💾 نسخة احتياطية',exportBackupBtn:'📤 تصدير كل البيانات',
   importBackupBtn:'📥 استيراد نسخة احتياطية',backupDropMsg:'اسحب ملف JSON هنا أو اضغط للاختيار',
-  noDevices:'لا توجد أجهزة للمقارنة',
+  noDevices:'يلزم جهازان على الأقل للمقارنة',
+  simDevices:['غرفة المختبر','مخزن العينات','غرفة الأجهزة','الممر الخارجي'],
+  llMaxT:'الحد الأقصى للحرارة',llMinT:'الحد الأدنى للحرارة',llTempLine:'الحرارة',
+  llMaxH:'الحد الأقصى للرطوبة',llMinH:'الحد الأدنى للرطوبة',llHumLine:'الرطوبة',
+  sheetsUploading:'⏳ جارٍ الرفع على Google Sheets...',
 },
 en:{
   title:'📊 USCE Lab Data Loggers',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
-  compareBtn:'📊 Compare',backupBtn:'💾 Backup',darkOn:'🌙',darkOff:'☀️',
-  emptyTitle:'🔌 No Devices',emptySub:'Click "Add" to connect your first sensor',
+  compareBtn:'📊 Compare',backupBtn:'💾 Backup',simBtn:' Demo',stopSimBtn:'⏹️ Stop Demo',
+  simBannerMsg:'Simulation Mode Active — Data is simulated',darkOn:'🌙',darkOff:'☀️',
+  emptyTitle:'🔌 No Devices',emptySub:'Click "Add" or " Demo" to start',
   addTitle:'🔍 Add New Device',addTip:'<strong>Before Scanning:</strong> Use Chrome/Edge, enable Bluetooth, keep sensor nearby',
   scanBtn:'🔍 Scan Bluetooth',scanMsg:'Scanning...',
   nameLabel:'Device Name:',namePH:'e.g. Lab Room',addFinalBtn:'✅ Add Device',
-  tabLive:'📡 Live',tabChart:'📈 Chart',tabStats:'📊 Stats',tabAlarm:'🚨 Alarm',tabLog:'📝 Log',tabSettings:'⚙️ Settings',
+  tabLive:'📡 Live',tabChart:'📈 Chart',tabStats:'📊 Reports',tabAlarm:'🚨 Alarms',tabLog:'📝 Log',tabSettings:'⚙️ Settings',
   discMsg:'⚠️ Device Disconnected',connBtn:'🔗 Connect Now',
   tempLbl:'🌡️ Temperature',humLbl:'💧 Humidity',
-  cr30:'Last 30',cr60:'Last 60',crAll:'All',chartPngBtn:'📷 Save PNG',
-  statsEmpty:'Not enough data yet. Start logging first.',
+  cr30:'Last 30',cr60:'Last 60',crAll:'All',chartPngBtn:'📷 PNG',fullscreenBtn:'⛶ Expand',
+  fcPngBtn:'📷 Save',fcCloseBtn:'✕ Close',
+  pAll:'All',pDay:'Today',pWeek:'Week',pMonth:'Month',
+  statsEmpty:'No data yet. Start logging first.',
   statAvg:'Avg Temperature',statMin:'Min Temperature',statMax:'Max Temperature',
-  statAvgH:'Avg Humidity',statMinH:'Min Humidity',statMaxH:'Max Humidity',statCount:'Total Readings',
+  statAvgH:'Avg Humidity',statMinH:'Min Humidity',statMaxH:'Max Humidity',
+  statCount:'Total Readings',statAlarms:'Total Alarms',
+  alarmHistTitle:'📋 Alarm History',
   alarmTempTitle:'🌡️ Temperature Limits',alarmHumTitle:'💧 Humidity Limits',
   maxTLabel:'Max Temperature (°C):',minTLabel:'Min Temperature (°C):',
   maxHLabel:'Max Humidity (%):',minHLabel:'Min Humidity (%):',
   alarmChkLbl:'Enable Alarms',saveAlarmBtn:'💾 Save Settings',
-  alarmHistTitle:'📋 Alarm History',
+  soundLabel:'🔊 Alarm Sound:',
+  sounds:{beep:'Beep',alarm:'Alarm',ping:'Ping',triple:'Triple',silent:'Silent'},
   snoozeMsg:'🔕 Alarm snoozed',cancelSnoozeBtn:'Cancel Snooze',
   alarmActMsg:'⚠️ Active Alarm! Snooze for:',
   snooze10:'10 min',snooze30:'30 min',snooze60:'1 hour',
   intervalLabel:'Log Interval:',
-  int5s:'5 seconds',int30s:'30 seconds',int1m:'1 minute',int5m:'5 minutes',
+  int5s:'5 sec',int30s:'30 sec',int1m:'1 min',int5m:'5 min',
   startLogBtn:'▶️ Start',stopLogBtn:'⏹️ Stop',csvBtn:'📥 CSV',pdfBtn:'📄 PDF',clearBtn:'🗑️ Clear',
-  logSearchPH:'Search...',fAll:'All',fAlarm:'Alarms',fNormal:'Normal',
-  editNameTitle:'✏️ Edit Name',editNameLabel:'New Name:',saveNameBtn:'💾 Save',removeBtn:'🗑️ Remove Device',
+  logSearchPH:'Search...',fAll:'All',fAlarm:'Alarms',fNormal:'Normal',fNoted:'Notes',
+  editNameTitle:'✏️ Device Name',editNameLabel:'Name:',saveNameBtn:'💾 Save Name',removeBtn:'🗑️ Remove Device',
   loadingConn:'Connecting to',
-  toastAlarmSave:'✅ Alarm settings saved',toastNameSave:'✅ Name saved',toastRemoved:'🗑️ Device removed',
+  noteTitleH:'📝 Note',noteLabel:'Add a note:',saveNoteBtn:'💾 Save',addNoteBtn:'📝',
+  toastAlarmSave:'✅ Settings saved',toastNameSave:'✅ Name saved',toastRemoved:'🗑️ Device removed',
   toastDupBLE:'This device is already added',toastNoData:'No data to export',
   toastLogStart:'▶️ Logging started',toastLogStop:'⏹️ Logging stopped',toastLogClear:'🗑️ Log cleared',
   toastSnoozed:'🔕 Alarm snoozed',toastSnoozeCancel:'🔔 Snooze cancelled',
-  toastExported:'✅ Backup exported',toastImported:'✅ Data imported successfully',
-  toastImportErr:'❌ Invalid file',
-  notifAlarm:'🚨 Alarm: {name}',
-  confirmRemove:'Are you sure you want to remove this device?',
-  noDataExport:'No log data to export',
+  toastExported:'✅ Backup exported',toastImported:'✅ Data imported',
+  toastImportErr:'❌ Invalid file',toastNoteSaved:'📝 Note saved',
+  toastSheetsSent:'✅ Uploaded to Google Sheets',toastSheetsErr:'❌ Sheets upload error',
+  notifAlarm:'🚨 Alarm: {name}',confirmRemove:'Are you sure you want to remove this device?',
   miniMin:'Min',miniAvg:'Avg',miniMax:'Max',
-  batLabel:'🔋',lastUpdate:'Last update:',
+  batLabel:'🔋',batWarn:'⚠️ Low Battery!',lastUpdate:'Last update:',
+  agoJust:'just now',agoMin:'min',agoMins:'mins',agoHour:'hr',agoSuffix:'ago',
   alarmTempHigh:'🌡️ Temp too High',alarmTempLow:'🌡️ Temp too Low',
   alarmHumHigh:'💧 Humidity too High',alarmHumLow:'💧 Humidity too Low',
   chartTempLabel:'Temperature',chartHumLabel:'Humidity',readingsLabel:'readings',
-  compareTitle:'📊 Compare Devices',closeCompareBtn:'Close Compare',
+  compareTitle:'📊 Compare Devices',refreshCmpBtn:'🔄',closeCompareBtn:'✕',
   backupTitle:'💾 Backup & Restore',exportBackupBtn:'📤 Export All Data',
   importBackupBtn:'📥 Import Backup',backupDropMsg:'Drop JSON file here or click to choose',
-  noDevices:'No devices to compare',
+  noDevices:'Need at least 2 devices to compare',
+  simDevices:['Lab Room','Sample Storage','Equipment Room','Outdoor Corridor'],
+  llMaxT:'Max Temp Limit',llMinT:'Min Temp Limit',llTempLine:'Temperature',
+  llMaxH:'Max Humidity Limit',llMinH:'Min Humidity Limit',llHumLine:'Humidity',
+  sheetsUploading:'⏳ Uploading to Google Sheets...',
 }};
 
-/* ═══════════════════════ STATE ═══════════════════════ */
 const XIAOMI='ebe0ccb0-7a0a-4b0c-8a1a-6ff2997da3a6';
 const TH='ebe0ccc1-7a0a-4b0c-8a1a-6ff2997da3a6';
 const BAT='ebe0ccc4-7a0a-4b0c-8a1a-6ff2997da3a6';
+const SOUNDS=['beep','alarm','ping','triple','silent'];
 
 let devices=[],currentId=null,selectedBLE=null;
-let unit='C',lang='ar',dark=false,chartRange=30;
-let cTI=null,cHI=null,cmpI=null;
-let toastTmr=null,activeTab='live';
-let dragSrcIdx=null;
-let snoozeTimers={};// deviceId -> {timer, remaining, interval}
+let unit='C',lang='ar',dark=false,chartRange=30,statPeriod='all',cmpType='temp';
+let cTI=null,cHI=null,cmpI=null,fcTI=null,fcHI=null;
+let toastTmr=null,activeTab='live',dragSrcIdx=null;
+let snoozeTimers={},simInterval=null,simRunning=false,pendingNoteIdx=null;
+let compareChartOpen=false;
 
-/* ═══════════════════════ STORAGE ═══════════════════════ */
-async function loadDevices(){
+const $=id=>document.getElementById(id);
+
+// ============================================================
+// STORAGE — localStorage (persistent across refresh)
+// ============================================================
+function loadDevices(){
   try{
-    const r=await window.storage.get('devicesV3');
-    if(r){
-      devices=JSON.parse(r.value);
+    const raw=localStorage.getItem('usce_devicesV5');
+    if(raw){
+      devices=JSON.parse(raw);
       devices.forEach(d=>{
         d.connected=false;d.bleDevice=null;d.server=null;
         d.alarmActive=false;d.alarmType='';d.snoozed=false;
-        if(!d.logs)d.logs=[];if(!d.alarmHistory)d.alarmHistory=[];
+        d.logging=false;d.loggingInterval=null;
+        if(!d.logs)d.logs=[];
+        if(!d.alarmHistory)d.alarmHistory=[];
         if(d.maxH==null)d.maxH=70;if(d.minH==null)d.minH=30;
         if(d.maxT==null)d.maxT=27;if(d.minT==null)d.minT=18;
-        if(d.logInterval==null)d.logInterval=60000;
+        if(!d.logInterval)d.logInterval=60000;
+        if(!d.sound)d.sound='beep';
       });
     }
   }catch(e){devices=[];}
+  // Restore preferences
+  try{
+    const prefs=JSON.parse(localStorage.getItem('usce_prefs')||'{}');
+    if(prefs.dark){dark=true;document.body.classList.add('dark');}
+    if(prefs.lang){
+      lang=prefs.lang;
+      document.documentElement.lang=lang;
+      document.documentElement.dir=lang==='ar'?'rtl':'ltr';
+      $('langPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(lang==='ar'?0:1)));
+    }
+    if(prefs.unit){
+      unit=prefs.unit;
+      $('unitPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(unit==='C'?0:1)));
+    }
+    $('darkBtn').textContent=dark?T[lang].darkOff:T[lang].darkOn;
+  }catch(e){}
   applyLang();render();
 }
-async function save(){
-  const clean=devices.map(({bleDevice,server,loggingInterval,...r})=>r);
-  try{await window.storage.set('devicesV3',JSON.stringify(clean));}catch(e){}
+function save(){
+  try{
+    const clean=devices.filter(d=>!d.isSim).map(({bleDevice,server,loggingInterval,...r})=>r);
+    localStorage.setItem('usce_devicesV5',JSON.stringify(clean));
+  }catch(e){console.warn('Save error:',e);}
 }
-const $=id=>document.getElementById(id);
+function savePrefs(){
+  try{localStorage.setItem('usce_prefs',JSON.stringify({dark,lang,unit}));}catch(e){}
+}
 
-/* ═══════════════════════ TOAST ═══════════════════════ */
+
+const sheetsLastSent = {};
+
+function sendToSheets(dev, rows){
+  if(!rows||!rows.length||!SHEETS_URL) return;
+  const payload={
+    device: dev.name||'Device',
+    maxT: dev.maxT, minT: dev.minT,
+    maxH: dev.maxH, minH: dev.minH,
+    rows: rows.map(l=>({ts:l.ts,t:l.t,h:l.h,b:l.b||0,alarm:l.alarm||false,note:l.note||''}))
+  };
+  const iframeId='sheetsIframe_'+Date.now();
+  const iframe=document.createElement('iframe');
+  iframe.name=iframeId;iframe.style.display='none';
+  document.body.appendChild(iframe);
+  const form=document.createElement('form');
+  form.method='POST';form.action=SHEETS_URL;
+  form.target=iframeId;form.style.display='none';
+  const input=document.createElement('input');
+  input.type='hidden';input.name='data';input.value=JSON.stringify(payload);
+  form.appendChild(input);
+  document.body.appendChild(form);
+  form.submit();
+  setTimeout(()=>{
+    try{document.body.removeChild(form);document.body.removeChild(iframe);}catch(e){}
+  },5000);
+  sheetsLastSent[dev.id]={time:Date.now(),count:dev.logs.length};
+}
+
+// Auto-upload: runs every 1 minute, sends only new rows since last upload
+setInterval(()=>{
+  devices.filter(d=>d.logs&&d.logs.length).forEach(dev=>{
+    const last=sheetsLastSent[dev.id];
+    const fromIdx=last?last.count:0;
+    const newRows=dev.logs.slice(fromIdx);
+    if(!newRows.length)return;
+    sendToSheets(dev, newRows);
+    // Show subtle status if device detail is open
+    if(currentId===dev.id){
+      const statusEl=$('sheetsStatus');
+      if(statusEl){
+        statusEl.classList.add('show');
+        statusEl.textContent='📤 '+(lang==='ar'
+          ?`رُفع تلقائياً ${newRows.length} قراءة → Sheets`
+          :`Auto-uploaded ${newRows.length} new rows → Sheets`);
+        setTimeout(()=>statusEl.classList.remove('show'),5000);
+      }
+    }
+  });
+}, 60 * 1000);
+
+// ============================================================
+// UI HELPERS
+// ============================================================
 function toast(msg,type='ok'){
   const el=$('toast');el.textContent=msg;el.className='show '+type;
   clearTimeout(toastTmr);toastTmr=setTimeout(()=>{el.className='';},3200);
 }
-
-/* ═══════════════════════ LOADING ═══════════════════════ */
 function showLoading(msg){$('loadingOverlay').classList.add('show');$('loadingMsg').textContent=msg;}
 function hideLoading(){$('loadingOverlay').classList.remove('show');}
 
-/* ═══════════════════════ DARK/UNIT/LANG ═══════════════════════ */
+function timeAgo(ts){
+  if(!ts)return'';const t=T[lang];const diff=Math.floor((Date.now()-ts)/1000);
+  if(diff<30)return t.agoJust;
+  if(diff<90)return'1 '+t.agoMin+' '+t.agoSuffix;
+  if(diff<3600)return Math.floor(diff/60)+' '+t.agoMins+' '+t.agoSuffix;
+  return Math.floor(diff/3600)+' '+t.agoHour+' '+t.agoSuffix;
+}
+function tempClass(v){if(v==null)return'temp-normal';if(v<5)return'temp-cold';if(v<18)return'temp-cool';if(v<=27)return'temp-normal';if(v<=33)return'temp-warm';return'temp-hot';}
+function dbClass(v){if(v==null)return'db-normal';if(v<5)return'db-cold';if(v<18)return'db-cool';if(v<=27)return'db-normal';if(v<=33)return'db-warm';return'db-hot';}
+function tempColor(v){if(v==null)return'#1976d2';if(v<5)return'#5c6bc0';if(v<18)return'#1565c0';if(v<=27)return'#1976d2';if(v<=33)return'#e65100';return'#c62828';}
+function toDisp(c){return unit==='F'?((c*9/5)+32).toFixed(1)+'°F':c.toFixed(1)+'°C';}
+function toLimitDisp(c){return unit==='F'?((c*9/5)+32).toFixed(1):c.toFixed(1);}
+
 function toggleDark(){
   dark=!dark;document.body.classList.toggle('dark',dark);
   $('darkBtn').textContent=dark?T[lang].darkOff:T[lang].darkOn;
-  if(cTI||cHI)buildCharts();if(cmpI)buildCompareChart();
+  savePrefs();
+  if(cTI||cHI)buildCharts();if(cmpI)buildCompareChart();if(fcTI||fcHI)buildFullCharts();
 }
 function setUnit(u){
-  unit=u;
-  $('unitPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(u==='C'?0:1)));
-  render();if(currentId)updateLive();
+  unit=u;$('unitPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(u==='C'?0:1)));
+  savePrefs();render();if(currentId)updateLive();if(activeTab==='chart')buildCharts();
 }
-function toDisp(c){return unit==='F'?((c*9/5)+32).toFixed(1)+'°F':c.toFixed(1)+'°C';}
 function setLang(l){
   lang=l;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
   $('langPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(l==='ar'?0:1)));
-  applyLang();render();if(currentId)updateDetailUI();
+  savePrefs();applyLang();render();if(currentId)updateDetailUI();
 }
 function applyLang(){
   const t=T[lang];
   $('appTitle').textContent=t.title;$('addBtn').textContent=t.addBtn;
-  $('backupBtn').textContent=t.backupBtn;
+  $('backupBtn').textContent=t.backupBtn;$('simBtn').textContent=t.simBtn;
   $('emptyTitle').textContent=t.emptyTitle;$('emptySub').textContent=t.emptySub;
-  if(devices.length>1){$('compareBtn').style.display='inline-flex';$('compareBtn').textContent=t.compareBtn;}
+  $('simBannerMsg').textContent=t.simBannerMsg;$('stopSimBtn').textContent=t.stopSimBtn;
 }
 
-/* ═══════════════════════ RENDER CARDS ═══════════════════════ */
+// ============================================================
+// SIMULATION
+// ============================================================
+const SIM_CFG=[
+  {maxT:27,minT:18,maxH:70,minH:30,baseT:24,baseH:58,bat:87},
+  {maxT:8,minT:2,maxH:60,minH:30,baseT:5,baseH:42,bat:34},
+  {maxT:22,minT:17,maxH:70,minH:40,baseT:20,baseH:65,bat:62},
+  {maxT:35,minT:15,maxH:80,minH:20,baseT:28,baseH:72,bat:11},
+];
+function startSimulation(){
+  if(simRunning)return;simRunning=true;
+  const t=T[lang];
+  SIM_CFG.forEach((cfg,i)=>{
+    const id='sim_'+i;if(devices.find(d=>d.id===id))return;
+    devices.push({id,name:t.simDevices[i],bleId:null,bleDevice:null,server:null,connected:true,
+      temperature:cfg.baseT,humidity:cfg.baseH,battery:cfg.bat,lastUpdate:Date.now(),
+      maxT:cfg.maxT,minT:cfg.minT,maxH:cfg.maxH,minH:cfg.minH,
+      alarmEnabled:true,alarmActive:false,alarmType:'',snoozed:false,
+      logs:[],alarmHistory:[],logging:false,loggingInterval:null,logInterval:5000,sound:'beep',isSim:true,_cfg:cfg});
+  });
+  $('simBanner').classList.add('show');
+  simInterval=setInterval(()=>{
+    devices.filter(d=>d.isSim).forEach(d=>{
+      d.temperature=Math.round((d.temperature+(Math.random()-.45))*10)/10;
+      d.humidity=Math.round(d.humidity+(Math.random()-.48));
+      d.battery=Math.max(0,d.battery-.02);d.lastUpdate=Date.now();
+      d.logs.push({ts:Date.now(),t:d.temperature,h:d.humidity,b:d.battery,alarm:d.alarmActive,note:''});
+      if(d.logs.length>200)d.logs.shift();
+      checkAlarm(d);
+    });
+    render();
+    if(currentId&&activeTab==='live')updateLive();
+    if(currentId&&activeTab==='chart')buildCharts();
+    if(currentId&&activeTab==='stats')buildStats();
+    if(currentId&&activeTab==='log')renderLog();
+    if(compareChartOpen)buildCompareChart();
+  },3000);
+  save();render();applyLang();toast(t.simBannerMsg,'info');
+}
+function stopSimulation(){
+  simRunning=false;clearInterval(simInterval);simInterval=null;
+  devices=devices.filter(d=>!d.isSim);
+  $('simBanner').classList.remove('show');save();render();toast('⏹️','warn');
+}
+
+// ============================================================
+// RENDER CARDS
+// ============================================================
 function render(){
   const t=T[lang];
   const grid=$('devGrid'),empty=$('emptyState'),rb=$('reconnBtn'),cb=$('compareBtn');
   if(!devices.length){grid.innerHTML='';empty.style.display='block';rb.style.display='none';cb.style.display='none';return;}
   empty.style.display='none';
-  rb.style.display=devices.some(d=>!d.connected)?'inline-flex':'none';
-  rb.textContent=t.reconnBtn;
-  cb.style.display=devices.length>1?'inline-flex':'none';
-  cb.textContent=t.compareBtn;
-
+  rb.style.display=devices.some(d=>!d.connected&&!d.isSim)?'inline-flex':'none';rb.textContent=t.reconnBtn;
+  cb.style.display=devices.length>1?'inline-flex':'none';cb.textContent=t.compareBtn;
   grid.innerHTML=devices.map((d,i)=>{
     const temps=(d.logs||[]).map(l=>l.t).filter(v=>v!=null);
-    const dispT=v=>(unit==='F'?((+v*9/5)+32).toFixed(1):v)+(temps.length?'°':'')+(temps.length?unit:'');
+    const disp=v=>v==='--'?'--':(unit==='F'?((+v*9/5)+32).toFixed(1):v);
     const minT=temps.length?Math.min(...temps).toFixed(1):'--';
     const maxT=temps.length?Math.max(...temps).toFixed(1):'--';
     const avgT=temps.length?(temps.reduce((a,b)=>a+b,0)/temps.length).toFixed(1):'--';
-    const dotCls=d.connected?(d.alarmActive&&!d.snoozed?'dalarm':d.snoozed?'dsnooze':'don'):'doff';
-    const cardCls=`card ${d.alarmActive&&!d.snoozed?'alarm':''} ${d.snoozed?'snoozed':''} ${!d.connected?'disc':''}`;
-    return `<div class="${cardCls}" draggable="true"
-        ondragstart="dragStart(event,${i})" ondragover="dragOver(event,${i})"
-        ondragleave="dragLeave(event)" ondrop="dragDrop(event,${i})"
-        onclick="openDetail('${d.id}')">
+    const tc=tempClass(d.temperature),dbc=dbClass(d.temperature),col=tempColor(d.temperature);
+    const bat=d.battery!=null?Math.round(d.battery):null;
+    const bcls=bat==null?'bat-ok':bat>40?'bat-ok':bat>20?'bat-mid':'bat-low';
+    const dotCls=d.isSim?'dsim':(d.connected?(d.alarmActive&&!d.snoozed?'dalarm':d.snoozed?'dsnooze':'don'):'doff');
+    const ccls=`card ${tc} ${d.isSim?'sim-card':''} ${d.alarmActive&&!d.snoozed?'alarm':''} ${d.snoozed?'snoozed':''} ${!d.connected&&!d.isSim?'disc':''}`;
+    return`<div class="${ccls}" draggable="true"
+      ondragstart="dragStart(event,${i})" ondragover="dragOver(event,${i})"
+      ondragleave="dragLeave(event)" ondrop="dragDrop(event,${i})"
+      onclick="openDetail('${d.id}')">
       <div class="card-header">
-        <div class="card-name"><span class="dot ${dotCls}"></span>${d.name||'Device'}</div>
-        <span class="drag-handle" title="drag">⠿</span>
+        <div class="card-name"><span class="dot ${dotCls}"></span>${d.name||'Device'}${d.isSim?' ':''}</div>
+        <span class="drag-handle">⠿</span>
       </div>
-      <div class="data-box">
-        <div class="big-temp">${d.temperature!=null?toDisp(d.temperature):'--'}</div>
-        <div class="big-hum">💧 ${d.humidity!=null?Math.round(d.humidity)+'%':'--'}</div>
-        <div class="bat-txt">${t.batLabel} ${d.battery!=null?Math.round(d.battery)+'%':'--'}</div>
+      <div class="data-box ${dbc}">
+        <div class="big-temp" style="color:${col}">${d.temperature!=null?toDisp(d.temperature):'--'}</div>
+        <div class="big-hum" style="color:#0288d1">💧 ${d.humidity!=null?Math.round(d.humidity)+'%':'--'}</div>
+        <div class="bat-txt">${t.batLabel}<div class="bat-bar"><div class="bat-fill ${bcls}" style="width:${bat||0}%"></div></div>${bat!=null?bat+'%':'--'}</div>
       </div>
       ${d.alarmActive&&!d.snoozed?`<div class="alarm-hint">⚠️ ${getAlarmMsg(d)}</div>`:''}
       ${d.snoozed?`<div class="snooze-hint">🔕 ${t.snoozeMsg}</div>`:''}
-      ${!d.connected?`<div class="disc-hint">⚡ ${lang==='ar'?'اضغط للاتصال':'Tap to connect'}</div>`:''}
+      ${!d.connected&&!d.isSim?`<div class="disc-hint">⚡ ${lang==='ar'?'اضغط للاتصال':'Tap to connect'}</div>`:''}
+      ${bat!=null&&bat<=20?`<div class="bat-warn">${t.batWarn}</div>`:''}
       <div class="mini-stats">
-        <div class="ms"><div class="msv">${dispT(minT)}</div><div class="msl">${t.miniMin}</div></div>
-        <div class="ms"><div class="msv">${dispT(avgT)}</div><div class="msl">${t.miniAvg}</div></div>
-        <div class="ms"><div class="msv">${dispT(maxT)}</div><div class="msl">${t.miniMax}</div></div>
+        <div class="ms"><div class="msv">${disp(minT)}${temps.length?'°'+unit:''}</div><div class="msl">${t.miniMin}</div></div>
+        <div class="ms"><div class="msv">${disp(avgT)}${temps.length?'°'+unit:''}</div><div class="msl">${t.miniAvg}</div></div>
+        <div class="ms"><div class="msv">${disp(maxT)}${temps.length?'°'+unit:''}</div><div class="msl">${t.miniMax}</div></div>
       </div>
+      <div class="last-seen">${d.lastUpdate?timeAgo(d.lastUpdate):''}</div>
     </div>`;
   }).join('');
 }
@@ -587,22 +845,25 @@ function getAlarmMsg(d){
   const t=T[lang];
   if(d.alarmType==='temp')return d.temperature>d.maxT?t.alarmTempHigh:t.alarmTempLow;
   if(d.alarmType==='hum')return d.humidity>d.maxH?t.alarmHumHigh:t.alarmHumLow;
-  return '⚠️';
+  return'⚠️';
 }
 
-/* ═══════════════════════ DRAG & DROP ═══════════════════════ */
-function dragStart(e,i){dragSrcIdx=i;setTimeout(()=>e.target.classList.add('dragging'),0);}
+// ============================================================
+// DRAG & DROP
+// ============================================================
+function dragStart(e,i){dragSrcIdx=i;setTimeout(()=>e.target.closest('.card')?.classList.add('dragging'),0);}
 function dragOver(e,i){e.preventDefault();if(i!==dragSrcIdx)e.currentTarget.classList.add('drag-over');}
 function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
 async function dragDrop(e,i){
   e.currentTarget.classList.remove('drag-over');
   if(dragSrcIdx===null||dragSrcIdx===i)return;
-  const moved=devices.splice(dragSrcIdx,1)[0];
-  devices.splice(i,0,moved);dragSrcIdx=null;
-  await save();render();
+  const m=devices.splice(dragSrcIdx,1)[0];devices.splice(i,0,m);dragSrcIdx=null;
+  save();render();
 }
 
-/* ═══════════════════════ ADD DEVICE ═══════════════════════ */
+// ============================================================
+// ADD DEVICE
+// ============================================================
 function openAddModal(){
   const t=T[lang];$('addTitle').textContent=t.addTitle;$('addTip').innerHTML=t.addTip;
   $('scanBtn').textContent=t.scanBtn;$('nameLabel').textContent=t.nameLabel;
@@ -622,27 +883,26 @@ async function scanForDevices(){
       optionalServices:[XIAOMI,'battery_service','0000180f-0000-1000-8000-00805f9b34fb']
     });
     if(devices.some(d=>d.bleId===dev.id)){toast(t.toastDupBLE,'err');closeAddModal();return;}
-    selectedBLE=dev;$('scanState').style.display='none';$('nameState').style.display='block';
-    $('newName').value=dev.name||'Sensor';
+    selectedBLE=dev;$('scanState').style.display='none';$('nameState').style.display='block';$('newName').value=dev.name||'Sensor';
   }catch(e){toast('❌ '+e.message,'err');closeAddModal();}
 }
 async function finalizeDevice(){
   const t=T[lang];const name=$('newName').value.trim();
   if(!name){toast(lang==='ar'?'أدخل اسمًا':'Enter a name','warn');return;}
-  if(!selectedBLE){toast(lang==='ar'?'لم يتم الاختيار':'No device selected','err');return;}
-  if(devices.some(d=>d.bleId===selectedBLE.id)){toast(t.toastDupBLE,'err');closeAddModal();return;}
+  if(!selectedBLE||devices.some(d=>d.bleId===selectedBLE.id)){toast(t.toastDupBLE,'err');closeAddModal();return;}
   const dev={id:'d'+Date.now(),name,bleId:selectedBLE.id,bleDevice:null,server:null,connected:false,
-    temperature:null,humidity:null,battery:null,lastUpdate:null,
-    maxT:27,minT:18,maxH:70,minH:30,alarmEnabled:true,alarmActive:false,alarmType:'',
-    snoozed:false,logs:[],alarmHistory:[],logging:false,loggingInterval:null,logInterval:60000};
-  devices.push(dev);await save();render();closeAddModal();
-  await connectDevice(dev.id,selectedBLE);
+    temperature:null,humidity:null,battery:null,lastUpdate:null,maxT:27,minT:18,maxH:70,minH:30,
+    alarmEnabled:true,alarmActive:false,alarmType:'',snoozed:false,
+    logs:[],alarmHistory:[],logging:false,loggingInterval:null,logInterval:60000,sound:'beep'};
+  devices.push(dev);save();render();closeAddModal();await connectDevice(dev.id,selectedBLE);
 }
 
-/* ═══════════════════════ BLE ═══════════════════════ */
+// ============================================================
+// BLE
+// ============================================================
 async function connectDevice(deviceId,bleDevice){
   const dev=devices.find(d=>d.id===deviceId);if(!dev)return;
-  showLoading((T[lang].loadingConn||'Connecting to')+' '+dev.name);
+  showLoading(T[lang].loadingConn+' '+dev.name);
   try{
     const server=await bleDevice.gatt.connect();
     dev.server=server;dev.bleDevice=bleDevice;dev.connected=true;
@@ -659,54 +919,74 @@ async function startReading(deviceId){
     await th.startNotifications();
     th.addEventListener('characteristicvaluechanged',ev=>parseSensor(deviceId,ev.target.value));
     parseSensor(deviceId,await th.readValue());
-    const bat=await svc.getCharacteristic(BAT);
-    dev.battery=(await bat.readValue()).getUint8(0);
+    const bat=await svc.getCharacteristic(BAT);dev.battery=(await bat.readValue()).getUint8(0);
     setInterval(async()=>{if(dev.connected){try{parseSensor(deviceId,await th.readValue());dev.battery=(await bat.readValue()).getUint8(0);}catch(e){}}},5000);
   }catch(e){console.error(e);}
 }
 function parseSensor(deviceId,val){
   const dev=devices.find(d=>d.id===deviceId);if(!dev)return;
   dev.temperature=val.getInt16(0,true)/100;dev.humidity=val.getUint8(2);dev.lastUpdate=Date.now();
-  checkAlarm(dev);render();
-  if(currentId===deviceId&&activeTab==='live')updateLive();
+  checkAlarm(dev);render();if(currentId===deviceId&&activeTab==='live')updateLive();
 }
 function checkAlarm(dev){
   if(!dev.alarmEnabled){dev.alarmActive=false;dev.alarmType='';return;}
   if(dev.snoozed)return;
   const ta=dev.temperature>dev.maxT||dev.temperature<dev.minT;
   const ha=dev.humidity>dev.maxH||dev.humidity<dev.minH;
-  const was=dev.alarmActive;dev.alarmActive=ta||ha;
-  dev.alarmType=ta?'temp':(ha?'hum':'');
+  const was=dev.alarmActive;dev.alarmActive=ta||ha;dev.alarmType=ta?'temp':(ha?'hum':'');
   if(dev.alarmActive&&!was){
-    playBeep();sendNotif(dev);
+    playSound(dev.sound||'beep');sendNotif(dev);
     dev.alarmHistory.unshift({ts:Date.now(),t:dev.temperature,h:dev.humidity,msg:getAlarmMsg(dev)});
     if(dev.alarmHistory.length>50)dev.alarmHistory.pop();
   }
   if(!dev.alarmActive)dev.alarmType='';
 }
-function playBeep(){
-  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator(),g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=900;o.type='square';g.gain.value=0.22;o.start();setTimeout(()=>o.stop(),550);}catch(e){}
+
+// ============================================================
+// SOUNDS
+// ============================================================
+function playSound(type){
+  try{
+    const ctx=new(window.AudioContext||window.webkitAudioContext)();
+    const g=ctx.createGain();g.connect(ctx.destination);
+    function b(freq,start,dur,wave='square',vol=0.2){
+      const o=ctx.createOscillator();o.connect(g);o.frequency.value=freq;o.type=wave;g.gain.value=vol;
+      o.start(ctx.currentTime+start);o.stop(ctx.currentTime+start+dur);
+    }
+    if(type==='silent')return;
+    if(type==='beep')b(900,0,.5);
+    else if(type==='alarm')[0,.3,.6].forEach(t=>b(1000,t,.25,'sawtooth',.25));
+    else if(type==='ping')b(1400,0,.15,'sine',.3);
+    else if(type==='triple')[0,.2,.4].forEach(t=>b(800,t,.15,'square',.2));
+  }catch(e){}
+}
+function buildSoundOptions(dev){
+  const t=T[lang];$('soundLabel').textContent=t.soundLabel;
+  $('soundOptions').innerHTML=SOUNDS.map(s=>
+    `<button class="sound-opt ${(dev.sound||'beep')===s?'on':''}" onclick="selectSound('${s}',this)">${t.sounds[s]}</button>
+     <button style="background:none;border:none;cursor:pointer;color:var(--sub);font-size:12px" onclick="playSound('${s}')">▶</button>`
+  ).join('');
+}
+function selectSound(s,el){
+  document.querySelectorAll('.sound-opt').forEach(b=>b.classList.remove('on'));el.classList.add('on');
+  const dev=devices.find(d=>d.id===currentId);if(dev)dev.sound=s;
 }
 
-/* ═══════════════════════ SNOOZE ═══════════════════════ */
+// ============================================================
+// SNOOZE
+// ============================================================
 function snooze(minutes){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   dev.snoozed=true;dev.alarmActive=false;dev.alarmType='';
-  const ms=minutes*60*1000;
-  let remaining=ms;
+  const ms=minutes*60*1000;let remaining=ms;
   if(snoozeTimers[currentId]){clearTimeout(snoozeTimers[currentId].timer);clearInterval(snoozeTimers[currentId].interval);}
-  const timer=setTimeout(async()=>{
-    dev.snoozed=false;clearInterval(snoozeTimers[currentId]?.interval);
-    delete snoozeTimers[currentId];render();
-    if(currentId===dev.id)updateLive();
-  },ms);
+  const timer=setTimeout(()=>{dev.snoozed=false;clearInterval(snoozeTimers[currentId]?.interval);delete snoozeTimers[currentId];render();if(currentId===dev.id)updateLive();},ms);
   const interval=setInterval(()=>{
-    remaining-=1000;
-    const el=$('snoozeCount');
+    remaining-=1000;const el=$('snoozeCount');
     if(el){const m=Math.floor(remaining/60000),s=Math.floor((remaining%60000)/1000);el.textContent=`${m}:${s.toString().padStart(2,'0')}`;}
     if(remaining<=0)clearInterval(interval);
   },1000);
-  snoozeTimers[currentId]={timer,interval,remaining:ms};
+  snoozeTimers[currentId]={timer,interval};
   toast(T[lang].toastSnoozed,'info');render();updateLive();
 }
 function cancelSnooze(){
@@ -716,48 +996,50 @@ function cancelSnooze(){
   toast(T[lang].toastSnoozeCancel,'warn');render();updateLive();
 }
 
-/* ═══════════════════════ NOTIFICATIONS ═══════════════════════ */
+// ============================================================
+// NOTIFICATIONS
+// ============================================================
 async function requestNotifPerm(){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();}
 function sendNotif(dev){
   const msg=T[lang].notifAlarm.replace('{name}',dev.name||'Device')+' — '+getAlarmMsg(dev);
   if('Notification' in window&&Notification.permission==='granted')new Notification('⚠️ USCE Lab',{body:msg});
-  const bar=$('notifBar');bar.textContent=msg;bar.style.display='block';
-  setTimeout(()=>{bar.style.display='none';},9000);
+  const bar=$('notifBar');bar.textContent=msg;bar.style.display='block';setTimeout(()=>{bar.style.display='none';},9000);
 }
 
-/* ═══════════════════════ RECONNECT ═══════════════════════ */
-async function tryReconnect(bleId){
-  try{if(!navigator.bluetooth?.getDevices)return null;const l=await navigator.bluetooth.getDevices();return l.find(d=>d.id===bleId)||null;}catch(e){return null;}
-}
+// ============================================================
+// RECONNECT
+// ============================================================
+async function tryReconnect(bleId){try{if(!navigator.bluetooth?.getDevices)return null;const l=await navigator.bluetooth.getDevices();return l.find(d=>d.id===bleId)||null;}catch(e){return null;}}
 async function reconnectDevice(deviceId){
-  const dev=devices.find(d=>d.id===deviceId);if(!dev)return;
+  const dev=devices.find(d=>d.id===deviceId);if(!dev||dev.isSim)return;
   try{
     let ble=dev.bleId?await tryReconnect(dev.bleId):null;
     if(!ble)ble=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'LYWSD'},{namePrefix:'Xiaomi'},{namePrefix:'ATC'}],optionalServices:[XIAOMI,'0000180f-0000-1000-8000-00805f9b34fb']});
-    if(!dev.bleId){dev.bleId=ble.id;await save();}
+    if(!dev.bleId){dev.bleId=ble.id;save();}
     await connectDevice(deviceId,ble);
   }catch(e){console.error(e);}
 }
 async function reconnectAll(){
-  const disc=devices.filter(d=>!d.connected);if(!disc.length)return;
+  const disc=devices.filter(d=>!d.connected&&!d.isSim);if(!disc.length)return;
   $('reconnBtn').disabled=true;
   for(const d of disc){await reconnectDevice(d.id);await new Promise(r=>setTimeout(r,400));}
   $('reconnBtn').disabled=false;render();
 }
 async function connectFromDetail(){
-  if(!currentId)return;const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  if(!currentId)return;const dev=devices.find(d=>d.id===currentId);if(!dev||dev.isSim)return;
   try{
     let ble=dev.bleId?await tryReconnect(dev.bleId):null;
     if(!ble)ble=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'LYWSD'},{namePrefix:'Xiaomi'},{namePrefix:'ATC'}],optionalServices:[XIAOMI,'0000180f-0000-1000-8000-00805f9b34fb']});
-    if(!dev.bleId){dev.bleId=ble.id;await save();}
-    await connectDevice(currentId,ble);
-    $('connStatus').style.display='none';render();updateLive();
+    if(!dev.bleId){dev.bleId=ble.id;save();}
+    await connectDevice(currentId,ble);$('connStatus').style.display='none';render();updateLive();
   }catch(e){toast('❌ '+e.message,'err');}
 }
 
-/* ═══════════════════════ DETAIL MODAL ═══════════════════════ */
+// ============================================================
+// DETAIL MODAL
+// ============================================================
 function openDetail(deviceId){
-  currentId=deviceId;activeTab='live';requestNotifPerm();
+  currentId=deviceId;activeTab='live';
   buildTabBar();updateDetailUI();switchTab('live');
   $('detailModal').style.display='block';
 }
@@ -770,26 +1052,32 @@ function buildTabBar(){
 function switchTab(name,ev){
   activeTab=name;
   document.querySelectorAll('.tc').forEach(el=>el.classList.remove('on'));
-  document.querySelectorAll('.tab').forEach(el=>el.classList.remove('on'));
+  document.querySelectorAll('#tabBar .tab').forEach(el=>el.classList.remove('on'));
   $('tc-'+name).classList.add('on');
   if(ev)ev.target.classList.add('on');
-  else{const btns=$('tabBar').querySelectorAll('.tab');['live','chart','stats','alarm','log','settings'].forEach((id,i)=>{if(id===name)btns[i].classList.add('on');});}
-  if(name==='chart')buildCharts();if(name==='stats')buildStats();if(name==='log')renderLog();if(name==='alarm')renderAlarmHist();
+  else{$('tabBar').querySelectorAll('.tab').forEach((b,i)=>{if(['live','chart','stats','alarm','log','settings'][i]===name)b.classList.add('on');});}
+  if(name==='chart')buildCharts();
+  if(name==='stats')buildStats();
+  if(name==='log')renderLog();
+  if(name==='alarm')renderAlarmHist();
+  if(name==='settings'){const dev=devices.find(d=>d.id===currentId);if(dev)buildSoundOptions(dev);}
 }
 function updateDetailUI(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const t=T[lang];
-  $('detailName').textContent=dev.name||'Device';
+  $('detailName').textContent=dev.name+(dev.isSim?' ':'');
   $('discMsg').textContent=t.discMsg;$('connBtn').textContent=t.connBtn;
-  $('connStatus').style.display=dev.connected?'none':'block';
+  $('connStatus').style.display=dev.connected||dev.isSim?'none':'block';
   $('dTempLbl').textContent=t.tempLbl;$('dHumLbl').textContent=t.humLbl;
   $('cr30').textContent=t.cr30;$('cr60').textContent=t.cr60;$('crAll').textContent=t.crAll;
-  $('chartPngBtn').textContent=t.chartPngBtn;
+  $('chartPngBtn').textContent=t.chartPngBtn;$('fullscreenBtn').textContent=t.fullscreenBtn;
+  $('fcPngBtn').textContent=t.fcPngBtn;$('fcCloseBtn').textContent=t.fcCloseBtn;
+  $('pAll').textContent=t.pAll;$('pDay').textContent=t.pDay;$('pWeek').textContent=t.pWeek;$('pMonth').textContent=t.pMonth;
+  $('alarmHistTitle').textContent=t.alarmHistTitle;
   $('alarmTempTitle').textContent=t.alarmTempTitle;$('alarmHumTitle').textContent=t.alarmHumTitle;
   $('maxTLabel').textContent=t.maxTLabel;$('minTLabel').textContent=t.minTLabel;
   $('maxHLabel').textContent=t.maxHLabel;$('minHLabel').textContent=t.minHLabel;
   $('alarmChkLbl').textContent=t.alarmChkLbl;$('saveAlarmBtn').textContent=t.saveAlarmBtn;
-  $('alarmHistTitle').textContent=t.alarmHistTitle;
   $('maxT').value=dev.maxT;$('minT').value=dev.minT;$('maxH').value=dev.maxH;$('minH').value=dev.minH;
   $('alarmChk').checked=dev.alarmEnabled;
   $('intervalLabel').textContent=t.intervalLabel;
@@ -798,7 +1086,7 @@ function updateDetailUI(){
   $('startLogBtn').textContent=t.startLogBtn;$('stopLogBtn').textContent=t.stopLogBtn;
   $('csvBtn').textContent=t.csvBtn;$('pdfBtn').textContent=t.pdfBtn;$('clearBtn').textContent=t.clearBtn;
   $('logSearch').placeholder=t.logSearchPH;
-  $('fAll').textContent=t.fAll;$('fAlarm').textContent=t.fAlarm;$('fNormal').textContent=t.fNormal;
+  $('fAll').textContent=t.fAll;$('fAlarm').textContent=t.fAlarm;$('fNormal').textContent=t.fNormal;$('fNoted').textContent=t.fNoted;
   $('editNameTitle').textContent=t.editNameTitle;$('editNameLabel').textContent=t.editNameLabel;
   $('saveNameBtn').textContent=t.saveNameBtn;$('removeBtn').textContent=t.removeBtn;
   $('editName').value=dev.name||'';
@@ -807,171 +1095,432 @@ function updateDetailUI(){
   updateLive();
 }
 function updateLive(){
-  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
-  const t=T[lang];
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;const t=T[lang];
   $('dTemp').textContent=dev.temperature!=null?toDisp(dev.temperature):'--';
+  $('dTemp').style.color=tempColor(dev.temperature);
   $('dHum').textContent=dev.humidity!=null?Math.round(dev.humidity)+'%':'--%';
-  $('dBat').textContent=t.batLabel+' '+(dev.battery!=null?Math.round(dev.battery)+'%':'--%');
-  $('dLast').textContent=dev.lastUpdate?(t.lastUpdate+' '+new Date(dev.lastUpdate).toLocaleTimeString()):'';
-  // snooze bar
+  const bat=dev.battery!=null?Math.round(dev.battery):null;
+  const bcls=bat==null?'bat-ok':bat>40?'bat-ok':bat>20?'bat-mid':'bat-low';
+  $('dBat').innerHTML=`${t.batLabel} <div class="bat-bar" style="display:inline-block"><div class="bat-fill ${bcls}" style="width:${bat||0}%"></div></div> ${bat!=null?bat+'%':'--'}${bat!=null&&bat<=20?` <span style="color:#f44336;font-weight:700">${t.batWarn}</span>`:''}`;
+  $('dLast').textContent=dev.lastUpdate?(t.lastUpdate+' '+timeAgo(dev.lastUpdate)):'';
   const sb=$('snoozeBar'),sn=snoozeTimers[currentId];
   if(dev.snoozed&&sn){sb.style.display='flex';$('snoozeMsg').textContent=t.snoozeMsg;$('cancelSnoozeBtn').textContent=t.cancelSnoozeBtn;}
   else sb.style.display='none';
-  // alarm actions
-  const aa=$('alarmActions');
-  if(dev.alarmActive&&!dev.snoozed){aa.style.display='block';}else aa.style.display='none';
+  $('alarmActions').style.display=dev.alarmActive&&!dev.snoozed?'block':'none';
 }
 
-/* ═══════════════════════ ALARM ═══════════════════════ */
+// ============================================================
+// ALARM SETTINGS
+// ============================================================
 async function saveAlarm(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   dev.maxT=parseFloat($('maxT').value);dev.minT=parseFloat($('minT').value);
   dev.maxH=parseFloat($('maxH').value);dev.minH=parseFloat($('minH').value);
   dev.alarmEnabled=$('alarmChk').checked;
-  await save();checkAlarm(dev);render();toast(T[lang].toastAlarmSave,'ok');
+  save();checkAlarm(dev);render();toast(T[lang].toastAlarmSave,'ok');
+  // Rebuild charts with new limits
+  if(activeTab==='chart')buildCharts();
 }
+
+// ============================================================
+// ALARM HISTORY
+// ============================================================
 function renderAlarmHist(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const hist=dev.alarmHistory||[];
-  $('alarmHistBox').innerHTML=hist.length?hist.map(h=>`<div class="alarm-hist-item">
-    <strong>${new Date(h.ts).toLocaleString()}</strong><br>
-    ${h.msg} — 🌡️${h.t!=null?toDisp(h.t):'--'} 💧${h.h!=null?Math.round(h.h)+'%':'--'}
-  </div>`).join(''):`<div style="text-align:center;color:var(--sub);padding:16px">${T[lang].statsEmpty}</div>`;
+  $('alarmHistBox').innerHTML=hist.length
+    ?hist.map(h=>`<div class="alarm-hist-item"><strong>${new Date(h.ts).toLocaleString()}</strong><br>${h.msg} — 🌡️${h.t!=null?toDisp(h.t):'--'} 💧${h.h!=null?Math.round(h.h)+'%':'--'}</div>`).join('')
+    :`<div style="text-align:center;color:var(--sub);padding:20px">${T[lang].statsEmpty}</div>`;
 }
 
-/* ═══════════════════════ STATS ═══════════════════════ */
+// ============================================================
+// STATS
+// ============================================================
+function setPeriod(p,ev){
+  statPeriod=p;document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('on'));if(ev)ev.target.classList.add('on');buildStats();
+}
+function filterByPeriod(logs){
+  const now=Date.now();
+  if(statPeriod==='day')return logs.filter(l=>now-l.ts<86400000);
+  if(statPeriod==='week')return logs.filter(l=>now-l.ts<604800000);
+  if(statPeriod==='month')return logs.filter(l=>now-l.ts<2592000000);
+  return logs;
+}
 function buildStats(){
   const dev=devices.find(d=>d.id===currentId);const t=T[lang];
-  if(!dev||!dev.logs.length){$('statsContent').innerHTML=`<p style="color:var(--sub);text-align:center;padding:28px">${t.statsEmpty}</p>`;return;}
-  const temps=dev.logs.map(l=>l.t).filter(v=>v!=null);
-  const hums=dev.logs.map(l=>l.h).filter(v=>v!=null);
+  const logs=filterByPeriod(dev?.logs||[]);
+  if(!dev||!logs.length){$('statsContent').innerHTML=`<p style="color:var(--sub);text-align:center;padding:28px">${t.statsEmpty}</p>`;return;}
+  const temps=logs.map(l=>l.t).filter(v=>v!=null);
+  const hums=logs.map(l=>l.h).filter(v=>v!=null);
   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
-  const items=temps.length?[
+  const items=[
     {l:t.statAvg,v:toDisp(avg(temps))},{l:t.statMin,v:toDisp(Math.min(...temps))},{l:t.statMax,v:toDisp(Math.max(...temps))},
     {l:t.statAvgH,v:avg(hums).toFixed(1)+'%'},{l:t.statMinH,v:Math.min(...hums).toFixed(1)+'%'},{l:t.statMaxH,v:Math.max(...hums).toFixed(1)+'%'},
-    {l:t.statCount,v:dev.logs.length+' '+t.readingsLabel},
-  ]:[];
+    {l:t.statCount,v:logs.length+' '+t.readingsLabel},{l:t.statAlarms,v:'⚠️ '+logs.filter(l=>l.alarm).length},
+  ];
   $('statsContent').innerHTML=`<div class="stats-grid">${items.map(i=>`<div class="sb"><div class="sbv">${i.v}</div><div class="sbl">${i.l}</div></div>`).join('')}</div>`;
 }
 
-/* ═══════════════════════ CHARTS ═══════════════════════ */
-function setChartRange(r){chartRange=r;buildCharts();}
-function chartDefaults(){return{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:dark?'#ccc':'#555'}}},scales:{x:{ticks:{color:dark?'#ccc':'#555',maxTicksLimit:7},grid:{color:dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.07)'}},y:{ticks:{color:dark?'#ccc':'#555'},grid:{color:dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.07)'}}}};}
+// ============================================================
+// CHARTS WITH CPK-STYLE LIMIT LINES
+// ============================================================
+function setChartRange(r){chartRange=r;buildCharts();if($('fullChartModal').classList.contains('show'))buildFullCharts();}
+function gc(){return dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.07)';}
+function tc2(){return dark?'#ccc':'#555';}
+
+/**
+ * Build chart with UCL/LCL limit lines (CPK style)
+ * @param {string} canvasId  - canvas element id
+ * @param {object} existing  - existing Chart instance (will be destroyed)
+ * @param {number[]} data    - main data array
+ * @param {string[]} labels  - x-axis labels
+ * @param {string} lbl       - dataset label
+ * @param {string} color     - main line color
+ * @param {number} maxLimit  - upper control limit value
+ * @param {number} minLimit  - lower control limit value
+ * @param {string} maxColor  - UCL line color
+ * @param {string} minColor  - LCL line color
+ * @param {string} limitUnit - unit suffix for limit labels
+ */
+function mkChartWithLimits(canvasId, existing, data, labels, lbl, color, maxLimit, minLimit, maxColor, minColor, limitUnit){
+  if(existing)existing.destroy();
+
+  const maxLabel = `UCL ${toLimitDisp(maxLimit)}${limitUnit}`;
+  const minLabel = `LCL ${toLimitDisp(minLimit)}${limitUnit}`;
+
+  // Fill arrays with constant limit values matching data length
+  const maxArr = data.map(()=>maxLimit);
+  const minArr = data.map(()=>minLimit);
+
+  return new Chart($(canvasId).getContext('2d'),{
+    type:'line',
+    data:{
+      labels,
+      datasets:[
+        // Main data line
+        {
+          label: lbl,
+          data,
+          borderColor: color,
+          backgroundColor: color+'18',
+          tension:.35,
+          pointRadius: data.length > 60 ? 0 : 2,
+          fill: true,
+          order: 3
+        },
+        // UCL — Max limit (red/pink)
+        {
+          label: maxLabel,
+          data: maxArr,
+          borderColor: maxColor,
+          backgroundColor: 'transparent',
+          borderWidth: 2,
+          borderDash: [8, 4],
+          pointRadius: 0,
+          fill: false,
+          tension: 0,
+          order: 1
+        },
+        // LCL — Min limit (blue/cyan)
+        {
+          label: minLabel,
+          data: minArr,
+          borderColor: minColor,
+          backgroundColor: minColor+'18',
+          borderWidth: 2,
+          borderDash: [8, 4],
+          pointRadius: 0,
+          fill: '-1',   // fill between LCL and UCL
+          tension: 0,
+          order: 2
+        }
+      ]
+    },
+    options:{
+      responsive:true,
+      maintainAspectRatio:false,
+      animation:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{
+          labels:{
+            color: tc2(),
+            usePointStyle: true,
+            pointStyle: 'line',
+            font:{size:11}
+          }
+        },
+        tooltip:{
+          callbacks:{
+            afterBody(ctx){
+              const v = ctx[0]?.parsed?.y;
+              if(v==null)return '';
+              if(v > maxLimit) return '⚠️ Above UCL';
+              if(v < minLimit) return '⚠️ Below LCL';
+              return '✅ In Range';
+            }
+          }
+        }
+      },
+      scales:{
+        x:{ticks:{color:tc2(),maxTicksLimit:8},grid:{color:gc()}},
+        y:{ticks:{color:tc2()},grid:{color:gc()},
+          // Auto-expand y axis to show limits with margin
+          suggestedMin: Math.min(minLimit, ...(data.filter(v=>v!=null))) - 2,
+          suggestedMax: Math.max(maxLimit, ...(data.filter(v=>v!=null))) + 2
+        }
+      }
+    }
+  });
+}
+
 function buildCharts(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const t=T[lang];
   let logs=dev.logs||[];if(chartRange>0)logs=logs.slice(-chartRange);
   const labels=logs.map(l=>new Date(l.ts).toLocaleTimeString());
-  const temps=logs.map(l=>unit==='F'?+(l.t*9/5+32).toFixed(2):l.t);
-  const hums=logs.map(l=>l.h);
-  function mk(id,inst,data,lbl,color){
-    if(inst)inst.destroy();
-    return new Chart($(id).getContext('2d'),{type:'line',data:{labels,datasets:[{label:lbl,data,borderColor:color,backgroundColor:color+'22',tension:.35,pointRadius:2,fill:true}]},options:chartDefaults()});
-  }
-  cTI=mk('cTemp',cTI,temps,t.chartTempLabel,'#1976d2');
-  cHI=mk('cHum',cHI,hums,t.chartHumLabel,'#388e3c');
-}
-function exportChartPNG(){
-  const canvas=$('cTemp');if(!canvas)return;
-  const a=document.createElement('a');a.download='temperature_chart.png';a.href=canvas.toDataURL('image/png');a.click();
+
+  // Convert limits if Fahrenheit
+  const maxTL = unit==='F'?(dev.maxT*9/5+32):dev.maxT;
+  const minTL = unit==='F'?(dev.minT*9/5+32):dev.minT;
+  const tUnit = '°'+(unit==='C'?'C':'F');
+
+  cTI=mkChartWithLimits(
+    'cTemp', cTI,
+    logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),
+    labels, t.chartTempLabel, '#1976d2',
+    maxTL, minTL, '#f44336', '#2196F3', tUnit
+  );
+
+  cHI=mkChartWithLimits(
+    'cHum', cHI,
+    logs.map(l=>l.h),
+    labels, t.chartHumLabel, '#388e3c',
+    dev.maxH, dev.minH, '#e91e63', '#00bcd4', '%'
+  );
+
+  // Update legend labels
+  $('llMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;
+  $('llMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;
+  $('llTempLine').textContent=t.chartTempLabel;
+  $('llMaxH').textContent=`UCL ${dev.maxH}%`;
+  $('llMinH').textContent=`LCL ${dev.minH}%`;
+  $('llHumLine').textContent=t.chartHumLabel;
 }
 
-/* ═══════════════════════ COMPARE ═══════════════════════ */
-let compareChartOpen=false;
+function buildFullCharts(){
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  const t=T[lang];
+  let logs=dev.logs||[];if(chartRange>0)logs=logs.slice(-chartRange);
+  const labels=logs.map(l=>new Date(l.ts).toLocaleTimeString());
+
+  const maxTL=unit==='F'?(dev.maxT*9/5+32):dev.maxT;
+  const minTL=unit==='F'?(dev.minT*9/5+32):dev.minT;
+  const tUnit='°'+(unit==='C'?'C':'F');
+
+  fcTI=mkChartWithLimits(
+    'fcTemp', fcTI,
+    logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),
+    labels, t.chartTempLabel, '#1976d2',
+    maxTL, minTL, '#f44336', '#2196F3', tUnit
+  );
+
+  fcHI=mkChartWithLimits(
+    'fcHum', fcHI,
+    logs.map(l=>l.h),
+    labels, t.chartHumLabel, '#388e3c',
+    dev.maxH, dev.minH, '#e91e63', '#00bcd4', '%'
+  );
+
+  // Update fullscreen legend labels
+  $('fcLlMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;
+  $('fcLlMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;
+  $('fcLlMaxH').textContent=`UCL ${dev.maxH}%`;
+  $('fcLlMinH').textContent=`LCL ${dev.minH}%`;
+}
+
+function openFullChart(){
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  $('fcTitle').textContent=(dev.name||'Device')+' — Charts';
+  $('fullChartModal').classList.add('show');setTimeout(buildFullCharts,100);
+}
+function closeFullChart(){
+  $('fullChartModal').classList.remove('show');
+  if(fcTI){fcTI.destroy();fcTI=null;}if(fcHI){fcHI.destroy();fcHI=null;}
+}
+function exportChartPNG(full=false){
+  const c1=$(full?'fcTemp':'cTemp');
+  const c2=$(full?'fcHum':'cHum');
+  if(!c1||!c2)return;
+  const dev=devices.find(d=>d.id===currentId);
+  const name=dev?dev.name:'Device';
+
+  // Merge both canvases vertically into one PNG
+  const gap=20, titleH=36, padding=16;
+  const w=Math.max(c1.width,c2.width)+padding*2;
+  const h=titleH+c1.height+gap+c2.height+padding*2;
+
+  const merged=document.createElement('canvas');
+  merged.width=w;merged.height=h;
+  const ctx=merged.getContext('2d');
+
+  // Background
+  ctx.fillStyle=dark?'#1e1e2e':'#ffffff';
+  ctx.fillRect(0,0,w,h);
+
+  // Title
+  ctx.fillStyle=dark?'#e0e0e0':'#333333';
+  ctx.font='bold 15px Segoe UI, sans-serif';
+  ctx.textAlign='center';
+  ctx.fillText('📊 '+name+' — '+new Date().toLocaleString(),w/2,padding+18);
+
+  // Draw temp chart
+  ctx.drawImage(c1,padding,titleH+padding);
+
+  // Draw hum chart
+  ctx.drawImage(c2,padding,titleH+padding+c1.height+gap);
+
+  // Limits bar
+  if(dev){
+    ctx.font='11px Segoe UI, sans-serif';
+    ctx.textAlign='left';
+    ctx.fillStyle='#f44336';ctx.fillText(`UCL T: ${dev.maxT}°C`,padding,titleH+padding+c1.height+gap/2);
+    ctx.fillStyle='#2196F3';ctx.fillText(`LCL T: ${dev.minT}°C`,padding+90,titleH+padding+c1.height+gap/2);
+    ctx.fillStyle='#e91e63';ctx.fillText(`UCL H: ${dev.maxH}%`,padding+180,titleH+padding+c1.height+gap/2);
+    ctx.fillStyle='#00bcd4';ctx.fillText(`LCL H: ${dev.minH}%`,padding+260,titleH+padding+c1.height+gap/2);
+  }
+
+  const a=document.createElement('a');
+  a.download=(name+'_chart.png').replace(/\s+/g,'_');
+  a.href=merged.toDataURL('image/png');
+  a.click();
+}
+
+// ============================================================
+// COMPARE
+// ============================================================
+function setCmpType(t){cmpType=t;$('cmpTypePill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(t==='temp'?0:1)));buildCompareChart();}
+function refreshCompare(){buildCompareChart();toast('🔄','info');}
 function openCompare(){
   if(devices.length<2){toast(T[lang].noDevices,'warn');return;}
-  compareChartOpen=true;
-  $('compareBar').classList.add('show');
+  compareChartOpen=true;$('compareBar').classList.add('show');
   $('compareTitle').textContent=T[lang].compareTitle;
+  $('refreshCmpBtn').textContent=T[lang].refreshCmpBtn;
   $('closeCompareBtn').textContent=T[lang].closeCompareBtn;
   buildCompareChart();
 }
 function closeCompare(){compareChartOpen=false;$('compareBar').classList.remove('show');if(cmpI){cmpI.destroy();cmpI=null;}}
 function buildCompareChart(){
-  if(!compareChartOpen)return;
-  if(cmpI){cmpI.destroy();cmpI=null;}
+  if(!compareChartOpen)return;if(cmpI){cmpI.destroy();cmpI=null;}
   const colors=['#1976d2','#e53935','#388e3c','#f57c00','#7b1fa2','#00838f'];
+  const isTemp=cmpType==='temp';
   const datasets=devices.map((d,i)=>{
     const logs=(d.logs||[]).slice(-30);
-    return{label:d.name||'Device '+(i+1),data:logs.map(l=>unit==='F'?+(l.t*9/5+32).toFixed(2):l.t),borderColor:colors[i%colors.length],backgroundColor:colors[i%colors.length]+'22',tension:.35,pointRadius:2,fill:false};
+    return{label:d.name||'Device '+(i+1),data:isTemp?logs.map(l=>unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):logs.map(l=>l.h),borderColor:colors[i%6],backgroundColor:colors[i%6]+'22',tension:.35,pointRadius:2,fill:false};
   });
-  const labels=devices.reduce((a,d)=>Math.max(a,(d.logs||[]).length),0);
-  const xLabels=Array.from({length:Math.min(labels,30)},(_,i)=>i+1+'');
-  cmpI=new Chart($('compareChart').getContext('2d'),{type:'line',data:{labels:xLabels,datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:dark?'#ccc':'#555'}}},scales:{x:{ticks:{color:dark?'#ccc':'#555'}},y:{ticks:{color:dark?'#ccc':'#555'}}}}});
+  const maxLen=devices.reduce((a,d)=>Math.max(a,(d.logs||[]).length),0);
+  cmpI=new Chart($('compareChart').getContext('2d'),{type:'line',
+    data:{labels:Array.from({length:Math.min(maxLen,30)},(_,i)=>i+1+''),datasets},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc2()}}},scales:{x:{ticks:{color:tc2()}},y:{ticks:{color:tc2()}}}}});
 }
 
-/* ═══════════════════════ LOG ═══════════════════════ */
+// ============================================================
+// LOG
+// ============================================================
 function startLog(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||dev.logging)return;
   const interval=parseInt($('logInterval').value)||60000;dev.logInterval=interval;dev.logging=true;
   dev.loggingInterval=setInterval(async()=>{
     if(dev.temperature==null)return;
-    dev.logs.push({ts:Date.now(),t:dev.temperature,h:dev.humidity,b:dev.battery,alarm:dev.alarmActive});
-    await save();if(activeTab==='log')renderLog();if(compareChartOpen)buildCompareChart();
+    dev.logs.push({ts:Date.now(),t:dev.temperature,h:dev.humidity,b:dev.battery,alarm:dev.alarmActive,note:''});
+    save();if(activeTab==='log')renderLog();if(compareChartOpen)buildCompareChart();
   },interval);
   toast(T[lang].toastLogStart,'ok');
 }
-function stopLog(){
-  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
-  dev.logging=false;clearInterval(dev.loggingInterval);toast(T[lang].toastLogStop,'warn');
-}
-async function clearLog(){
-  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
-  dev.logs=[];await save();renderLog();toast(T[lang].toastLogClear,'info');
-}
+function stopLog(){const dev=devices.find(d=>d.id===currentId);if(!dev)return;dev.logging=false;clearInterval(dev.loggingInterval);toast(T[lang].toastLogStop,'warn');}
+async function clearLog(){const dev=devices.find(d=>d.id===currentId);if(!dev)return;dev.logs=[];save();renderLog();toast(T[lang].toastLogClear,'info');}
 function renderLog(){
   const dev=devices.find(d=>d.id===currentId);if(!dev){$('logBox').innerHTML='';return;}
   const t=T[lang];
   const search=$('logSearch').value.toLowerCase();
   const filter=$('logFilter').value;
   const dateStr=$('logDate').value;
-  let logs=[...dev.logs].reverse();
+  let logs=[...dev.logs].map((l,i)=>({...l,_idx:i})).reverse();
   if(filter==='alarm')logs=logs.filter(l=>l.alarm);
   if(filter==='normal')logs=logs.filter(l=>!l.alarm);
+  if(filter==='noted')logs=logs.filter(l=>l.note&&l.note.trim());
   if(dateStr)logs=logs.filter(l=>new Date(l.ts).toISOString().startsWith(dateStr));
-  if(search)logs=logs.filter(l=>new Date(l.ts).toLocaleString().toLowerCase().includes(search)||String(l.t).includes(search));
+  if(search)logs=logs.filter(l=>new Date(l.ts).toLocaleString().toLowerCase().includes(search)||String(l.t).includes(search)||((l.note||'').toLowerCase().includes(search)));
   $('logBox').innerHTML=logs.map(l=>`<div class="le ${l.alarm?'ale':''}">
+    <button class="add-note-btn" onclick="openNoteModal(${l._idx},event)">${t.addNoteBtn}</button>
     [${new Date(l.ts).toLocaleString()}] 🌡️${l.t!=null?toDisp(l.t):'--'} 💧${l.h!=null?Math.round(l.h)+'%':'--'} 🔋${Math.round(l.b||0)}%${l.alarm?' ⚠️':''}
+    ${l.note?`<div class="le-note">📝 ${l.note}</div>`:''}
   </div>`).join('')||`<div style="text-align:center;color:var(--sub);padding:18px">${t.statsEmpty}</div>`;
   $('logCount').textContent=`${logs.length} / ${dev.logs.length} ${t.readingsLabel}`;
 }
 
-/* ═══════════════════════ EXPORT ═══════════════════════ */
+// ============================================================
+// NOTE
+// ============================================================
+function openNoteModal(idx,e){
+  e.stopPropagation();const t=T[lang];pendingNoteIdx=idx;
+  $('noteTitleH').textContent=t.noteTitleH;$('noteLabel').textContent=t.noteLabel;$('saveNoteBtn').textContent=t.saveNoteBtn;
+  const dev=devices.find(d=>d.id===currentId);$('noteText').value=dev?.logs[idx]?.note||'';
+  $('noteModal').style.display='block';
+}
+function closeNoteModal(){$('noteModal').style.display='none';pendingNoteIdx=null;}
+async function saveNote(){
+  if(pendingNoteIdx===null)return;
+  const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs[pendingNoteIdx])return;
+  dev.logs[pendingNoteIdx].note=$('noteText').value.trim();
+  save();renderLog();closeNoteModal();toast(T[lang].toastNoteSaved,'ok');
+}
+
+// ============================================================
+// EXPORT
+// ============================================================
 function exportCSV(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs.length){toast(T[lang].toastNoData,'warn');return;}
-  const rows=dev.logs.map(l=>`${new Date(l.ts).toISOString()},${l.t},${l.h},${l.b||0},${l.alarm}`).join('\n');
-  dl('Timestamp,Temperature_C,Humidity_%,Battery_%,Alarm\n'+rows,'text/csv',`${(dev.name||'device').replace(/\s+/g,'_')}_log.csv`);
+  const rows=dev.logs.map(l=>`${new Date(l.ts).toISOString()},${l.t},${l.h},${l.b||0},${l.alarm},"${(l.note||'').replace(/"/g,"'")}"`).join('\n');
+  dl('Timestamp,Temperature_C,Humidity_%,Battery_%,Alarm,Note\n'+rows,'text/csv',`${(dev.name||'device').replace(/\s+/g,'_')}_log.csv`);
 }
 function exportPDF(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs.length){toast(T[lang].toastNoData,'warn');return;}
   const rows=dev.logs.slice(-150).map(l=>`<tr ${l.alarm?'style="background:#ffebee"':''}>
     <td>${new Date(l.ts).toLocaleString()}</td><td>${l.t!=null?toDisp(l.t):'--'}</td>
-    <td>${l.h!=null?Math.round(l.h)+'%':'--'}</td><td>${l.b!=null?Math.round(l.b)+'%':'--'}</td><td>${l.alarm?'⚠️':''}</td>
+    <td>${l.h!=null?Math.round(l.h)+'%':'--'}</td><td>${l.b!=null?Math.round(l.b)+'%':'--'}</td>
+    <td>${l.alarm?'⚠️':''}</td><td style="color:#667eea;font-style:italic">${l.note||''}</td>
   </tr>`).join('');
   const w=window.open('','_blank');
   w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${dev.name}</title>
   <style>body{font-family:sans-serif;padding:22px}h1{color:#667eea}table{width:100%;border-collapse:collapse;margin-top:14px}
-  th,td{border:1px solid #ddd;padding:7px;font-size:12px}th{background:#667eea;color:#fff}tr:nth-child(even){background:#f9f9f9}</style></head>
-  <body><h1>📊 USCE Lab — ${dev.name}</h1><p style="color:#666;font-size:13px">Generated: ${new Date().toLocaleString()} | Readings: ${dev.logs.length}</p>
-  <table><thead><tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Alarm</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
+  th,td{border:1px solid #ddd;padding:7px;font-size:11px}th{background:#667eea;color:#fff}tr:nth-child(even){background:#f9f9f9}
+  .limits{margin-top:10px;background:#f5f5f5;padding:10px;border-radius:8px;font-size:12px;color:#333}
+  </style></head>
+  <body><h1>📊 USCE Lab — ${dev.name}</h1>
+  <p style="color:#666;font-size:12px">Generated: ${new Date().toLocaleString()} | Readings: ${dev.logs.length}</p>
+  <div class="limits">🌡️ Temp Limits: UCL ${dev.maxT}°C / LCL ${dev.minT}°C &nbsp;|&nbsp; 💧 Humidity Limits: UCL ${dev.maxH}% / LCL ${dev.minH}%</div>
+  <table><thead><tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Alarm</th><th>Note</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
   w.document.close();setTimeout(()=>w.print(),500);
 }
-function dl(content,mime,filename){
-  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();
-}
+function dl(content,mime,filename){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();}
 
-/* ═══════════════════════ SETTINGS ═══════════════════════ */
+// ============================================================
+// SETTINGS
+// ============================================================
 async function saveName(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const n=$('editName').value.trim();if(!n){toast(lang==='ar'?'أدخل اسمًا':'Enter a name','warn');return;}
-  dev.name=n;await save();render();$('detailName').textContent=n;toast(T[lang].toastNameSave,'ok');
+  dev.name=n;save();render();$('detailName').textContent=n+(dev.isSim?' ':'');toast(T[lang].toastNameSave,'ok');
 }
 async function removeDevice(){
   if(!confirm(T[lang].confirmRemove))return;
-  devices=devices.filter(d=>d.id!==currentId);await save();render();closeDetail();toast(T[lang].toastRemoved,'info');
+  devices=devices.filter(d=>d.id!==currentId);save();render();closeDetail();toast(T[lang].toastRemoved,'info');
 }
 
-/* ═══════════════════════ BACKUP ═══════════════════════ */
+// ============================================================
+// BACKUP
+// ============================================================
 function openBackup(){
   const t=T[lang];$('backupTitle').textContent=t.backupTitle;$('exportBackupBtn').textContent=t.exportBackupBtn;
   $('importBackupBtn').textContent=t.importBackupBtn;$('backupDropMsg').textContent=t.backupDropMsg;
@@ -979,8 +1528,8 @@ function openBackup(){
 }
 function closeBackup(){$('backupModal').style.display='none';}
 function doExportBackup(){
-  const clean=devices.map(({bleDevice,server,loggingInterval,...r})=>r);
-  dl(JSON.stringify({version:3,exported:new Date().toISOString(),devices:clean},null,2),'application/json',`usce_backup_${Date.now()}.json`);
+  const clean=devices.filter(d=>!d.isSim).map(({bleDevice,server,loggingInterval,...r})=>r);
+  dl(JSON.stringify({version:4,exported:new Date().toISOString(),devices:clean},null,2),'application/json',`usce_backup_${Date.now()}.json`);
   toast(T[lang].toastExported,'ok');
 }
 async function doImportBackup(e){
@@ -988,20 +1537,26 @@ async function doImportBackup(e){
   try{
     const text=await file.text();const data=JSON.parse(text);
     if(!data.devices||!Array.isArray(data.devices))throw new Error('invalid');
-    devices=data.devices.map(d=>({...d,connected:false,bleDevice:null,server:null,alarmActive:false,alarmType:'',snoozed:false,logs:d.logs||[],alarmHistory:d.alarmHistory||[]}));
-    await save();render();applyLang();closeBackup();toast(T[lang].toastImported,'ok');
+    const simDevs=devices.filter(d=>d.isSim);
+    devices=[...simDevs,...data.devices.map(d=>({...d,connected:false,bleDevice:null,server:null,alarmActive:d.alarmActive||false,alarmType:d.alarmType||'',snoozed:false,logs:d.logs||[],alarmHistory:d.alarmHistory||[],sound:d.sound||'beep'}))];
+    save();render();applyLang();closeBackup();toast(T[lang].toastImported,'ok');
   }catch(err){toast(T[lang].toastImportErr,'err');}
   e.target.value='';
 }
-
-/* ═══════════════════════ DRAG BACKUP DROP ═══════════════════════ */
 const dz=$('backupDropZone');
 dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='#667eea';});
 dz.addEventListener('dragleave',()=>{dz.style.borderColor='';});
 dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';const f=e.dataTransfer.files[0];if(f)doImportBackup({target:{files:[f],value:''}});});
 
-/* ═══════════════════════ INIT ═══════════════════════ */
+// ============================================================
+// INIT
+// ============================================================
 loadDevices();
+requestNotifPerm();
+// Re-render time-ago labels every 30s
+setInterval(()=>{if(devices.length)render();},30000);
+// Auto-save every 30 seconds (catches any unsaved log entries)
+setInterval(()=>save(),30000);
 </script>
 </body>
 </html>
