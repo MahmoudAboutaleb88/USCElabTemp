@@ -979,7 +979,7 @@ function openBackup(){
 }
 function closeBackup(){$('backupModal').style.display='none';}
 function doExportBackup(){
-  const clean=devices.map(({bleDevice,server,loggingInterval,...r})=>r);if,
+  const clean=devices.map(({bleDevice,server,loggingInterval,...r})=>r);
   dl(JSON.stringify({version:3,exported:new Date().toISOString(),devices:clean},null,2),'application/json',`usce_backup_${Date.now()}.json`);
   toast(T[lang].toastExported,'ok');
 }
