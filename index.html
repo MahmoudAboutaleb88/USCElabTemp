@@ -6,18 +6,31 @@
 <title>USCE Lab Data Loggers</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
+@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800&display=swap');
 *{box-sizing:border-box;margin:0;padding:0}
-:root{--card:#fff;--sh:0 10px 30px rgba(0,0,0,.15);--tx:#333;--sub:#666;--bd:#ddd;--inp:#fff;--sec:#f5f5f5;--lb:#f5f5f5;--li:#fff}
-body.dark{--card:#1e1e2e;--sh:0 10px 30px rgba(0,0,0,.5);--tx:#e0e0e0;--sub:#aaa;--bd:#444;--inp:#2a2a3e;--sec:#2a2a3e;--lb:#2a2a3e;--li:#1a1a28}
-body{font-family:'Segoe UI',sans-serif;background:linear-gradient(135deg,#667eea,#764ba2);min-height:100vh;padding:20px;transition:.3s}
-body.dark{background:linear-gradient(135deg,#0f0f1a,#1a1a2e)}
+:root{
+  --brand-green:#A7CE39;--brand-gray:#5D676F;--brand-orange:#EF9600;
+  --card:#fff;--sh:0 4px 18px rgba(93,103,111,.13);--tx:#2c3e50;--sub:#5D676F;
+  --bd:#d0d5da;--inp:#f8f9fa;--sec:#f4f6f8;--lb:#f4f6f8;--li:#fff;
+  --bg:#f0f2f5;--header-bg:#fff;--accent:#A7CE39;--accent2:#EF9600;
+}
+body.dark{
+  --card:#1e2430;--sh:0 4px 18px rgba(0,0,0,.4);--tx:#e8eaed;--sub:#9aa0a6;
+  --bd:#3c4450;--inp:#252d3a;--sec:#252d3a;--lb:#252d3a;--li:#1a2030;
+  --bg:#141921;--header-bg:#1e2430;
+}
+body{
+  font-family:'Nunito','Avenir Medium','Avenir',sans-serif;
+  background:var(--bg);min-height:100vh;padding:20px;transition:.3s;color:var(--tx);
+}
+body.dark{background:var(--bg)}
 
-#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);padding:12px 26px;border-radius:50px;font-size:14px;font-weight:700;color:#fff;opacity:0;transition:.4s;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.3);white-space:nowrap;pointer-events:none}
+#toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(120px);padding:12px 26px;border-radius:50px;font-size:13px;font-weight:700;color:#fff;opacity:0;transition:.4s;z-index:9999;box-shadow:0 6px 24px rgba(0,0,0,.2);white-space:nowrap;pointer-events:none}
 #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-#toast.ok{background:linear-gradient(135deg,#4CAF50,#388e3c)}
-#toast.err{background:linear-gradient(135deg,#f44336,#c62828)}
-#toast.warn{background:linear-gradient(135deg,#ff9800,#e65100)}
-#toast.info{background:linear-gradient(135deg,#2196F3,#1565c0)}
+#toast.ok{background:var(--brand-green);color:#fff}
+#toast.err{background:#e74c3c;color:#fff}
+#toast.warn{background:var(--brand-orange);color:#fff}
+#toast.info{background:var(--brand-gray);color:#fff}
 
 #loadingOverlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;align-items:center;justify-content:center;flex-direction:column;gap:16px}
 #loadingOverlay.show{display:flex}
@@ -26,180 +39,197 @@ body.dark{background:linear-gradient(135deg,#0f0f1a,#1a1a2e)}
 .loading-msg{color:#fff;font-size:16px;font-weight:600}
 
 .container{max-width:1200px;margin:0 auto}
-.header{background:var(--card);border-radius:20px;padding:14px 20px;margin-bottom:18px;box-shadow:var(--sh);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
-.header h1{color:#667eea;font-size:22px;font-weight:700}
-.hbtns{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+.header{background:var(--card);border-radius:16px;padding:12px 18px;margin-bottom:16px;box-shadow:var(--sh);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;border-bottom:3px solid var(--brand-green)}
+.header h1{color:var(--brand-gray);font-size:22px;font-weight:800;letter-spacing:-.3px}
+.hbtns{display:flex;gap:6px;flex-wrap:wrap;align-items:center}
 
-#simBanner{background:linear-gradient(135deg,#ff9800,#e65100);color:#fff;border-radius:14px;padding:10px 18px;margin-bottom:14px;display:none;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;box-shadow:0 4px 16px rgba(255,152,0,.4)}
+#simBanner{background:linear-gradient(135deg,var(--brand-orange),#d4840a);color:#fff;border-radius:12px;padding:9px 16px;margin-bottom:12px;display:none;align-items:center;justify-content:space-between;gap:10px;font-size:13px;font-weight:700;box-shadow:0 3px 12px rgba(239,150,0,.35)}
 #simBanner.show{display:flex}
 .sim-pulse{width:10px;height:10px;border-radius:50%;background:#fff;animation:simpulse 1s infinite}
 @keyframes simpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.4)}}
 
-.btn{border:none;padding:9px 15px;border-radius:11px;font-size:13px;font-weight:600;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px}
-.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn{border:none;padding:8px 14px;border-radius:9px;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;gap:5px;font-family:inherit}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.06)}
 .btn:active{transform:translateY(0)}
 .btn:disabled{opacity:.45;cursor:not-allowed;transform:none}
-.bp{background:linear-gradient(135deg,#667eea,#764ba2);color:#fff;box-shadow:0 3px 12px rgba(102,126,234,.4)}
-.bg{background:linear-gradient(135deg,#4CAF50,#388e3c);color:#fff}
-.br{background:linear-gradient(135deg,#f44336,#c62828);color:#fff}
-.bo{background:linear-gradient(135deg,#ff9800,#e65100);color:#fff}
-.bgy{background:linear-gradient(135deg,#607d8b,#37474f);color:#fff}
-.bdk{background:linear-gradient(135deg,#424242,#212121);color:#fff}
-.bt{background:linear-gradient(135deg,#009688,#00695c);color:#fff}
-.bsh{background:linear-gradient(135deg,#0f9d58,#0b7d47);color:#fff}
-.bsm{padding:7px 11px;font-size:12px;border-radius:9px}
+.bp{background:var(--brand-green);color:#fff;box-shadow:0 2px 8px rgba(167,206,57,.35)}
+.bg{background:var(--brand-green);color:#fff}
+.br{background:#e74c3c;color:#fff}
+.bo{background:var(--brand-orange);color:#fff}
+.bgy{background:var(--brand-gray);color:#fff}
+.bdk{background:#2c3e50;color:#fff}
+.bt{background:var(--brand-gray);color:#fff}
+.bsh{background:var(--brand-green);color:#fff}
+.bsm{padding:6px 10px;font-size:11px;border-radius:7px}
 
-.pill{display:flex;background:var(--sec);border-radius:10px;overflow:hidden;border:2px solid var(--bd)}
-.pill button{padding:6px 12px;border:none;background:transparent;color:var(--sub);font-size:13px;font-weight:700;cursor:pointer;transition:.2s}
-.pill button.on{background:#667eea;color:#fff;border-radius:8px}
+.pill{display:flex;background:var(--sec);border-radius:8px;overflow:hidden;border:1.5px solid var(--bd)}
+.pill button{padding:5px 11px;border:none;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.pill button.on{background:var(--brand-green);color:#fff;border-radius:6px}
 
-#compareBar{background:var(--card);border-radius:16px;padding:14px 18px;margin-bottom:16px;box-shadow:var(--sh);display:none;flex-direction:column;gap:10px}
+#compareBar{background:var(--card);border-radius:14px;padding:13px 16px;margin-bottom:14px;box-shadow:var(--sh);display:none;flex-direction:column;gap:10px;border:1.5px solid var(--bd)}
 #compareBar.show{display:flex}
 .cmp-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px}
-#compareBar h3{color:#667eea;font-size:15px}
+#compareBar h3{color:var(--brand-gray);font-size:15px;font-weight:700}
 .chart-wrap{position:relative;height:200px;margin-top:10px}
 
-#notifBar{display:none;background:#fff3cd;border:2px solid #ffc107;border-radius:12px;padding:10px 16px;margin-bottom:12px;font-size:13px;color:#856404;text-align:center}
-body.dark #notifBar{background:#3e2f00;border-color:#ffc107;color:#ffe082}
+#notifBar{display:none;background:#fff8e1;border:1.5px solid var(--brand-orange);border-radius:10px;padding:9px 14px;margin-bottom:10px;font-size:12px;color:#7a4f00;text-align:center}
+body.dark #notifBar{background:#3e2f00;border-color:var(--brand-orange);color:#ffe082}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 
-.card{border-radius:22px;padding:17px;box-shadow:var(--sh);cursor:pointer;transition:.3s;color:var(--tx);position:relative;user-select:none;border:2px solid transparent}
-.card:hover{transform:translateY(-4px);box-shadow:0 18px 42px rgba(0,0,0,.22)}
-.card.alarm{animation:pulse 1s infinite;border-color:#f44336!important}
-.card.snoozed{border-color:#ff9800!important;animation:none}
-.card.disc{opacity:.65;border:2px dashed #bbb!important}
-.card.sim-card{border-color:#ff9800!important}
+.card{border-radius:14px;padding:12px 14px;box-shadow:var(--sh);cursor:pointer;transition:.25s;color:var(--tx);position:relative;user-select:none;border:1.5px solid var(--bd);background:var(--card)}
+.card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(93,103,111,.18)}
+.card.alarm{animation:pulse 1s infinite;border-color:#e74c3c!important}
+.card.snoozed{border-color:var(--brand-orange)!important;animation:none}
+.card.disc{opacity:.65;border:1.5px dashed var(--bd)!important}
+.card.sim-card{border-color:var(--brand-orange)!important}
 .card.dragging{opacity:.4;transform:scale(.97)}
-.card.drag-over{border:2px dashed #667eea!important}
-@keyframes pulse{0%,100%{box-shadow:0 0 18px rgba(244,67,54,.55)}50%{box-shadow:0 0 38px rgba(244,67,54,.9)}}
-.card.temp-cold{background:linear-gradient(160deg,#e3f2fd 0%,var(--card) 60%)}
-.card.temp-cool{background:linear-gradient(160deg,#e8f5e9 0%,var(--card) 60%)}
-.card.temp-warm{background:linear-gradient(160deg,#fff8e1 0%,var(--card) 60%)}
-.card.temp-hot{background:linear-gradient(160deg,#ffebee 0%,var(--card) 60%)}
+.card.drag-over{border:1.5px dashed var(--brand-green)!important}
+@keyframes pulse{0%,100%{box-shadow:0 0 14px rgba(231,76,60,.5)}50%{box-shadow:0 0 28px rgba(231,76,60,.85)}}
+.card.in-range{border:2px solid var(--brand-green)!important;box-shadow:0 0 0 3px rgba(167,206,57,.18),var(--sh)!important}
+
+.card.temp-cool{background:linear-gradient(160deg,#edfaf1 0%,var(--card) 55%)}
+.card.temp-warm{background:linear-gradient(160deg,#fef9ec 0%,var(--card) 55%)}
+.card.temp-hot{background:linear-gradient(160deg,#fef0ee 0%,var(--card) 55%)}
 .card.temp-normal{background:var(--card)}
-body.dark .card.temp-cold{background:linear-gradient(160deg,#1a237e22 0%,var(--card) 60%)}
-body.dark .card.temp-cool{background:linear-gradient(160deg,#1b5e2022 0%,var(--card) 60%)}
-body.dark .card.temp-warm{background:linear-gradient(160deg,#f57f1722 0%,var(--card) 60%)}
-body.dark .card.temp-hot{background:linear-gradient(160deg,#b71c1c22 0%,var(--card) 60%)}
+body.dark .card.temp-cold{background:linear-gradient(160deg,#1a237e18 0%,var(--card) 55%)}
+body.dark .card.temp-cool{background:linear-gradient(160deg,#1b5e2018 0%,var(--card) 55%)}
+body.dark .card.temp-warm{background:linear-gradient(160deg,#f57f1718 0%,var(--card) 55%)}
+body.dark .card.temp-hot{background:linear-gradient(160deg,#b71c1c18 0%,var(--card) 55%)}
 
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:11px}
-.card-name{font-size:16px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:7px}
-.dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
-.don{background:#4CAF50}.doff{background:#9e9e9e}.dalarm{background:#f44336}.dsnooze{background:#ff9800}.dsim{background:#ff9800}
-.drag-handle{cursor:grab;color:var(--sub);font-size:18px;padding:2px 4px;opacity:.45}
-.drag-handle:hover{opacity:1}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.card-name{font-size:13px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:6px}
+.dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.don{background:var(--brand-green)}.doff{background:#9e9e9e}.dalarm{background:#e74c3c}.dsnooze{background:var(--brand-orange)}.dsim{background:var(--brand-orange)}
+.drag-handle{cursor:grab;color:var(--sub);font-size:16px;padding:2px 3px;opacity:.4}
+.drag-handle:hover{opacity:.8}
 
-.data-box{border-radius:16px;padding:14px;text-align:center}
-.db-cold{background:linear-gradient(135deg,#bbdefb,#90caf9)}
-.db-cool{background:linear-gradient(135deg,#c8e6c9,#a5d6a7)}
-.db-normal{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
-.db-warm{background:linear-gradient(135deg,#fff9c4,#fff176)}
-.db-hot{background:linear-gradient(135deg,#ffccbc,#ff8a65)}
-body.dark .data-box{background:linear-gradient(135deg,#1a237e33,#0d47a133)!important}
-.big-temp{font-size:36px;font-weight:700;line-height:1}
-.big-hum{font-size:20px;margin:5px 0}
+.data-box{border-radius:10px;padding:10px 12px;text-align:center;border:1px solid rgba(0,0,0,.06)}
+.db-cold{background:linear-gradient(135deg,#dbeeff,#c5e0f8)}
+.db-cool{background:linear-gradient(135deg,#d9f5df,#c1edd0)}
+.db-normal{background:linear-gradient(135deg,#f0f7ff,#ddeeff)}
+.db-warm{background:linear-gradient(135deg,#fff8dc,#ffeaa0)}
+.db-hot{background:linear-gradient(135deg,#fde8d8,#f9c8a8)}
+body.dark .data-box{background:linear-gradient(135deg,#252d3a,#1e2430)!important;border-color:var(--bd)}
+.big-temp{font-size:28px;font-weight:800;line-height:1}
+.big-hum{font-size:15px;margin:4px 0;font-weight:600}
+
+.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:7px}
+.ms{background:rgba(93,103,111,.07);border-radius:7px;padding:4px 2px;text-align:center}
+body.dark .ms{background:rgba(255,255,255,.06)}
+.msv{font-size:11px;font-weight:700;color:var(--tx)}
+.msl{font-size:9px;color:var(--sub)}
+.alarm-hint{text-align:center;color:#e74c3c;font-size:10px;font-weight:700;margin-top:4px}
+.snooze-hint{text-align:center;color:var(--brand-orange);font-size:10px;font-weight:700;margin-top:4px}
+.disc-hint{text-align:center;color:#999;font-size:10px;margin-top:4px}
+.last-seen{text-align:center;font-size:9px;color:var(--sub);margin-top:3px}
+
+/* battery bar — inside modal only */
 .bat-txt{font-size:12px;color:var(--sub);display:flex;align-items:center;justify-content:center;gap:5px;margin-top:3px}
 .bat-bar{width:40px;height:8px;background:#ddd;border-radius:4px;overflow:hidden;display:inline-block}
 .bat-fill{height:100%;border-radius:4px;transition:.4s}
-.bat-ok{background:#4CAF50}.bat-mid{background:#ff9800}.bat-low{background:#f44336;animation:batblink .8s infinite}
+.bat-ok{background:var(--brand-green)}.bat-mid{background:var(--brand-orange)}.bat-low{background:#e74c3c;animation:batblink .8s infinite}
 @keyframes batblink{0%,100%{opacity:1}50%{opacity:.4}}
 
-.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:5px;margin-top:9px}
-.ms{background:rgba(0,0,0,.05);border-radius:9px;padding:5px 3px;text-align:center}
-body.dark .ms{background:rgba(255,255,255,.07)}
-.msv{font-size:12px;font-weight:700;color:var(--tx)}
-.msl{font-size:10px;color:var(--sub)}
-.alarm-hint{text-align:center;color:#f44336;font-size:11px;font-weight:700;margin-top:5px}
-.snooze-hint{text-align:center;color:#ff9800;font-size:11px;font-weight:700;margin-top:5px}
-.disc-hint{text-align:center;color:#999;font-size:11px;margin-top:5px}
-.last-seen{text-align:center;font-size:10px;color:var(--sub);margin-top:4px}
-.bat-warn{text-align:center;font-size:11px;color:#f44336;font-weight:700;margin-top:4px;animation:batblink .8s infinite}
-
 /* Limit lines legend */
-.limit-legend{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-top:6px;padding:6px 10px;background:var(--sec);border-radius:9px;font-size:11px}
-.ll-item{display:flex;align-items:center;gap:5px;color:var(--tx);font-weight:600}
-.ll-dot{width:22px;height:3px;border-radius:2px}
+.limit-legend{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:5px;padding:5px 9px;background:var(--sec);border-radius:8px;font-size:10px;border:1px solid var(--bd)}
+.ll-item{display:flex;align-items:center;gap:4px;color:var(--tx);font-weight:700}
+.ll-dot{width:20px;height:3px;border-radius:2px}
 
-.modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.72);z-index:1000;padding:18px;overflow-y:auto}
-.mc{background:var(--card);max-width:680px;margin:32px auto;border-radius:22px;padding:24px;position:relative;color:var(--tx)}
-.mc h2{color:#667eea;margin-bottom:14px;font-size:20px}
-.xbtn{position:absolute;top:13px;right:13px;font-size:25px;cursor:pointer;color:#999;background:none;border:none}
-[dir=ltr] .xbtn{right:auto;left:13px}
+.modal{display:none;position:fixed;inset:0;background:rgba(44,62,80,.65);z-index:1000;padding:16px;overflow-y:auto}
+.mc{background:var(--card);max-width:680px;margin:28px auto;border-radius:16px;padding:20px;position:relative;color:var(--tx);border:1.5px solid var(--bd)}
+.mc h2{color:var(--brand-gray);margin-bottom:12px;font-size:20px;font-weight:800}
+.xbtn{position:absolute;top:12px;right:12px;font-size:22px;cursor:pointer;color:#999;background:none;border:none}
+[dir=ltr] .xbtn{right:auto;left:12px}
 .xbtn:hover{color:var(--tx)}
 
-.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
-.tab{padding:7px 13px;border:2px solid var(--bd);border-radius:10px;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
-.tab.on{background:#667eea;color:#fff;border-color:#667eea}
+.tabs{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px}
+.tab{padding:6px 12px;border:1.5px solid var(--bd);border-radius:8px;background:transparent;color:var(--sub);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.tab.on{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
 .tc{display:none}.tc.on{display:block}
 
-.sec{background:var(--sec);border-radius:13px;padding:15px;margin:9px 0}
-.sec h3{margin-bottom:9px;color:var(--tx);font-size:14px}
-.fg{margin:9px 0}
-.fg label{display:block;margin-bottom:5px;font-weight:600;color:var(--tx);font-size:13px}
-.fg input,.fg select,.fg textarea{width:100%;padding:9px 11px;border:2px solid var(--bd);border-radius:9px;font-size:14px;background:var(--inp);color:var(--tx);transition:.2s;font-family:inherit}
-.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#667eea}
-.ag{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.sec{background:var(--sec);border-radius:11px;padding:13px;margin:8px 0;border:1px solid var(--bd)}
+.sec h3{margin-bottom:8px;color:var(--tx);font-size:13px;font-weight:700}
+.fg{margin:8px 0}
+.fg label{display:block;margin-bottom:4px;font-weight:700;color:var(--tx);font-size:12px}
+.fg input,.fg select,.fg textarea{width:100%;padding:8px 10px;border:1.5px solid var(--bd);border-radius:8px;font-size:13px;background:var(--inp);color:var(--tx);transition:.2s;font-family:inherit}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:var(--brand-green)}
+.ag{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 
-.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px}
-.live-box{border-radius:15px;padding:17px;text-align:center}
-.lbt{background:linear-gradient(135deg,#e3f2fd,#bbdefb)}
-.lbh{background:linear-gradient(135deg,#e8f5e9,#c8e6c9)}
-body.dark .lbt{background:linear-gradient(135deg,#1a237e33,#0d47a133)}
-body.dark .lbh{background:linear-gradient(135deg,#1b5e2033,#00600033)}
-.lv{font-size:34px;font-weight:700}
-.lvt{color:#1976d2}.lvh{color:#388e3c}
-.ll{font-size:12px;color:var(--sub);margin-top:3px}
+.live-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.live-box{border-radius:12px;padding:14px;text-align:center;border:1px solid var(--bd)}
+.lbt{background:linear-gradient(135deg,#eaf4fb,#d5eaf8)}
+.lbh{background:linear-gradient(135deg,#edfaf1,#d5f4e0)}
+body.dark .lbt{background:linear-gradient(135deg,#1a237e28,#0d47a128)}
+body.dark .lbh{background:linear-gradient(135deg,#1b5e2028,#00600028)}
+.lv{font-size:32px;font-weight:800}
+.lvt{color:#1a6fa8}.lvh{color:#1e7e44}
+.ll{font-size:11px;color:var(--sub);margin-top:3px}
 
-.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin-top:9px}
-.sb{background:var(--card);border-radius:11px;padding:11px;text-align:center;box-shadow:0 2px 8px rgba(0,0,0,.07)}
-.sbv{font-size:19px;font-weight:700;color:#667eea}
-.sbl{font-size:11px;color:var(--sub);margin-top:3px}
-.period-tabs{display:flex;gap:6px;margin-bottom:12px}
-.ptab{padding:6px 14px;border:2px solid var(--bd);border-radius:9px;background:transparent;color:var(--sub);font-size:12px;font-weight:700;cursor:pointer;transition:.2s}
-.ptab.on{background:#667eea;color:#fff;border-color:#667eea}
+.stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+.sb{background:var(--card);border-radius:10px;padding:10px;text-align:center;box-shadow:0 2px 6px rgba(0,0,0,.06);border:1px solid var(--bd)}
+.sbv{font-size:17px;font-weight:800;color:var(--brand-green)}
+.sbl{font-size:10px;color:var(--sub);margin-top:3px}
+.period-tabs{display:flex;gap:5px;margin-bottom:10px}
+.ptab{padding:5px 12px;border:1.5px solid var(--bd);border-radius:8px;background:transparent;color:var(--sub);font-size:11px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit}
+.ptab.on{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
 
-.lf{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
-.lf input,.lf select{flex:1;min-width:85px;padding:7px 9px;border:2px solid var(--bd);border-radius:8px;font-size:12px;background:var(--inp);color:var(--tx)}
-.logbox{max-height:240px;overflow-y:auto;background:var(--lb);border-radius:10px;padding:9px}
-.le{background:var(--li);padding:7px 10px;margin:4px 0;border-radius:8px;font-family:monospace;font-size:11px;color:var(--tx);position:relative}
-[dir=rtl] .le{border-right:4px solid #667eea}
-[dir=ltr] .le{border-left:4px solid #667eea}
-.le.ale{background:#ffebee}
+.lf{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:7px}
+.lf input,.lf select{flex:1;min-width:80px;padding:6px 8px;border:1.5px solid var(--bd);border-radius:7px;font-size:11px;background:var(--inp);color:var(--tx);font-family:inherit}
+.logbox{max-height:240px;overflow-y:auto;background:var(--lb);border-radius:9px;padding:8px;border:1px solid var(--bd)}
+.le{background:var(--li);padding:6px 9px;margin:3px 0;border-radius:7px;font-family:monospace;font-size:10px;color:var(--tx);position:relative}
+[dir=rtl] .le{border-right:3px solid var(--brand-green)}
+[dir=ltr] .le{border-left:3px solid var(--brand-green)}
+.le.ale{background:#fef0ee}
 body.dark .le.ale{background:#3e1a1a}
-[dir=rtl] .le.ale{border-right-color:#f44336}
-[dir=ltr] .le.ale{border-left-color:#f44336}
-.le-note{font-style:italic;color:#667eea;font-size:10px;margin-top:3px}
-.add-note-btn{position:absolute;top:6px;right:6px;background:none;border:1px solid var(--bd);border-radius:6px;color:var(--sub);font-size:10px;padding:2px 6px;cursor:pointer}
-[dir=ltr] .add-note-btn{right:auto;left:6px}
-.add-note-btn:hover{border-color:#667eea;color:#667eea}
+[dir=rtl] .le.ale{border-right-color:#e74c3c}
+[dir=ltr] .le.ale{border-left-color:#e74c3c}
+.le-note{font-style:italic;color:var(--brand-green);font-size:9px;margin-top:2px}
+.add-note-btn{position:absolute;top:5px;right:5px;background:none;border:1px solid var(--bd);border-radius:5px;color:var(--sub);font-size:9px;padding:2px 5px;cursor:pointer;font-family:inherit}
+[dir=ltr] .add-note-btn{right:auto;left:5px}
+.add-note-btn:hover{border-color:var(--brand-green);color:var(--brand-green)}
 
-.alarm-hist-item{background:var(--li);padding:9px 12px;margin:4px 0;border-radius:9px;border-right:4px solid #f44336;font-size:12px;color:var(--tx)}
-[dir=ltr] .alarm-hist-item{border-right:none;border-left:4px solid #f44336}
+.alarm-hist-item{background:var(--li);padding:8px 11px;margin:3px 0;border-radius:8px;border-right:3px solid #e74c3c;font-size:11px;color:var(--tx);border-top:1px solid var(--bd)}
+[dir=ltr] .alarm-hist-item{border-right:none;border-left:3px solid #e74c3c}
 
-.snooze-bar{background:#fff3cd;border:2px solid #ffc107;border-radius:10px;padding:10px 14px;margin-top:10px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px;color:#856404}
+.snooze-bar{background:#fff8e1;border:1.5px solid var(--brand-orange);border-radius:9px;padding:9px 13px;margin-top:9px;display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;color:#7a4f00}
 body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
-.snooze-count{font-weight:700;font-size:16px;color:#e65100}
+.snooze-count{font-weight:800;font-size:15px;color:var(--brand-orange)}
 
-#fullChartModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.92);z-index:9000;padding:24px;flex-direction:column;gap:14px}
+#fullChartModal{display:none;position:fixed;inset:0;background:rgba(20,25,33,.96);z-index:9000;padding:20px;flex-direction:column;gap:12px}
 #fullChartModal.show{display:flex}
 .fc-header{display:flex;justify-content:space-between;align-items:center;color:#fff}
-.fc-header h3{font-size:18px}
-.fc-body{flex:1;display:grid;grid-template-rows:1fr 1fr;gap:14px;min-height:0}
-.fc-chart{position:relative;background:rgba(255,255,255,.05);border-radius:16px;padding:14px}
+.fc-header h3{font-size:17px;font-weight:700}
+.fc-body{flex:1;display:grid;grid-template-rows:1fr 1fr;gap:12px;min-height:0}
+.fc-chart{position:relative;background:rgba(255,255,255,.04);border-radius:12px;padding:12px;border:1px solid rgba(255,255,255,.08)}
 
-/* Google Sheets upload status */
-.sheets-status{background:linear-gradient(135deg,#e8f5e9,#c8e6c9);border-radius:10px;padding:10px 14px;margin-top:10px;font-size:12px;color:#1b5e20;display:none}
+.sheets-status{background:linear-gradient(135deg,#f0f9e8,#dff0c3);border-radius:9px;padding:9px 13px;margin-top:9px;font-size:11px;color:#3d6b0a;display:none;border:1px solid #c5e494}
 .sheets-status.show{display:block}
 
-.sound-options{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.sound-opt{padding:8px 14px;border:2px solid var(--bd);border-radius:10px;cursor:pointer;font-size:13px;background:transparent;color:var(--tx);transition:.2s}
-.sound-opt.on{border-color:#667eea;background:#667eea22;color:#667eea;font-weight:700}
+.sound-options{display:flex;gap:7px;flex-wrap:wrap;margin-top:9px}
+.sound-opt{padding:7px 12px;border:1.5px solid var(--bd);border-radius:8px;cursor:pointer;font-size:12px;background:transparent;color:var(--tx);transition:.2s;font-family:inherit}
+.sound-opt.on{border-color:var(--brand-green);background:#A7CE3922;color:#5a7a10;font-weight:700}
 
-.empty{text-align:center;padding:55px 20px;color:#fff}
-.empty h2{font-size:26px;margin-bottom:7px}
-.backup-zone{border:2px dashed var(--bd);border-radius:12px;padding:20px;text-align:center;cursor:pointer;transition:.2s;color:var(--sub)}
-.backup-zone:hover{border-color:#667eea;color:#667eea}
+.empty{text-align:center;padding:55px 20px;color:var(--sub)}
+.empty h2{font-size:24px;margin-bottom:7px;color:var(--tx)}
+.backup-zone{border:1.5px dashed var(--bd);border-radius:10px;padding:18px;text-align:center;cursor:pointer;transition:.2s;color:var(--sub)}
+.backup-zone:hover{border-color:var(--brand-green);color:var(--brand-green)}
+
+/* FIX 5: Log limit warning bar */
+#logLimitWarn{display:none;background:#fff8e1;border:1px solid var(--brand-orange);border-radius:7px;padding:6px 11px;font-size:11px;color:#7a4f00;margin-bottom:7px}
+
+/* FIX 8: Logging indicator on card */
+.log-dot{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--brand-green);margin-right:3px;animation:logpulse 1.2s infinite}
+@keyframes logpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.7)}}
+
+/* FIX 12: Log pagination */
+.log-pagination{display:flex;gap:6px;align-items:center;justify-content:center;margin-top:8px;flex-wrap:wrap}
+.log-page-btn{padding:4px 10px;border:1.5px solid var(--bd);border-radius:6px;background:transparent;color:var(--sub);font-size:11px;font-weight:700;cursor:pointer;font-family:inherit;transition:.2s}
+.log-page-btn.on{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
+.log-page-btn:hover:not(.on){border-color:var(--brand-green);color:var(--brand-green)}
+
+/* FIX 6: PDF fallback notice */
+#pdfFallback{display:none;background:#fff8e1;border:1px solid var(--brand-orange);border-radius:7px;padding:6px 11px;font-size:11px;color:#7a4f00;margin-top:6px}
 </style>
 </head>
 <body>
@@ -215,14 +245,14 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
   <div class="header">
     <h1 id="appTitle">📊 USCE Lab Data Loggers</h1>
     <div class="hbtns">
-      <div class="pill" id="unitPill"><button class="on" onclick="setUnit('C')">°C</button><button onclick="setUnit('F')">°F</button></div>
-      <div class="pill" id="langPill"><button class="on" onclick="setLang('ar')">عربي</button><button onclick="setLang('en')">EN</button></div>
-      <button class="btn bdk" onclick="toggleDark()" id="darkBtn">🌙</button>
-      <button class="btn bo" onclick="startSimulation()" id="simBtn"></button>
-      <button class="btn bt" onclick="openCompare()" id="compareBtn" style="display:none"></button>
-      <button class="btn bgy" onclick="openBackup()" id="backupBtn"></button>
-      <button class="btn bg" id="reconnBtn" style="display:none" onclick="reconnectAll()"></button>
-      <button class="btn bp" onclick="openAddModal()" id="addBtn"></button>
+      <div class="pill" id="unitPill"><button class="on" onclick="setUnit('C')" aria-label="Celsius">°C</button><button onclick="setUnit('F')" aria-label="Fahrenheit">°F</button></div>
+      <div class="pill" id="langPill"><button class="on" onclick="setLang('ar')" aria-label="Arabic">عربي</button><button onclick="setLang('en')" aria-label="English">EN</button></div>
+      <button class="btn bdk" onclick="toggleDark()" id="darkBtn" aria-label="Toggle dark mode">🌙</button>
+      <button class="btn bo" onclick="startSimulation()" id="simBtn" aria-label="Start demo simulation"></button>
+      <button class="btn bt" onclick="openCompare()" id="compareBtn" style="display:none" aria-label="Compare devices"></button>
+      <button class="btn bgy" onclick="openBackup()" id="backupBtn" aria-label="Backup and restore"></button>
+      <button class="btn bg" id="reconnBtn" style="display:none" onclick="reconnectAll()" aria-label="Reconnect all devices"></button>
+      <button class="btn bp" onclick="openAddModal()" id="addBtn" aria-label="Add new device"></button>
     </div>
   </div>
 
@@ -280,6 +310,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
       </div>
       <div style="text-align:center;font-size:13px;margin-top:8px" id="dBat"></div>
       <div style="text-align:center;font-size:11px;color:#aaa;margin-top:4px" id="dLast"></div>
+      <div style="text-align:center;font-size:10px;color:var(--sub);margin-top:2px;font-family:monospace" id="dMac"></div>
       <div id="alarmActions" style="display:none;margin-top:12px">
         <div style="background:#ffebee;border-radius:12px;padding:12px;text-align:center">
           <div style="color:#f44336;font-weight:700;margin-bottom:9px" id="alarmActMsg"></div>
@@ -301,14 +332,12 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <button class="btn bsm bt" onclick="exportChartPNG()" id="chartPngBtn"></button>
         <button class="btn bsm bdk" onclick="openFullChart()" id="fullscreenBtn"></button>
       </div>
-      <!-- Temperature Chart -->
       <div class="chart-wrap"><canvas id="cTemp"></canvas></div>
       <div class="limit-legend" id="tempLimitLegend">
         <span class="ll-item"><span class="ll-dot" style="background:#f44336"></span><span id="llMaxT"></span></span>
         <span class="ll-item"><span class="ll-dot" style="background:#2196F3"></span><span id="llMinT"></span></span>
         <span class="ll-item"><span class="ll-dot" style="background:#1976d2;height:2px;width:22px;opacity:.6"></span><span id="llTempLine"></span></span>
       </div>
-      <!-- Humidity Chart -->
       <div class="chart-wrap" style="margin-top:12px"><canvas id="cHum"></canvas></div>
       <div class="limit-legend" id="humLimitLegend">
         <span class="ll-item"><span class="ll-dot" style="background:#e91e63"></span><span id="llMaxH"></span></span>
@@ -331,7 +360,10 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     <!-- TAB: ALARM -->
     <div class="tc" id="tc-alarm">
       <div class="sec">
-        <h3 id="alarmHistTitle"></h3>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
+          <h3 id="alarmHistTitle"></h3>
+          <button class="btn bsm br" onclick="clearAlarmHist()" id="clearAlarmHistBtn"></button>
+        </div>
         <div class="logbox" id="alarmHistBox" style="max-height:320px"></div>
       </div>
     </div>
@@ -356,10 +388,10 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <button class="btn bsm bo" onclick="exportPDF()" id="pdfBtn"></button>
         <button class="btn bsm bgy" onclick="clearLog()" id="clearBtn"></button>
       </div>
-      <!-- Sheets status -->
+      <div id="logLimitWarn"></div>
       <div class="sheets-status" id="sheetsStatus"></div>
       <div class="lf">
-        <input type="text" id="logSearch" oninput="renderLog()">
+        <input type="text" id="logSearch" oninput="debouncedRenderLog()">
         <select id="logFilter" onchange="renderLog()">
           <option value="all" id="fAll"></option>
           <option value="alarm" id="fAlarm"></option>
@@ -369,7 +401,9 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <input type="date" id="logDate" onchange="renderLog()">
       </div>
       <div class="logbox" id="logBox"></div>
+      <div class="log-pagination" id="logPagination"></div>
       <div style="font-size:11px;color:var(--sub);margin-top:4px" id="logCount"></div>
+      <div id="pdfFallback"></div>
     </div>
 
     <!-- TAB: SETTINGS -->
@@ -382,13 +416,13 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
       <div class="sec">
         <h3 id="alarmTempTitle"></h3>
         <div class="ag">
-          <div class="fg"><label id="maxTLabel"></label><input type="number" id="maxT" value="27" step="0.5"></div>
-          <div class="fg"><label id="minTLabel"></label><input type="number" id="minT" value="18" step="0.5"></div>
+          <div class="fg"><label id="maxTLabel"></label><input type="number" id="maxT" value="27" step="0.5" min="-40" max="85" title="Range: -40 to 85°C"></div>
+          <div class="fg"><label id="minTLabel"></label><input type="number" id="minT" value="18" step="0.5" min="-40" max="85" title="Range: -40 to 85°C"></div>
         </div>
         <h3 id="alarmHumTitle" style="margin-top:12px"></h3>
         <div class="ag">
-          <div class="fg"><label id="maxHLabel"></label><input type="number" id="maxH" value="70" min="0" max="100"></div>
-          <div class="fg"><label id="minHLabel"></label><input type="number" id="minH" value="30" min="0" max="100"></div>
+          <div class="fg"><label id="maxHLabel"></label><input type="number" id="maxH" value="70" min="0" max="100" title="Range: 0 to 100%"></div>
+          <div class="fg"><label id="minHLabel"></label><input type="number" id="minH" value="30" min="0" max="100" title="Range: 0 to 100%"></div>
         </div>
         <label style="display:flex;align-items:center;gap:9px;margin-top:12px;cursor:pointer">
           <input type="checkbox" id="alarmChk" checked style="width:17px;height:17px">
@@ -401,6 +435,15 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <button class="btn bp" style="width:100%;justify-content:center;margin-top:12px" onclick="saveAlarm()" id="saveAlarmBtn"></button>
       </div>
       <button class="btn br" style="width:100%;justify-content:center;margin-top:9px" onclick="removeDevice()" id="removeBtn"></button>
+      <!-- FIX 12: DB URL setting -->
+      <div class="sec" style="margin-top:10px">
+        <h3 id="dbUrlTitle"></h3>
+        <div class="fg">
+          <label id="dbUrlLabel"></label>
+          <input type="url" id="dbUrlInput" placeholder="https://script.google.com/..." style="font-size:11px">
+        </div>
+        <button class="btn bp bsm" style="margin-top:7px" onclick="saveDbUrl()" id="saveDbUrlBtn"></button>
+      </div>
     </div>
 
   </div>
@@ -419,7 +462,6 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     <div class="fc-chart"><canvas id="fcTemp"></canvas></div>
     <div class="fc-chart"><canvas id="fcHum"></canvas></div>
   </div>
-  <!-- Fullscreen legends -->
   <div style="display:flex;gap:20px;flex-wrap:wrap;padding:0 14px">
     <div class="limit-legend" style="flex:1;background:rgba(255,255,255,.08)">
       <span class="ll-item" style="color:#fff"><span class="ll-dot" style="background:#f44336"></span><span id="fcLlMaxT"></span></span>
@@ -463,14 +505,10 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 </div>
 
 <script>
-// ============================================================
-// GOOGLE SHEETS WEB APP URL
-// ============================================================
-const SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5UtuQH817DYpkUWjOTIxfne88jglzTWaRIkuOZOjvYc37Cb/exec';
+// FIX 12: DB URL editable — load from prefs or use default
+let SHEETS_URL = 'https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5UtuQH817DYpkUWjOTIxfne88jglzTWaRIkuOZOjvYc37Cb/exec';
+try{const su=localStorage.getItem('usce_db_url');if(su)SHEETS_URL=su;}catch(e){}
 
-// ============================================================
-// TRANSLATIONS
-// ============================================================
 const T={
 ar:{
   title:'📊 USCE Lab Data Loggers',addBtn:'➕ إضافة',reconnBtn:'🔄 إعادة اتصال',
@@ -490,7 +528,7 @@ ar:{
   statAvg:'متوسط الحرارة',statMin:'أدنى حرارة',statMax:'أقصى حرارة',
   statAvgH:'متوسط الرطوبة',statMinH:'أدنى رطوبة',statMaxH:'أقصى رطوبة',
   statCount:'عدد القراءات',statAlarms:'عدد التنبيهات',
-  alarmHistTitle:'📋 سجل التنبيهات',
+  alarmHistTitle:'📋 سجل التنبيهات',clearAlarmHistBtn:'🗑️ مسح',
   alarmTempTitle:'🌡️ حدود الحرارة',alarmHumTitle:'💧 حدود الرطوبة',
   maxTLabel:'الحد الأقصى (°C):',minTLabel:'الحد الأدنى (°C):',
   maxHLabel:'الحد الأقصى (%):',minHLabel:'الحد الأدنى (%):',
@@ -505,6 +543,7 @@ ar:{
   startLogBtn:'▶️ بدء',stopLogBtn:'⏹️ إيقاف',csvBtn:'📥 CSV',pdfBtn:'📄 PDF',clearBtn:'🗑️ مسح',
   logSearchPH:'بحث...',fAll:'الكل',fAlarm:'تنبيهات',fNormal:'عادي',fNoted:'ملاحظات',
   editNameTitle:'✏️ اسم الجهاز',editNameLabel:'الاسم:',saveNameBtn:'💾 حفظ الاسم',removeBtn:'🗑️ حذف الجهاز',
+  dbUrlTitle:'🔗 رابط قاعدة البيانات',dbUrlLabel:'رابط الـ API:',saveDbUrlBtn:'💾 حفظ الرابط',
   loadingConn:'جارٍ الاتصال بـ',
   noteTitleH:'📝 ملاحظة',noteLabel:'أضف ملاحظة:',saveNoteBtn:'💾 حفظ',addNoteBtn:'📝',
   toastAlarmSave:'✅ تم حفظ الإعدادات',toastNameSave:'✅ تم حفظ الاسم',toastRemoved:'🗑️ تم حذف الجهاز',
@@ -513,7 +552,7 @@ ar:{
   toastSnoozed:'🔕 تم تأجيل التنبيه',toastSnoozeCancel:'🔔 تم إلغاء التأجيل',
   toastExported:'✅ تم تصدير النسخة الاحتياطية',toastImported:'✅ تم استيراد البيانات',
   toastImportErr:'❌ خطأ في الملف',toastNoteSaved:'📝 تم حفظ الملاحظة',
-  toastSheetsSent:'✅ تم الرفع على Google Sheets',toastSheetsErr:'❌ خطأ في الرفع على Sheets',
+  toastSheetsSent:'✅ تم الرفع على قاعدة البيانات',toastSheetsErr:'❌ خطأ في الرفع على قاعدة البيانات',
   notifAlarm:'🚨 تنبيه: {name}',confirmRemove:'هل أنت متأكد من حذف هذا الجهاز؟',
   miniMin:'أدنى',miniAvg:'متوسط',miniMax:'أقصى',
   batLabel:'🔋',batWarn:'⚠️ بطارية منخفضة!',lastUpdate:'آخر تحديث:',
@@ -528,7 +567,9 @@ ar:{
   simDevices:['غرفة المختبر','مخزن العينات','غرفة الأجهزة','الممر الخارجي'],
   llMaxT:'الحد الأقصى للحرارة',llMinT:'الحد الأدنى للحرارة',llTempLine:'الحرارة',
   llMaxH:'الحد الأقصى للرطوبة',llMinH:'الحد الأدنى للرطوبة',llHumLine:'الرطوبة',
-  sheetsUploading:'⏳ جارٍ الرفع على Google Sheets...',
+  sheetsUploading:'⏳ جارٍ الرفع على قاعدة البيانات...',
+  logLimitWarn:'⚠️ السجل وصل {count} قراءة — يُنصح بالتصدير لتوفير المساحة',
+  autoReconn:'🔄 إعادة اتصال تلقائية...',
 },
 en:{
   title:'📊 USCE Lab Data Loggers',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
@@ -548,7 +589,7 @@ en:{
   statAvg:'Avg Temperature',statMin:'Min Temperature',statMax:'Max Temperature',
   statAvgH:'Avg Humidity',statMinH:'Min Humidity',statMaxH:'Max Humidity',
   statCount:'Total Readings',statAlarms:'Total Alarms',
-  alarmHistTitle:'📋 Alarm History',
+  alarmHistTitle:'📋 Alarm History',clearAlarmHistBtn:'🗑️ Clear',
   alarmTempTitle:'🌡️ Temperature Limits',alarmHumTitle:'💧 Humidity Limits',
   maxTLabel:'Max Temperature (°C):',minTLabel:'Min Temperature (°C):',
   maxHLabel:'Max Humidity (%):',minHLabel:'Min Humidity (%):',
@@ -563,6 +604,7 @@ en:{
   startLogBtn:'▶️ Start',stopLogBtn:'⏹️ Stop',csvBtn:'📥 CSV',pdfBtn:'📄 PDF',clearBtn:'🗑️ Clear',
   logSearchPH:'Search...',fAll:'All',fAlarm:'Alarms',fNormal:'Normal',fNoted:'Notes',
   editNameTitle:'✏️ Device Name',editNameLabel:'Name:',saveNameBtn:'💾 Save Name',removeBtn:'🗑️ Remove Device',
+  dbUrlTitle:'🔗 Database URL',dbUrlLabel:'API Endpoint:',saveDbUrlBtn:'💾 Save URL',
   loadingConn:'Connecting to',
   noteTitleH:'📝 Note',noteLabel:'Add a note:',saveNoteBtn:'💾 Save',addNoteBtn:'📝',
   toastAlarmSave:'✅ Settings saved',toastNameSave:'✅ Name saved',toastRemoved:'🗑️ Device removed',
@@ -571,7 +613,7 @@ en:{
   toastSnoozed:'🔕 Alarm snoozed',toastSnoozeCancel:'🔔 Snooze cancelled',
   toastExported:'✅ Backup exported',toastImported:'✅ Data imported',
   toastImportErr:'❌ Invalid file',toastNoteSaved:'📝 Note saved',
-  toastSheetsSent:'✅ Uploaded to Google Sheets',toastSheetsErr:'❌ Sheets upload error',
+  toastSheetsSent:'✅ Uploaded to Database',toastSheetsErr:'❌ Database upload error',
   notifAlarm:'🚨 Alarm: {name}',confirmRemove:'Are you sure you want to remove this device?',
   miniMin:'Min',miniAvg:'Avg',miniMax:'Max',
   batLabel:'🔋',batWarn:'⚠️ Low Battery!',lastUpdate:'Last update:',
@@ -586,13 +628,17 @@ en:{
   simDevices:['Lab Room','Sample Storage','Equipment Room','Outdoor Corridor'],
   llMaxT:'Max Temp Limit',llMinT:'Min Temp Limit',llTempLine:'Temperature',
   llMaxH:'Max Humidity Limit',llMinH:'Min Humidity Limit',llHumLine:'Humidity',
-  sheetsUploading:'⏳ Uploading to Google Sheets...',
+  sheetsUploading:'⏳ Uploading to Database...',
+  logLimitWarn:'⚠️ Log has {count} readings — consider exporting to free space',
+  autoReconn:'🔄 Auto-reconnecting...',
 }};
 
 const XIAOMI='ebe0ccb0-7a0a-4b0c-8a1a-6ff2997da3a6';
 const TH='ebe0ccc1-7a0a-4b0c-8a1a-6ff2997da3a6';
 const BAT='ebe0ccc4-7a0a-4b0c-8a1a-6ff2997da3a6';
 const SOUNDS=['beep','alarm','ping','triple','silent'];
+const LOG_LIMIT=500;
+const LOG_PAGE_SIZE=50; // FIX 12: pagination
 
 let devices=[],currentId=null,selectedBLE=null;
 let unit='C',lang='ar',dark=false,chartRange=30,statPeriod='all',cmpType='temp';
@@ -600,12 +646,17 @@ let cTI=null,cHI=null,cmpI=null,fcTI=null,fcHI=null;
 let toastTmr=null,activeTab='live',dragSrcIdx=null;
 let snoozeTimers={},simInterval=null,simRunning=false,pendingNoteIdx=null;
 let compareChartOpen=false;
+let logPage=0; // FIX 12: current log page
+
+// FIX 1: Track BLE polling intervals per device for cleanup
+const bleIntervals={};
+// FIX 2: Track auto-reconnect timers per device
+const reconnTimers={};
+// FIX 10: Watchdog — detect silent BLE disconnects
+const watchdogIntervals={};
 
 const $=id=>document.getElementById(id);
 
-// ============================================================
-// STORAGE — localStorage (persistent across refresh)
-// ============================================================
 function loadDevices(){
   try{
     const raw=localStorage.getItem('usce_devicesV5');
@@ -624,7 +675,6 @@ function loadDevices(){
       });
     }
   }catch(e){devices=[];}
-  // Restore preferences
   try{
     const prefs=JSON.parse(localStorage.getItem('usce_prefs')||'{}');
     if(prefs.dark){dark=true;document.body.classList.add('dark');}
@@ -646,66 +696,73 @@ function save(){
   try{
     const clean=devices.filter(d=>!d.isSim).map(({bleDevice,server,loggingInterval,...r})=>r);
     localStorage.setItem('usce_devicesV5',JSON.stringify(clean));
-  }catch(e){console.warn('Save error:',e);}
+  }catch(e){
+    // FIX 4: alert user if storage is full
+    if(e.name==='QuotaExceededError'||e.code===22){
+      toast(lang==='ar'?'⚠️ مساحة التخزين ممتلئة — صدّر البيانات الآن':'⚠️ Storage full — export your data now','err');
+    }else{console.warn('Save error:',e);}
+  }
 }
 function savePrefs(){
   try{localStorage.setItem('usce_prefs',JSON.stringify({dark,lang,unit}));}catch(e){}
 }
 
+const sheetsLastSent={};
+const dbRetryQueue={}; // FIX 4: retry queue per device
 
-const sheetsLastSent = {};
-
-function sendToSheets(dev, rows){
-  if(!rows||!rows.length||!SHEETS_URL) return;
-  const payload={
-    device: dev.name||'Device',
-    maxT: dev.maxT, minT: dev.minT,
-    maxH: dev.maxH, minH: dev.minH,
-    rows: rows.map(l=>({ts:l.ts,t:l.t,h:l.h,b:l.b||0,alarm:l.alarm||false,note:l.note||''}))
-  };
-  const iframeId='sheetsIframe_'+Date.now();
+function sendToSheets(dev,rows,isRetry=false){
+  if(!rows||!rows.length||!SHEETS_URL)return;
+  const payload={device:dev.name||'Device',maxT:dev.maxT,minT:dev.minT,maxH:dev.maxH,minH:dev.minH,
+    rows:rows.map(l=>({ts:l.ts,t:l.t,h:l.h,b:l.b||0,alarm:l.alarm||false,note:l.note||''}))};
+  const iframeId='dbIframe_'+Date.now();
   const iframe=document.createElement('iframe');
-  iframe.name=iframeId;iframe.style.display='none';
-  document.body.appendChild(iframe);
+  iframe.name=iframeId;iframe.style.display='none';document.body.appendChild(iframe);
   const form=document.createElement('form');
-  form.method='POST';form.action=SHEETS_URL;
-  form.target=iframeId;form.style.display='none';
+  form.method='POST';form.action=SHEETS_URL;form.target=iframeId;form.style.display='none';
   const input=document.createElement('input');
   input.type='hidden';input.name='data';input.value=JSON.stringify(payload);
-  form.appendChild(input);
-  document.body.appendChild(form);
-  form.submit();
-  setTimeout(()=>{
+  form.appendChild(input);document.body.appendChild(form);
+  // FIX 4: detect success vs failure via iframe load event
+  iframe.onload=()=>{
+    if(dbRetryQueue[dev.id]){clearTimeout(dbRetryQueue[dev.id]);delete dbRetryQueue[dev.id];}
     try{document.body.removeChild(form);document.body.removeChild(iframe);}catch(e){}
-  },5000);
-  sheetsLastSent[dev.id]={time:Date.now(),count:dev.logs.length};
+    sheetsLastSent[dev.id]={time:Date.now(),count:dev.logs.length};
+    if(currentId===dev.id){
+      const statusEl=$('sheetsStatus');
+      const timeStr=new Date().toLocaleTimeString();
+      if(statusEl){
+        statusEl.classList.add('show');
+        // FIX 6: show count + last synced time
+        statusEl.textContent='📤 '+(lang==='ar'
+          ?`رُفع ${rows.length} قراءة → قاعدة البيانات — آخر مزامنة: ${timeStr}`
+          :`Uploaded ${rows.length} rows → Database — Last sync: ${timeStr}`);
+        setTimeout(()=>statusEl.classList.remove('show'),6000);
+      }
+    }
+  };
+  iframe.onerror=()=>{
+    try{document.body.removeChild(form);document.body.removeChild(iframe);}catch(e){}
+    // FIX 4: schedule retry in 2 minutes
+    if(!dbRetryQueue[dev.id]){
+      dbRetryQueue[dev.id]=setTimeout(()=>{delete dbRetryQueue[dev.id];sendToSheets(dev,rows,true);},2*60*1000);
+      toast(lang==='ar'?'⚠️ فشل الرفع — سيعاد المحاولة':'⚠️ Upload failed — will retry','warn');
+    }
+  };
+  form.submit();
+  // fallback cleanup if neither load nor error fires
+  setTimeout(()=>{try{document.body.removeChild(form);document.body.removeChild(iframe);}catch(e){}},8000);
+  if(!isRetry)sheetsLastSent[dev.id]={time:Date.now(),count:dev.logs.length};
 }
-
-// Auto-upload: runs every 1 minute, sends only new rows since last upload
 setInterval(()=>{
   devices.filter(d=>d.logs&&d.logs.length).forEach(dev=>{
     const last=sheetsLastSent[dev.id];
     const fromIdx=last?last.count:0;
     const newRows=dev.logs.slice(fromIdx);
     if(!newRows.length)return;
-    sendToSheets(dev, newRows);
-    // Show subtle status if device detail is open
-    if(currentId===dev.id){
-      const statusEl=$('sheetsStatus');
-      if(statusEl){
-        statusEl.classList.add('show');
-        statusEl.textContent='📤 '+(lang==='ar'
-          ?`رُفع تلقائياً ${newRows.length} قراءة → Sheets`
-          :`Auto-uploaded ${newRows.length} new rows → Sheets`);
-        setTimeout(()=>statusEl.classList.remove('show'),5000);
-      }
-    }
+    sendToSheets(dev,newRows);
   });
-}, 60 * 1000);
+},60*1000);
 
-// ============================================================
-// UI HELPERS
-// ============================================================
 function toast(msg,type='ok'){
   const el=$('toast');el.textContent=msg;el.className='show '+type;
   clearTimeout(toastTmr);toastTmr=setTimeout(()=>{el.className='';},3200);
@@ -720,9 +777,31 @@ function timeAgo(ts){
   if(diff<3600)return Math.floor(diff/60)+' '+t.agoMins+' '+t.agoSuffix;
   return Math.floor(diff/3600)+' '+t.agoHour+' '+t.agoSuffix;
 }
-function tempClass(v){if(v==null)return'temp-normal';if(v<5)return'temp-cold';if(v<18)return'temp-cool';if(v<=27)return'temp-normal';if(v<=33)return'temp-warm';return'temp-hot';}
-function dbClass(v){if(v==null)return'db-normal';if(v<5)return'db-cold';if(v<18)return'db-cool';if(v<=27)return'db-normal';if(v<=33)return'db-warm';return'db-hot';}
-function tempColor(v){if(v==null)return'#1976d2';if(v<5)return'#5c6bc0';if(v<18)return'#1565c0';if(v<=27)return'#1976d2';if(v<=33)return'#e65100';return'#c62828';}
+// FIX 10: card color based on device's own limits, not hardcoded thresholds
+function tempClass(v,minT,maxT){
+  if(v==null)return'temp-normal';
+  if(v<(minT??18)-10)return'temp-cold';
+  if(v<(minT??18))return'temp-cool';
+  if(v<=(maxT??27))return'temp-normal';
+  if(v<=(maxT??27)+6)return'temp-warm';
+  return'temp-hot';
+}
+function dbClass(v,minT,maxT){
+  if(v==null)return'db-normal';
+  if(v<(minT??18)-10)return'db-cold';
+  if(v<(minT??18))return'db-cool';
+  if(v<=(maxT??27))return'db-normal';
+  if(v<=(maxT??27)+6)return'db-warm';
+  return'db-hot';
+}
+function tempColor(v,minT,maxT){
+  if(v==null)return'#1976d2';
+  if(v<(minT??18)-10)return'#5c6bc0';
+  if(v<(minT??18))return'#1565c0';
+  if(v<=(maxT??27))return'#1976d2';
+  if(v<=(maxT??27)+6)return'#e65100';
+  return'#c62828';
+}
 function toDisp(c){return unit==='F'?((c*9/5)+32).toFixed(1)+'°F':c.toFixed(1)+'°C';}
 function toLimitDisp(c){return unit==='F'?((c*9/5)+32).toFixed(1):c.toFixed(1);}
 
@@ -734,7 +813,10 @@ function toggleDark(){
 }
 function setUnit(u){
   unit=u;$('unitPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(u==='C'?0:1)));
-  savePrefs();render();if(currentId)updateLive();if(activeTab==='chart')buildCharts();
+  savePrefs();render();if(currentId)updateLive();
+  if(activeTab==='chart')buildCharts();
+  if(activeTab==='stats')buildStats();
+  if(compareChartOpen)buildCompareChart();
 }
 function setLang(l){
   lang=l;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
@@ -749,17 +831,23 @@ function applyLang(){
   $('simBannerMsg').textContent=t.simBannerMsg;$('stopSimBtn').textContent=t.stopSimBtn;
 }
 
-// ============================================================
-// SIMULATION
-// ============================================================
 const SIM_CFG=[
   {maxT:27,minT:18,maxH:70,minH:30,baseT:24,baseH:58,bat:87},
   {maxT:8,minT:2,maxH:60,minH:30,baseT:5,baseH:42,bat:34},
   {maxT:22,minT:17,maxH:70,minH:40,baseT:20,baseH:65,bat:62},
   {maxT:35,minT:15,maxH:80,minH:20,baseT:28,baseH:72,bat:11},
 ];
+// ============================================================
+// DEMO PASSWORD
+// ============================================================
 function startSimulation(){
-  if(simRunning)return;simRunning=true;
+  if(simRunning)return;
+  const pw=prompt(lang==='ar'?'أدخل كلمة المرور للوضع التجريبي:':'Enter demo mode password:');
+  if(pw!=='1088'){toast(lang==='ar'?'❌ كلمة مرور خاطئة':'❌ Wrong password','err');return;}
+  _doStartSimulation();
+}
+function _doStartSimulation(){
+  simRunning=true;
   const t=T[lang];
   SIM_CFG.forEach((cfg,i)=>{
     const id='sim_'+i;if(devices.find(d=>d.id===id))return;
@@ -775,8 +863,9 @@ function startSimulation(){
       d.temperature=Math.round((d.temperature+(Math.random()-.45))*10)/10;
       d.humidity=Math.round(d.humidity+(Math.random()-.48));
       d.battery=Math.max(0,d.battery-.02);d.lastUpdate=Date.now();
+      // FIX 5: warn instead of silent delete, cap at LOG_LIMIT
+      if(d.logs.length>=LOG_LIMIT)d.logs.shift();
       d.logs.push({ts:Date.now(),t:d.temperature,h:d.humidity,b:d.battery,alarm:d.alarmActive,note:''});
-      if(d.logs.length>200)d.logs.shift();
       checkAlarm(d);
     });
     render();
@@ -790,48 +879,58 @@ function startSimulation(){
 }
 function stopSimulation(){
   simRunning=false;clearInterval(simInterval);simInterval=null;
+  // FIX 3: close detail modal if it's showing a sim device
+  if(currentId&&devices.find(d=>d.id===currentId&&d.isSim))closeDetail();
   devices=devices.filter(d=>!d.isSim);
+  if(devices.length<2&&compareChartOpen)closeCompare();
   $('simBanner').classList.remove('show');save();render();toast('⏹️','warn');
 }
 
 // ============================================================
-// RENDER CARDS
+// RENDER CARDS — FIX 4: use device id for drag, not array index
 // ============================================================
 function render(){
   const t=T[lang];
-  const grid=$('devGrid'),empty=$('emptyState'),rb=$('reconnBtn'),cb=$('compareBtn');
-  if(!devices.length){grid.innerHTML='';empty.style.display='block';rb.style.display='none';cb.style.display='none';return;}
+  const grid=$('devGrid'),empty=$('emptyState');
+  // FIX 6: safe guard — elements may not exist if called before DOM ready
+  const rb=$('reconnBtn'),cb=$('compareBtn');
+  if(!devices.length){
+    grid.innerHTML='';empty.style.display='block';
+    if(rb)rb.style.display='none';if(cb)cb.style.display='none';
+    return;
+  }
   empty.style.display='none';
-  rb.style.display=devices.some(d=>!d.connected&&!d.isSim)?'inline-flex':'none';rb.textContent=t.reconnBtn;
-  cb.style.display=devices.length>1?'inline-flex':'none';cb.textContent=t.compareBtn;
+  if(rb){rb.style.display=devices.some(d=>!d.connected&&!d.isSim)?'inline-flex':'none';rb.textContent=t.reconnBtn;}
+  if(cb){cb.style.display=devices.length>1?'inline-flex':'none';cb.textContent=t.compareBtn;}
   grid.innerHTML=devices.map((d,i)=>{
     const temps=(d.logs||[]).map(l=>l.t).filter(v=>v!=null);
     const disp=v=>v==='--'?'--':(unit==='F'?((+v*9/5)+32).toFixed(1):v);
     const minT=temps.length?Math.min(...temps).toFixed(1):'--';
     const maxT=temps.length?Math.max(...temps).toFixed(1):'--';
     const avgT=temps.length?(temps.reduce((a,b)=>a+b,0)/temps.length).toFixed(1):'--';
-    const tc=tempClass(d.temperature),dbc=dbClass(d.temperature),col=tempColor(d.temperature);
-    const bat=d.battery!=null?Math.round(d.battery):null;
-    const bcls=bat==null?'bat-ok':bat>40?'bat-ok':bat>20?'bat-mid':'bat-low';
+    const tc=tempClass(d.temperature,d.minT,d.maxT),dbc=dbClass(d.temperature,d.minT,d.maxT),col=tempColor(d.temperature,d.minT,d.maxT);
     const dotCls=d.isSim?'dsim':(d.connected?(d.alarmActive&&!d.snoozed?'dalarm':d.snoozed?'dsnooze':'don'):'doff');
-    const ccls=`card ${tc} ${d.isSim?'sim-card':''} ${d.alarmActive&&!d.snoozed?'alarm':''} ${d.snoozed?'snoozed':''} ${!d.connected&&!d.isSim?'disc':''}`;
+    // ✨ Green border when connected, has data, and all readings within limits
+    const inRange=d.connected&&!d.alarmActive&&!d.snoozed&&d.temperature!=null&&d.humidity!=null
+      &&d.temperature>=d.minT&&d.temperature<=d.maxT
+      &&d.humidity>=d.minH&&d.humidity<=d.maxH;
+    const ccls=`card ${tc} ${d.isSim?'sim-card':''} ${d.alarmActive&&!d.snoozed?'alarm':''} ${d.snoozed?'snoozed':''} ${!d.connected&&!d.isSim?'disc':''} ${inRange?'in-range':''}`;
     return`<div class="${ccls}" draggable="true"
-      ondragstart="dragStart(event,${i})" ondragover="dragOver(event,${i})"
-      ondragleave="dragLeave(event)" ondrop="dragDrop(event,${i})"
+      ondragstart="dragStart(event,'${d.id}')" ondragover="dragOver(event,'${d.id}')"
+      ondragleave="dragLeave(event)" ondrop="dragDrop(event,'${d.id}')"
       onclick="openDetail('${d.id}')">
       <div class="card-header">
-        <div class="card-name"><span class="dot ${dotCls}"></span>${d.name||'Device'}${d.isSim?' ':''}</div>
+        <div class="card-name"><span class="dot ${dotCls}"></span>${d.logging?`<span class="log-dot" title="${lang==='ar'?'يسجّل':'Logging'}"></span>`:''}${d.name||'Device'}${d.isSim?' 🔬':''}</div>
         <span class="drag-handle">⠿</span>
       </div>
       <div class="data-box ${dbc}">
         <div class="big-temp" style="color:${col}">${d.temperature!=null?toDisp(d.temperature):'--'}</div>
-        <div class="big-hum" style="color:#0288d1">💧 ${d.humidity!=null?Math.round(d.humidity)+'%':'--'}</div>
-        <div class="bat-txt">${t.batLabel}<div class="bat-bar"><div class="bat-fill ${bcls}" style="width:${bat||0}%"></div></div>${bat!=null?bat+'%':'--'}</div>
+        <div class="big-hum" style="color:#1e7e44">💧 ${d.humidity!=null?Math.round(d.humidity)+'%':'--'}</div>
       </div>
       ${d.alarmActive&&!d.snoozed?`<div class="alarm-hint">⚠️ ${getAlarmMsg(d)}</div>`:''}
       ${d.snoozed?`<div class="snooze-hint">🔕 ${t.snoozeMsg}</div>`:''}
+      ${inRange?`<div style="text-align:center;color:var(--brand-green);font-size:10px;font-weight:700;margin-top:4px">✅ ${lang==='ar'?'ضمن الحدود':'In Range'}</div>`:''}
       ${!d.connected&&!d.isSim?`<div class="disc-hint">⚡ ${lang==='ar'?'اضغط للاتصال':'Tap to connect'}</div>`:''}
-      ${bat!=null&&bat<=20?`<div class="bat-warn">${t.batWarn}</div>`:''}
       <div class="mini-stats">
         <div class="ms"><div class="msv">${disp(minT)}${temps.length?'°'+unit:''}</div><div class="msl">${t.miniMin}</div></div>
         <div class="ms"><div class="msv">${disp(avgT)}${temps.length?'°'+unit:''}</div><div class="msl">${t.miniAvg}</div></div>
@@ -849,21 +948,23 @@ function getAlarmMsg(d){
 }
 
 // ============================================================
-// DRAG & DROP
+// DRAG & DROP — FIX 4: use device id instead of array index
 // ============================================================
-function dragStart(e,i){dragSrcIdx=i;setTimeout(()=>e.target.closest('.card')?.classList.add('dragging'),0);}
-function dragOver(e,i){e.preventDefault();if(i!==dragSrcIdx)e.currentTarget.classList.add('drag-over');}
+function dragStart(e,id){dragSrcIdx=id;setTimeout(()=>e.target.closest('.card')?.classList.add('dragging'),0);}
+function dragOver(e,id){e.preventDefault();if(id!==dragSrcIdx)e.currentTarget.classList.add('drag-over');}
 function dragLeave(e){e.currentTarget.classList.remove('drag-over');}
-async function dragDrop(e,i){
+function dragDrop(e,id){
   e.currentTarget.classList.remove('drag-over');
-  if(dragSrcIdx===null||dragSrcIdx===i)return;
-  const m=devices.splice(dragSrcIdx,1)[0];devices.splice(i,0,m);dragSrcIdx=null;
+  if(!dragSrcIdx||dragSrcIdx===id)return;
+  const fromIdx=devices.findIndex(d=>d.id===dragSrcIdx);
+  const toIdx=devices.findIndex(d=>d.id===id);
+  if(fromIdx<0||toIdx<0)return;
+  // FIX 5: prevent dragging sim devices (they're temporary)
+  if(devices[fromIdx].isSim||devices[toIdx].isSim)return;
+  const m=devices.splice(fromIdx,1)[0];devices.splice(toIdx,0,m);dragSrcIdx=null;
   save();render();
 }
 
-// ============================================================
-// ADD DEVICE
-// ============================================================
 function openAddModal(){
   const t=T[lang];$('addTitle').textContent=t.addTitle;$('addTip').innerHTML=t.addTip;
   $('scanBtn').textContent=t.scanBtn;$('nameLabel').textContent=t.nameLabel;
@@ -898,53 +999,138 @@ async function finalizeDevice(){
 }
 
 // ============================================================
-// BLE
+// BLE — FIX 1: remove polling setInterval, FIX 2: auto-reconnect
 // ============================================================
 async function connectDevice(deviceId,bleDevice){
   const dev=devices.find(d=>d.id===deviceId);if(!dev)return;
+  // MAC ID verification
+  if(dev.bleId && bleDevice.id && dev.bleId!==bleDevice.id){
+    toast(lang==='ar'?'❌ الجهاز غير مطابق — MAC مختلف':'❌ Device MAC mismatch — wrong device','err');
+    hideLoading();return;
+  }
   showLoading(T[lang].loadingConn+' '+dev.name);
   try{
     const server=await bleDevice.gatt.connect();
     dev.server=server;dev.bleDevice=bleDevice;dev.connected=true;
-    bleDevice.addEventListener('gattserverdisconnected',()=>{dev.connected=false;render();});
-    await startReading(deviceId);render();
-  }catch(e){dev.connected=false;toast('❌ '+e.message,'err');}
+    if(!dev.bleId){dev.bleId=bleDevice.id;save();}
+    bleDevice.addEventListener('gattserverdisconnected',()=>{
+      dev.connected=false;
+      if(bleIntervals[deviceId]){clearInterval(bleIntervals[deviceId]);delete bleIntervals[deviceId];}
+      if(watchdogIntervals[deviceId]){clearInterval(watchdogIntervals[deviceId]);delete watchdogIntervals[deviceId];}
+      render();scheduleAutoReconnect(deviceId);
+    });
+    await startReading(deviceId);
+    // FIX 10: start watchdog — if no update in 2 min, treat as silent disconnect
+    startWatchdog(deviceId);
+    // AUTO-START LOGGING immediately on connect
+    autoStartLog(deviceId);
+    render();
+  }catch(e){dev.connected=false;toast('❌ '+e.message,'err');scheduleAutoReconnect(deviceId);}
   hideLoading();
 }
+
+// FIX 10: Watchdog — detects silent BLE disconnects (no notification for 2 min)
+function startWatchdog(deviceId){
+  if(watchdogIntervals[deviceId])clearInterval(watchdogIntervals[deviceId]);
+  watchdogIntervals[deviceId]=setInterval(()=>{
+    const dev=devices.find(d=>d.id===deviceId);
+    if(!dev||!dev.connected)return;
+    const stale=dev.lastUpdate&&(Date.now()-dev.lastUpdate>2*60*1000);
+    if(stale){
+      dev.connected=false;
+      clearInterval(watchdogIntervals[deviceId]);delete watchdogIntervals[deviceId];
+      render();scheduleAutoReconnect(deviceId);
+      toast(lang==='ar'?'📡 انقطع الاتصال صامتاً — إعادة محاولة':'📡 Silent disconnect — retrying','warn');
+    }
+  },30*1000);
+}
+
+// FIX 1: Auto-start logging — guard against double-logging
+function autoStartLog(deviceId){
+  const dev=devices.find(d=>d.id===deviceId);
+  // If already logging, just ensure interval is running (don't create a second one)
+  if(!dev||dev.isSim)return;
+  if(dev.logging&&dev.loggingInterval)return; // already running
+  dev.logInterval=dev.logInterval||60000;dev.logging=true;
+  dev.loggingInterval=setInterval(()=>{
+    if(!dev.connected||dev.temperature==null)return;
+    if(dev.logs.length>=LOG_LIMIT)dev.logs.shift();
+    dev.logs.push({ts:Date.now(),t:dev.temperature,h:dev.humidity,b:dev.battery,alarm:dev.alarmActive,note:''});
+    save();
+    if(currentId===deviceId&&activeTab==='log')renderLog();
+    if(currentId===deviceId&&activeTab==='chart')buildCharts();
+    if(compareChartOpen)buildCompareChart();
+  },dev.logInterval);
+  toast(T[lang].toastLogStart,'ok');
+}
+
 async function startReading(deviceId){
   const dev=devices.find(d=>d.id===deviceId);if(!dev||!dev.server)return;
+  // FIX 3: clear any previous interval for this device before creating new one
+  if(bleIntervals[deviceId]){clearInterval(bleIntervals[deviceId]);delete bleIntervals[deviceId];}
   try{
     const svc=await dev.server.getPrimaryService(XIAOMI);
     const th=await svc.getCharacteristic(TH);
+    // FIX 1: use notifications only — no polling setInterval for temp/hum
     await th.startNotifications();
     th.addEventListener('characteristicvaluechanged',ev=>parseSensor(deviceId,ev.target.value));
     parseSensor(deviceId,await th.readValue());
-    const bat=await svc.getCharacteristic(BAT);dev.battery=(await bat.readValue()).getUint8(0);
-    setInterval(async()=>{if(dev.connected){try{parseSensor(deviceId,await th.readValue());dev.battery=(await bat.readValue()).getUint8(0);}catch(e){}}},5000);
+    // Battery: read once on connect, then every 5 minutes (not every 5 sec)
+    const bat=await svc.getCharacteristic(BAT);
+    dev.battery=(await bat.readValue()).getUint8(0);
+    const batInterval=setInterval(async()=>{
+      if(!dev.connected){clearInterval(batInterval);delete bleIntervals[deviceId+'_bat'];return;}
+      try{dev.battery=(await bat.readValue()).getUint8(0);}catch(e){clearInterval(batInterval);}
+    },5*60*1000);
+    bleIntervals[deviceId+'_bat']=batInterval;
   }catch(e){console.error(e);}
 }
+
+// FIX 2: Auto-reconnect with 5s delay
+function scheduleAutoReconnect(deviceId){
+  // FIX 2: don't schedule if device was already removed
+  if(!devices.find(d=>d.id===deviceId))return;
+  const dev=devices.find(d=>d.id===deviceId);
+  if(!dev||dev.isSim)return;
+  if(reconnTimers[deviceId])clearTimeout(reconnTimers[deviceId]);
+  toast(T[lang].autoReconn,'info');
+  reconnTimers[deviceId]=setTimeout(async()=>{
+    delete reconnTimers[deviceId];
+    // double-check device still exists
+    if(!devices.find(d=>d.id===deviceId))return;
+    if(dev.connected)return;
+    try{
+      let ble=dev.bleId?await tryReconnect(dev.bleId):null;
+      if(ble)await connectDevice(deviceId,ble);
+      else scheduleAutoReconnect(deviceId);
+    }catch(e){scheduleAutoReconnect(deviceId);}
+  },5000);
+}
+
 function parseSensor(deviceId,val){
-  const dev=devices.find(d=>d.id===deviceId);if(!dev)return;
+  const dev=devices.find(d=>d.id===deviceId);
+  if(!dev)return; // FIX 2: device was removed — ignore late BLE notification
   dev.temperature=val.getInt16(0,true)/100;dev.humidity=val.getUint8(2);dev.lastUpdate=Date.now();
-  checkAlarm(dev);render();if(currentId===deviceId&&activeTab==='live')updateLive();
+  checkAlarm(dev);render();
+  if(currentId===deviceId&&activeTab==='live')updateLive();
+  if(currentId===deviceId&&activeTab==='chart')buildCharts();
 }
 function checkAlarm(dev){
   if(!dev.alarmEnabled){dev.alarmActive=false;dev.alarmType='';return;}
   if(dev.snoozed)return;
+  // FIX 1: guard — don't alarm if no real readings yet
+  if(dev.temperature==null||dev.humidity==null){dev.alarmActive=false;dev.alarmType='';return;}
   const ta=dev.temperature>dev.maxT||dev.temperature<dev.minT;
   const ha=dev.humidity>dev.maxH||dev.humidity<dev.minH;
   const was=dev.alarmActive;dev.alarmActive=ta||ha;dev.alarmType=ta?'temp':(ha?'hum':'');
   if(dev.alarmActive&&!was){
     playSound(dev.sound||'beep');sendNotif(dev);
     dev.alarmHistory.unshift({ts:Date.now(),t:dev.temperature,h:dev.humidity,msg:getAlarmMsg(dev)});
-    if(dev.alarmHistory.length>50)dev.alarmHistory.pop();
+    if(dev.alarmHistory.length>100)dev.alarmHistory.pop();
   }
   if(!dev.alarmActive)dev.alarmType='';
 }
 
-// ============================================================
-// SOUNDS
-// ============================================================
 function playSound(type){
   try{
     const ctx=new(window.AudioContext||window.webkitAudioContext)();
@@ -969,12 +1155,10 @@ function buildSoundOptions(dev){
 }
 function selectSound(s,el){
   document.querySelectorAll('.sound-opt').forEach(b=>b.classList.remove('on'));el.classList.add('on');
-  const dev=devices.find(d=>d.id===currentId);if(dev)dev.sound=s;
+  const dev=devices.find(d=>d.id===currentId);
+  if(dev){dev.sound=s;save();} // FIX 9: persist immediately
 }
 
-// ============================================================
-// SNOOZE
-// ============================================================
 function snooze(minutes){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   dev.snoozed=true;dev.alarmActive=false;dev.alarmType='';
@@ -996,9 +1180,6 @@ function cancelSnooze(){
   toast(T[lang].toastSnoozeCancel,'warn');render();updateLive();
 }
 
-// ============================================================
-// NOTIFICATIONS
-// ============================================================
 async function requestNotifPerm(){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();}
 function sendNotif(dev){
   const msg=T[lang].notifAlarm.replace('{name}',dev.name||'Device')+' — '+getAlarmMsg(dev);
@@ -1006,16 +1187,17 @@ function sendNotif(dev){
   const bar=$('notifBar');bar.textContent=msg;bar.style.display='block';setTimeout(()=>{bar.style.display='none';},9000);
 }
 
-// ============================================================
-// RECONNECT
-// ============================================================
 async function tryReconnect(bleId){try{if(!navigator.bluetooth?.getDevices)return null;const l=await navigator.bluetooth.getDevices();return l.find(d=>d.id===bleId)||null;}catch(e){return null;}}
 async function reconnectDevice(deviceId){
   const dev=devices.find(d=>d.id===deviceId);if(!dev||dev.isSim)return;
   try{
+    // If MAC is stored, try silent reconnect from browser cache only — no popup
     let ble=dev.bleId?await tryReconnect(dev.bleId):null;
-    if(!ble)ble=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'LYWSD'},{namePrefix:'Xiaomi'},{namePrefix:'ATC'}],optionalServices:[XIAOMI,'0000180f-0000-1000-8000-00805f9b34fb']});
-    if(!dev.bleId){dev.bleId=ble.id;save();}
+    if(!ble&&!dev.bleId){
+      // No MAC yet — let user pick device (first time)
+      ble=await navigator.bluetooth.requestDevice({filters:[{namePrefix:'LYWSD'},{namePrefix:'Xiaomi'},{namePrefix:'ATC'}],optionalServices:[XIAOMI,'0000180f-0000-1000-8000-00805f9b34fb']});
+    }
+    if(!ble)return; // cached device not available yet, auto-reconnect will retry
     await connectDevice(deviceId,ble);
   }catch(e){console.error(e);}
 }
@@ -1035,15 +1217,19 @@ async function connectFromDetail(){
   }catch(e){toast('❌ '+e.message,'err');}
 }
 
-// ============================================================
-// DETAIL MODAL
-// ============================================================
 function openDetail(deviceId){
-  currentId=deviceId;activeTab='live';
+  // FIX 3: set currentId atomically before any async tab content builds
+  currentId=deviceId;activeTab='live';logPage=0;
   buildTabBar();updateDetailUI();switchTab('live');
   $('detailModal').style.display='block';
 }
-function closeDetail(){$('detailModal').style.display='none';currentId=null;}
+function closeDetail(){
+  // FIX 3: destroy charts when closing modal to prevent stale renders on deleted/switched devices
+  if(cTI){cTI.destroy();cTI=null;}
+  if(cHI){cHI.destroy();cHI=null;}
+  $('detailModal').style.display='none';
+  currentId=null;
+}
 function buildTabBar(){
   const t=T[lang];
   const tabs=[['live',t.tabLive],['chart',t.tabChart],['stats',t.tabStats],['alarm',t.tabAlarm],['log',t.tabLog],['settings',t.tabSettings]];
@@ -1074,6 +1260,7 @@ function updateDetailUI(){
   $('fcPngBtn').textContent=t.fcPngBtn;$('fcCloseBtn').textContent=t.fcCloseBtn;
   $('pAll').textContent=t.pAll;$('pDay').textContent=t.pDay;$('pWeek').textContent=t.pWeek;$('pMonth').textContent=t.pMonth;
   $('alarmHistTitle').textContent=t.alarmHistTitle;
+  const cahBtn=$('clearAlarmHistBtn');if(cahBtn)cahBtn.textContent=t.clearAlarmHistBtn;
   $('alarmTempTitle').textContent=t.alarmTempTitle;$('alarmHumTitle').textContent=t.alarmHumTitle;
   $('maxTLabel').textContent=t.maxTLabel;$('minTLabel').textContent=t.minTLabel;
   $('maxHLabel').textContent=t.maxHLabel;$('minHLabel').textContent=t.minHLabel;
@@ -1090,6 +1277,10 @@ function updateDetailUI(){
   $('editNameTitle').textContent=t.editNameTitle;$('editNameLabel').textContent=t.editNameLabel;
   $('saveNameBtn').textContent=t.saveNameBtn;$('removeBtn').textContent=t.removeBtn;
   $('editName').value=dev.name||'';
+  // FIX 12: DB URL field
+  const dbT=$('dbUrlTitle'),dbL=$('dbUrlLabel'),dbI=$('dbUrlInput'),dbB=$('saveDbUrlBtn');
+  if(dbT)dbT.textContent=t.dbUrlTitle;if(dbL)dbL.textContent=t.dbUrlLabel;
+  if(dbI)dbI.value=SHEETS_URL;if(dbB)dbB.textContent=t.saveDbUrlBtn;
   $('snooze10Btn').textContent=t.snooze10;$('snooze30Btn').textContent=t.snooze30;$('snooze60Btn').textContent=t.snooze60;
   $('alarmActMsg').textContent=t.alarmActMsg;$('cancelSnoozeBtn').textContent=t.cancelSnoozeBtn;
   updateLive();
@@ -1097,34 +1288,35 @@ function updateDetailUI(){
 function updateLive(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;const t=T[lang];
   $('dTemp').textContent=dev.temperature!=null?toDisp(dev.temperature):'--';
-  $('dTemp').style.color=tempColor(dev.temperature);
+  $('dTemp').style.color=tempColor(dev.temperature,dev.minT,dev.maxT);
   $('dHum').textContent=dev.humidity!=null?Math.round(dev.humidity)+'%':'--%';
   const bat=dev.battery!=null?Math.round(dev.battery):null;
   const bcls=bat==null?'bat-ok':bat>40?'bat-ok':bat>20?'bat-mid':'bat-low';
   $('dBat').innerHTML=`${t.batLabel} <div class="bat-bar" style="display:inline-block"><div class="bat-fill ${bcls}" style="width:${bat||0}%"></div></div> ${bat!=null?bat+'%':'--'}${bat!=null&&bat<=20?` <span style="color:#f44336;font-weight:700">${t.batWarn}</span>`:''}`;
   $('dLast').textContent=dev.lastUpdate?(t.lastUpdate+' '+timeAgo(dev.lastUpdate)):'';
+  const macEl=$('dMac');if(macEl)macEl.textContent=dev.bleId?'MAC: '+dev.bleId:'';
   const sb=$('snoozeBar'),sn=snoozeTimers[currentId];
   if(dev.snoozed&&sn){sb.style.display='flex';$('snoozeMsg').textContent=t.snoozeMsg;$('cancelSnoozeBtn').textContent=t.cancelSnoozeBtn;}
   else sb.style.display='none';
   $('alarmActions').style.display=dev.alarmActive&&!dev.snoozed?'block':'none';
 }
 
-// ============================================================
-// ALARM SETTINGS
-// ============================================================
 async function saveAlarm(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
-  dev.maxT=parseFloat($('maxT').value);dev.minT=parseFloat($('minT').value);
-  dev.maxH=parseFloat($('maxH').value);dev.minH=parseFloat($('minH').value);
+  const maxT=parseFloat($('maxT').value),minT=parseFloat($('minT').value);
+  const maxH=parseFloat($('maxH').value),minH=parseFloat($('minH').value);
+  // FIX 11: validate ranges
+  if(isNaN(maxT)||isNaN(minT)||isNaN(maxH)||isNaN(minH)){toast(lang==='ar'?'❌ قيم غير صالحة':'❌ Invalid values','err');return;}
+  if(minT>=maxT){toast(lang==='ar'?'❌ الحد الأدنى يجب أن يكون أقل من الأقصى':'❌ Min temp must be less than max','err');return;}
+  if(minH>=maxH){toast(lang==='ar'?'❌ الحد الأدنى يجب أن يكون أقل من الأقصى':'❌ Min humidity must be less than max','err');return;}
+  if(maxH>100||minH<0){toast(lang==='ar'?'❌ الرطوبة يجب أن تكون بين 0 و100':'❌ Humidity must be 0–100%','err');return;}
+  dev.maxT=maxT;dev.minT=minT;dev.maxH=maxH;dev.minH=minH;
   dev.alarmEnabled=$('alarmChk').checked;
   save();checkAlarm(dev);render();toast(T[lang].toastAlarmSave,'ok');
-  // Rebuild charts with new limits
-  if(activeTab==='chart')buildCharts();
+  buildCharts();
+  if($('fullChartModal').classList.contains('show'))buildFullCharts();
 }
 
-// ============================================================
-// ALARM HISTORY
-// ============================================================
 function renderAlarmHist(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const hist=dev.alarmHistory||[];
@@ -1132,10 +1324,13 @@ function renderAlarmHist(){
     ?hist.map(h=>`<div class="alarm-hist-item"><strong>${new Date(h.ts).toLocaleString()}</strong><br>${h.msg} — 🌡️${h.t!=null?toDisp(h.t):'--'} 💧${h.h!=null?Math.round(h.h)+'%':'--'}</div>`).join('')
     :`<div style="text-align:center;color:var(--sub);padding:20px">${T[lang].statsEmpty}</div>`;
 }
+// FIX 8: clear alarm history with confirm
+function clearAlarmHist(){
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  if(!confirm(lang==='ar'?'مسح كل سجل التنبيهات؟':'Clear all alarm history?'))return;
+  dev.alarmHistory=[];save();renderAlarmHist();toast(lang==='ar'?'🗑️ تم مسح السجل':'🗑️ History cleared','info');
+}
 
-// ============================================================
-// STATS
-// ============================================================
 function setPeriod(p,ev){
   statPeriod=p;document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('on'));if(ev)ev.target.classList.add('on');buildStats();
 }
@@ -1152,125 +1347,60 @@ function buildStats(){
   if(!dev||!logs.length){$('statsContent').innerHTML=`<p style="color:var(--sub);text-align:center;padding:28px">${t.statsEmpty}</p>`;return;}
   const temps=logs.map(l=>l.t).filter(v=>v!=null);
   const hums=logs.map(l=>l.h).filter(v=>v!=null);
+  // FIX 2: guard against empty filtered arrays
+  if(!temps.length||!hums.length){$('statsContent').innerHTML=`<p style="color:var(--sub);text-align:center;padding:28px">${t.statsEmpty}</p>`;return;}
   const avg=a=>a.reduce((x,y)=>x+y,0)/a.length;
+  const alarmCount=logs.filter(l=>l.alarm).length;
+  const outOfRange=logs.filter(l=>l.t!=null&&(l.t>dev.maxT||l.t<dev.minT||l.h>dev.maxH||l.h<dev.minH)).length;
+  const pctOK=logs.length?Math.round(((logs.length-outOfRange)/logs.length)*100):100;
   const items=[
     {l:t.statAvg,v:toDisp(avg(temps))},{l:t.statMin,v:toDisp(Math.min(...temps))},{l:t.statMax,v:toDisp(Math.max(...temps))},
     {l:t.statAvgH,v:avg(hums).toFixed(1)+'%'},{l:t.statMinH,v:Math.min(...hums).toFixed(1)+'%'},{l:t.statMaxH,v:Math.max(...hums).toFixed(1)+'%'},
-    {l:t.statCount,v:logs.length+' '+t.readingsLabel},{l:t.statAlarms,v:'⚠️ '+logs.filter(l=>l.alarm).length},
+    {l:t.statCount,v:logs.length+' '+t.readingsLabel},{l:t.statAlarms,v:'⚠️ '+alarmCount},
+    {l:lang==='ar'?'ضمن الحدود':'In-Range %',v:`${pctOK}%`,color:pctOK>=90?'var(--brand-green)':pctOK>=70?'var(--brand-orange)':'#e74c3c'},
   ];
-  $('statsContent').innerHTML=`<div class="stats-grid">${items.map(i=>`<div class="sb"><div class="sbv">${i.v}</div><div class="sbl">${i.l}</div></div>`).join('')}</div>`;
+  $('statsContent').innerHTML=`<div class="stats-grid">${items.map(i=>`<div class="sb"><div class="sbv" ${i.color?`style="color:${i.color}"`:''}>${i.v}</div><div class="sbl">${i.l}</div></div>`).join('')}</div>`;
 }
 
-// ============================================================
-// CHARTS WITH CPK-STYLE LIMIT LINES
-// ============================================================
 function setChartRange(r){chartRange=r;buildCharts();if($('fullChartModal').classList.contains('show'))buildFullCharts();}
 function gc(){return dark?'rgba(255,255,255,.08)':'rgba(0,0,0,.07)';}
 function tc2(){return dark?'#ccc':'#555';}
 
-/**
- * Build chart with UCL/LCL limit lines (CPK style)
- * @param {string} canvasId  - canvas element id
- * @param {object} existing  - existing Chart instance (will be destroyed)
- * @param {number[]} data    - main data array
- * @param {string[]} labels  - x-axis labels
- * @param {string} lbl       - dataset label
- * @param {string} color     - main line color
- * @param {number} maxLimit  - upper control limit value
- * @param {number} minLimit  - lower control limit value
- * @param {string} maxColor  - UCL line color
- * @param {string} minColor  - LCL line color
- * @param {string} limitUnit - unit suffix for limit labels
- */
-function mkChartWithLimits(canvasId, existing, data, labels, lbl, color, maxLimit, minLimit, maxColor, minColor, limitUnit){
+function mkChartWithLimits(canvasId,existing,data,labels,lbl,color,maxLimit,minLimit,maxColor,minColor,limitUnit){
   if(existing)existing.destroy();
-
-  const maxLabel = `UCL ${toLimitDisp(maxLimit)}${limitUnit}`;
-  const minLabel = `LCL ${toLimitDisp(minLimit)}${limitUnit}`;
-
-  // Fill arrays with constant limit values matching data length
-  const maxArr = data.map(()=>maxLimit);
-  const minArr = data.map(()=>minLimit);
-
+  const maxArr=data.map(()=>maxLimit);
+  const minArr=data.map(()=>minLimit);
   return new Chart($(canvasId).getContext('2d'),{
     type:'line',
-    data:{
-      labels,
-      datasets:[
-        // Main data line
-        {
-          label: lbl,
-          data,
-          borderColor: color,
-          backgroundColor: color+'18',
-          tension:.35,
-          pointRadius: data.length > 60 ? 0 : 2,
-          fill: true,
-          order: 3
-        },
-        // UCL — Max limit (red/pink)
-        {
-          label: maxLabel,
-          data: maxArr,
-          borderColor: maxColor,
-          backgroundColor: 'transparent',
-          borderWidth: 2,
-          borderDash: [8, 4],
-          pointRadius: 0,
-          fill: false,
-          tension: 0,
-          order: 1
-        },
-        // LCL — Min limit (blue/cyan)
-        {
-          label: minLabel,
-          data: minArr,
-          borderColor: minColor,
-          backgroundColor: minColor+'18',
-          borderWidth: 2,
-          borderDash: [8, 4],
-          pointRadius: 0,
-          fill: '-1',   // fill between LCL and UCL
-          tension: 0,
-          order: 2
-        }
-      ]
-    },
-    options:{
-      responsive:true,
-      maintainAspectRatio:false,
-      animation:false,
-      interaction:{mode:'index',intersect:false},
-      plugins:{
-        legend:{
-          labels:{
-            color: tc2(),
-            usePointStyle: true,
-            pointStyle: 'line',
-            font:{size:11}
-          }
-        },
-        tooltip:{
-          callbacks:{
-            afterBody(ctx){
-              const v = ctx[0]?.parsed?.y;
-              if(v==null)return '';
-              if(v > maxLimit) return '⚠️ Above UCL';
-              if(v < minLimit) return '⚠️ Below LCL';
-              return '✅ In Range';
-            }
-          }
-        }
-      },
-      scales:{
-        x:{ticks:{color:tc2(),maxTicksLimit:8},grid:{color:gc()}},
-        y:{ticks:{color:tc2()},grid:{color:gc()},
-          // Auto-expand y axis to show limits with margin
-          suggestedMin: Math.min(minLimit, ...(data.filter(v=>v!=null))) - 2,
-          suggestedMax: Math.max(maxLimit, ...(data.filter(v=>v!=null))) + 2
-        }
-      }
-    }
+    data:{labels,datasets:[
+      {label:lbl,data,borderColor:color,backgroundColor:color+'18',tension:.35,pointRadius:data.length>60?0:2,fill:true,order:3},
+      {label:`UCL ${toLimitDisp(maxLimit)}${limitUnit}`,data:maxArr,borderColor:maxColor,backgroundColor:'transparent',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:false,tension:0,order:1},
+      {label:`LCL ${toLimitDisp(minLimit)}${limitUnit}`,data:minArr,borderColor:minColor,backgroundColor:minColor+'18',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:'-1',tension:0,order:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:tc2(),usePointStyle:true,pointStyle:'line',font:{size:11}}},
+        tooltip:{callbacks:{afterBody(ctx){const v=ctx[0]?.parsed?.y;if(v==null)return'';if(v>maxLimit)return'⚠️ Above UCL';if(v<minLimit)return'⚠️ Below LCL';return'✅ In Range';}}}},
+      scales:{x:{ticks:{color:tc2(),maxTicksLimit:8},grid:{color:gc()}},
+        y:{ticks:{color:tc2()},grid:{color:gc()},suggestedMin:Math.min(minLimit,...(data.filter(v=>v!=null)))-2,suggestedMax:Math.max(maxLimit,...(data.filter(v=>v!=null)))+2}}}
+  });
+}
+
+// FIX 11: separate chart builder that accepts explicit tick/legend colors (for fullscreen dark bg)
+function mkChartForCanvas(canvasId,data,labels,lbl,color,maxLimit,minLimit,maxColor,minColor,limitUnit,tickColor,gridColor){
+  const maxArr=data.map(()=>maxLimit);
+  const minArr=data.map(()=>minLimit);
+  return new Chart($(canvasId).getContext('2d'),{
+    type:'line',
+    data:{labels,datasets:[
+      {label:lbl,data,borderColor:color,backgroundColor:color+'18',tension:.35,pointRadius:data.length>60?0:2,fill:true,order:3},
+      {label:`UCL ${toLimitDisp(maxLimit)}${limitUnit}`,data:maxArr,borderColor:maxColor,backgroundColor:'transparent',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:false,tension:0,order:1},
+      {label:`LCL ${toLimitDisp(minLimit)}${limitUnit}`,data:minArr,borderColor:minColor,backgroundColor:minColor+'18',borderWidth:2,borderDash:[8,4],pointRadius:0,fill:'-1',tension:0,order:2}
+    ]},
+    options:{responsive:true,maintainAspectRatio:false,animation:false,interaction:{mode:'index',intersect:false},
+      plugins:{legend:{labels:{color:tickColor,usePointStyle:true,pointStyle:'line',font:{size:11}}},
+        tooltip:{callbacks:{afterBody(ctx){const v=ctx[0]?.parsed?.y;if(v==null)return'';if(v>maxLimit)return'⚠️ Above UCL';if(v<minLimit)return'⚠️ Below LCL';return'✅ In Range';}}}},
+      scales:{x:{ticks:{color:tickColor,maxTicksLimit:8},grid:{color:gridColor}},
+        y:{ticks:{color:tickColor},grid:{color:gridColor},suggestedMin:Math.min(minLimit,...(data.filter(v=>v!=null)))-2,suggestedMax:Math.max(maxLimit,...(data.filter(v=>v!=null)))+2}}}
   });
 }
 
@@ -1279,66 +1409,31 @@ function buildCharts(){
   const t=T[lang];
   let logs=dev.logs||[];if(chartRange>0)logs=logs.slice(-chartRange);
   const labels=logs.map(l=>new Date(l.ts).toLocaleTimeString());
-
-  // Convert limits if Fahrenheit
-  const maxTL = unit==='F'?(dev.maxT*9/5+32):dev.maxT;
-  const minTL = unit==='F'?(dev.minT*9/5+32):dev.minT;
-  const tUnit = '°'+(unit==='C'?'C':'F');
-
-  cTI=mkChartWithLimits(
-    'cTemp', cTI,
-    logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),
-    labels, t.chartTempLabel, '#1976d2',
-    maxTL, minTL, '#f44336', '#2196F3', tUnit
-  );
-
-  cHI=mkChartWithLimits(
-    'cHum', cHI,
-    logs.map(l=>l.h),
-    labels, t.chartHumLabel, '#388e3c',
-    dev.maxH, dev.minH, '#e91e63', '#00bcd4', '%'
-  );
-
-  // Update legend labels
-  $('llMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;
-  $('llMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;
-  $('llTempLine').textContent=t.chartTempLabel;
-  $('llMaxH').textContent=`UCL ${dev.maxH}%`;
-  $('llMinH').textContent=`LCL ${dev.minH}%`;
-  $('llHumLine').textContent=t.chartHumLabel;
+  const maxTL=unit==='F'?(dev.maxT*9/5+32):dev.maxT;
+  const minTL=unit==='F'?(dev.minT*9/5+32):dev.minT;
+  const tUnit='°'+(unit==='C'?'C':'F');
+  cTI=mkChartWithLimits('cTemp',cTI,logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),labels,t.chartTempLabel,'#1976d2',maxTL,minTL,'#f44336','#2196F3',tUnit);
+  cHI=mkChartWithLimits('cHum',cHI,logs.map(l=>l.h),labels,t.chartHumLabel,'#388e3c',dev.maxH,dev.minH,'#e91e63','#00bcd4','%');
+  $('llMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;$('llMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;$('llTempLine').textContent=t.chartTempLabel;
+  $('llMaxH').textContent=`UCL ${dev.maxH}%`;$('llMinH').textContent=`LCL ${dev.minH}%`;$('llHumLine').textContent=t.chartHumLabel;
 }
-
 function buildFullCharts(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const t=T[lang];
   let logs=dev.logs||[];if(chartRange>0)logs=logs.slice(-chartRange);
   const labels=logs.map(l=>new Date(l.ts).toLocaleTimeString());
-
   const maxTL=unit==='F'?(dev.maxT*9/5+32):dev.maxT;
   const minTL=unit==='F'?(dev.minT*9/5+32):dev.minT;
   const tUnit='°'+(unit==='C'?'C':'F');
-
-  fcTI=mkChartWithLimits(
-    'fcTemp', fcTI,
-    logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),
-    labels, t.chartTempLabel, '#1976d2',
-    maxTL, minTL, '#f44336', '#2196F3', tUnit
-  );
-
-  fcHI=mkChartWithLimits(
-    'fcHum', fcHI,
-    logs.map(l=>l.h),
-    labels, t.chartHumLabel, '#388e3c',
-    dev.maxH, dev.minH, '#e91e63', '#00bcd4', '%'
-  );
-
-  // Update fullscreen legend labels
-  $('fcLlMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;
-  $('fcLlMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;
-  $('fcLlMaxH').textContent=`UCL ${dev.maxH}%`;
-  $('fcLlMinH').textContent=`LCL ${dev.minH}%`;
+  // FIX 11: fullscreen bg is always dark — always use light text
+  const fcColor='#ccc'; const fcGrid='rgba(255,255,255,.08)';
+  if(fcTI)fcTI.destroy();
+  if(fcHI)fcHI.destroy();
+  fcTI=mkChartForCanvas('fcTemp',logs.map(l=>l.t!=null?(unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):null),labels,t.chartTempLabel,'#1976d2',maxTL,minTL,'#f44336','#2196F3',tUnit,fcColor,fcGrid);
+  fcHI=mkChartForCanvas('fcHum',logs.map(l=>l.h),labels,t.chartHumLabel,'#388e3c',dev.maxH,dev.minH,'#e91e63','#00bcd4','%',fcColor,fcGrid);
+  $('fcLlMaxT').textContent=`UCL ${toLimitDisp(maxTL)}${tUnit}`;$('fcLlMinT').textContent=`LCL ${toLimitDisp(minTL)}${tUnit}`;
+  $('fcLlMaxH').textContent=`UCL ${dev.maxH}%`;$('fcLlMinH').textContent=`LCL ${dev.minH}%`;
 }
-
 function openFullChart(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   $('fcTitle').textContent=(dev.name||'Device')+' — Charts';
@@ -1349,64 +1444,26 @@ function closeFullChart(){
   if(fcTI){fcTI.destroy();fcTI=null;}if(fcHI){fcHI.destroy();fcHI=null;}
 }
 function exportChartPNG(full=false){
-  const c1=$(full?'fcTemp':'cTemp');
-  const c2=$(full?'fcHum':'cHum');
-  if(!c1||!c2)return;
-  const dev=devices.find(d=>d.id===currentId);
-  const name=dev?dev.name:'Device';
-
-  // Merge both canvases vertically into one PNG
-  const gap=20, titleH=36, padding=16;
-  const w=Math.max(c1.width,c2.width)+padding*2;
-  const h=titleH+c1.height+gap+c2.height+padding*2;
-
-  const merged=document.createElement('canvas');
-  merged.width=w;merged.height=h;
+  const c1=$(full?'fcTemp':'cTemp');const c2=$(full?'fcHum':'cHum');if(!c1||!c2)return;
+  const dev=devices.find(d=>d.id===currentId);const name=dev?dev.name:'Device';
+  const gap=20,titleH=36,padding=16;
+  const w=Math.max(c1.width,c2.width)+padding*2;const h=titleH+c1.height+gap+c2.height+padding*2;
+  const merged=document.createElement('canvas');merged.width=w;merged.height=h;
   const ctx=merged.getContext('2d');
-
-  // Background
-  ctx.fillStyle=dark?'#1e1e2e':'#ffffff';
-  ctx.fillRect(0,0,w,h);
-
-  // Title
-  ctx.fillStyle=dark?'#e0e0e0':'#333333';
-  ctx.font='bold 15px Segoe UI, sans-serif';
-  ctx.textAlign='center';
+  ctx.fillStyle=dark?'#1e1e2e':'#ffffff';ctx.fillRect(0,0,w,h);
+  ctx.fillStyle=dark?'#e0e0e0':'#333333';ctx.font='bold 15px Segoe UI, sans-serif';ctx.textAlign='center';
   ctx.fillText('📊 '+name+' — '+new Date().toLocaleString(),w/2,padding+18);
-
-  // Draw temp chart
-  ctx.drawImage(c1,padding,titleH+padding);
-
-  // Draw hum chart
-  ctx.drawImage(c2,padding,titleH+padding+c1.height+gap);
-
-  // Limits bar
-  if(dev){
-    ctx.font='11px Segoe UI, sans-serif';
-    ctx.textAlign='left';
-    ctx.fillStyle='#f44336';ctx.fillText(`UCL T: ${dev.maxT}°C`,padding,titleH+padding+c1.height+gap/2);
-    ctx.fillStyle='#2196F3';ctx.fillText(`LCL T: ${dev.minT}°C`,padding+90,titleH+padding+c1.height+gap/2);
-    ctx.fillStyle='#e91e63';ctx.fillText(`UCL H: ${dev.maxH}%`,padding+180,titleH+padding+c1.height+gap/2);
-    ctx.fillStyle='#00bcd4';ctx.fillText(`LCL H: ${dev.minH}%`,padding+260,titleH+padding+c1.height+gap/2);
-  }
-
-  const a=document.createElement('a');
-  a.download=(name+'_chart.png').replace(/\s+/g,'_');
-  a.href=merged.toDataURL('image/png');
-  a.click();
+  ctx.drawImage(c1,padding,titleH+padding);ctx.drawImage(c2,padding,titleH+padding+c1.height+gap);
+  if(dev){ctx.font='11px Segoe UI, sans-serif';ctx.textAlign='left';ctx.fillStyle='#f44336';ctx.fillText(`UCL T: ${dev.maxT}°C`,padding,titleH+padding+c1.height+gap/2);ctx.fillStyle='#2196F3';ctx.fillText(`LCL T: ${dev.minT}°C`,padding+90,titleH+padding+c1.height+gap/2);ctx.fillStyle='#e91e63';ctx.fillText(`UCL H: ${dev.maxH}%`,padding+180,titleH+padding+c1.height+gap/2);ctx.fillStyle='#00bcd4';ctx.fillText(`LCL H: ${dev.minH}%`,padding+260,titleH+padding+c1.height+gap/2);}
+  const a=document.createElement('a');a.download=(name+'_chart.png').replace(/\s+/g,'_');a.href=merged.toDataURL('image/png');a.click();
 }
 
-// ============================================================
-// COMPARE
-// ============================================================
 function setCmpType(t){cmpType=t;$('cmpTypePill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(t==='temp'?0:1)));buildCompareChart();}
 function refreshCompare(){buildCompareChart();toast('🔄','info');}
 function openCompare(){
   if(devices.length<2){toast(T[lang].noDevices,'warn');return;}
   compareChartOpen=true;$('compareBar').classList.add('show');
-  $('compareTitle').textContent=T[lang].compareTitle;
-  $('refreshCmpBtn').textContent=T[lang].refreshCmpBtn;
-  $('closeCompareBtn').textContent=T[lang].closeCompareBtn;
+  $('compareTitle').textContent=T[lang].compareTitle;$('refreshCmpBtn').textContent=T[lang].refreshCmpBtn;$('closeCompareBtn').textContent=T[lang].closeCompareBtn;
   buildCompareChart();
 }
 function closeCompare(){compareChartOpen=false;$('compareBar').classList.remove('show');if(cmpI){cmpI.destroy();cmpI=null;}}
@@ -1414,34 +1471,68 @@ function buildCompareChart(){
   if(!compareChartOpen)return;if(cmpI){cmpI.destroy();cmpI=null;}
   const colors=['#1976d2','#e53935','#388e3c','#f57c00','#7b1fa2','#00838f'];
   const isTemp=cmpType==='temp';
-  const datasets=devices.map((d,i)=>{
-    const logs=(d.logs||[]).slice(-30);
-    return{label:d.name||'Device '+(i+1),data:isTemp?logs.map(l=>unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):logs.map(l=>l.h),borderColor:colors[i%6],backgroundColor:colors[i%6]+'22',tension:.35,pointRadius:2,fill:false};
-  });
+  const datasets=devices.map((d,i)=>{const logs=(d.logs||[]).slice(-30);return{label:d.name||'Device '+(i+1),data:isTemp?logs.map(l=>unit==='F'?+(l.t*9/5+32).toFixed(2):l.t):logs.map(l=>l.h),borderColor:colors[i%6],backgroundColor:colors[i%6]+'22',tension:.35,pointRadius:2,fill:false};});
   const maxLen=devices.reduce((a,d)=>Math.max(a,(d.logs||[]).length),0);
+  const subtitle=lang==='ar'?'(آخر 30 قراءة)':'(Last 30 readings)';
   cmpI=new Chart($('compareChart').getContext('2d'),{type:'line',
     data:{labels:Array.from({length:Math.min(maxLen,30)},(_,i)=>i+1+''),datasets},
-    options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc2()}}},scales:{x:{ticks:{color:tc2()}},y:{ticks:{color:tc2()}}}}});
+    options:{responsive:true,maintainAspectRatio:false,animation:false,
+      plugins:{
+        legend:{labels:{color:tc2()}},
+        // FIX 7: subtitle note
+        title:{display:true,text:subtitle,color:tc2(),font:{size:10},padding:{bottom:4}}
+      },
+      scales:{x:{ticks:{color:tc2()}},y:{ticks:{color:tc2()}}}}});
 }
 
 // ============================================================
-// LOG
+// LOG — FIX 5: show warning when approaching limit, raise cap to 500
 // ============================================================
 function startLog(){
-  const dev=devices.find(d=>d.id===currentId);if(!dev||dev.logging)return;
-  const interval=parseInt($('logInterval').value)||60000;dev.logInterval=interval;dev.logging=true;
-  dev.loggingInterval=setInterval(async()=>{
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  // FIX 1: prevent double-logging — stop existing interval first
+  if(dev.loggingInterval){clearInterval(dev.loggingInterval);dev.loggingInterval=null;}
+  const interval=parseInt($('logInterval').value)||60000;
+  dev.logInterval=interval;dev.logging=true;
+  dev.loggingInterval=setInterval(()=>{
     if(dev.temperature==null)return;
+    if(dev.logs.length>=LOG_LIMIT)dev.logs.shift();
     dev.logs.push({ts:Date.now(),t:dev.temperature,h:dev.humidity,b:dev.battery,alarm:dev.alarmActive,note:''});
     save();if(activeTab==='log')renderLog();if(compareChartOpen)buildCompareChart();
+    if(currentId===dev.id&&activeTab==='chart')buildCharts();
   },interval);
+  render(); // update logging dot on card
   toast(T[lang].toastLogStart,'ok');
 }
-function stopLog(){const dev=devices.find(d=>d.id===currentId);if(!dev)return;dev.logging=false;clearInterval(dev.loggingInterval);toast(T[lang].toastLogStop,'warn');}
-async function clearLog(){const dev=devices.find(d=>d.id===currentId);if(!dev)return;dev.logs=[];save();renderLog();toast(T[lang].toastLogClear,'info');}
+// FIX: stopLog nulls the interval reference
+function stopLog(){
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  dev.logging=false;clearInterval(dev.loggingInterval);dev.loggingInterval=null;
+  render(); // remove logging dot from card
+  toast(T[lang].toastLogStop,'warn');
+}
+// FIX: clearLog asks for confirmation first
+async function clearLog(){
+  const dev=devices.find(d=>d.id===currentId);if(!dev)return;
+  if(!confirm(lang==='ar'?'هل أنت متأكد من مسح كل السجل؟':'Clear all log entries?'))return;
+  dev.logs=[];save();renderLog();toast(T[lang].toastLogClear,'info');
+}
+
+// Debounce helper
+let _logSearchTimer=null;
+function debouncedRenderLog(){
+  logPage=0; // reset to first page on new search
+  clearTimeout(_logSearchTimer);_logSearchTimer=setTimeout(renderLog,220);
+}
+
 function renderLog(){
   const dev=devices.find(d=>d.id===currentId);if(!dev){$('logBox').innerHTML='';return;}
   const t=T[lang];
+  const warnEl=$('logLimitWarn');
+  if(warnEl){
+    if(dev.logs.length>=LOG_LIMIT*0.8){warnEl.style.display='block';warnEl.textContent=t.logLimitWarn.replace('{count}',dev.logs.length);}
+    else warnEl.style.display='none';
+  }
   const search=$('logSearch').value.toLowerCase();
   const filter=$('logFilter').value;
   const dateStr=$('logDate').value;
@@ -1451,17 +1542,36 @@ function renderLog(){
   if(filter==='noted')logs=logs.filter(l=>l.note&&l.note.trim());
   if(dateStr)logs=logs.filter(l=>new Date(l.ts).toISOString().startsWith(dateStr));
   if(search)logs=logs.filter(l=>new Date(l.ts).toLocaleString().toLowerCase().includes(search)||String(l.t).includes(search)||((l.note||'').toLowerCase().includes(search)));
-  $('logBox').innerHTML=logs.map(l=>`<div class="le ${l.alarm?'ale':''}">
+
+  // FIX 12: Pagination — only render current page slice
+  const totalPages=Math.max(1,Math.ceil(logs.length/LOG_PAGE_SIZE));
+  if(logPage>=totalPages)logPage=totalPages-1;
+  const pageStart=logPage*LOG_PAGE_SIZE;
+  const pageLogs=logs.slice(pageStart,pageStart+LOG_PAGE_SIZE);
+
+  $('logBox').innerHTML=pageLogs.map(l=>`<div class="le ${l.alarm?'ale':''}">
     <button class="add-note-btn" onclick="openNoteModal(${l._idx},event)">${t.addNoteBtn}</button>
     [${new Date(l.ts).toLocaleString()}] 🌡️${l.t!=null?toDisp(l.t):'--'} 💧${l.h!=null?Math.round(l.h)+'%':'--'} 🔋${Math.round(l.b||0)}%${l.alarm?' ⚠️':''}
     ${l.note?`<div class="le-note">📝 ${l.note}</div>`:''}
   </div>`).join('')||`<div style="text-align:center;color:var(--sub);padding:18px">${t.statsEmpty}</div>`;
-  $('logCount').textContent=`${logs.length} / ${dev.logs.length} ${t.readingsLabel}`;
-}
 
-// ============================================================
-// NOTE
-// ============================================================
+  // Pagination controls
+  const pgEl=$('logPagination');
+  if(pgEl){
+    if(totalPages<=1){pgEl.innerHTML='';
+    }else{
+      let html='';
+      if(logPage>0)html+=`<button class="log-page-btn" onclick="goLogPage(${logPage-1})">◀</button>`;
+      const start=Math.max(0,logPage-2);const end=Math.min(totalPages-1,logPage+2);
+      for(let p=start;p<=end;p++)html+=`<button class="log-page-btn ${p===logPage?'on':''}" onclick="goLogPage(${p})">${p+1}</button>`;
+      if(logPage<totalPages-1)html+=`<button class="log-page-btn" onclick="goLogPage(${logPage+1})">▶</button>`;
+      pgEl.innerHTML=html;
+    }
+  }
+  $('logCount').textContent=`${pageStart+1}–${Math.min(pageStart+LOG_PAGE_SIZE,logs.length)} / ${logs.length} ${t.readingsLabel}`;
+}
+function goLogPage(p){logPage=p;renderLog();$('logBox').scrollTop=0;}
+
 function openNoteModal(idx,e){
   e.stopPropagation();const t=T[lang];pendingNoteIdx=idx;
   $('noteTitleH').textContent=t.noteTitleH;$('noteLabel').textContent=t.noteLabel;$('saveNoteBtn').textContent=t.saveNoteBtn;
@@ -1476,51 +1586,87 @@ async function saveNote(){
   save();renderLog();closeNoteModal();toast(T[lang].toastNoteSaved,'ok');
 }
 
-// ============================================================
-// EXPORT
-// ============================================================
+// FIX 9: exportCSV exports currently filtered view (or all if no filter active)
 function exportCSV(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs.length){toast(T[lang].toastNoData,'warn');return;}
-  const rows=dev.logs.map(l=>`${new Date(l.ts).toISOString()},${l.t},${l.h},${l.b||0},${l.alarm},"${(l.note||'').replace(/"/g,"'")}"`).join('\n');
+  const search=$('logSearch').value.toLowerCase();
+  const filter=$('logFilter').value;
+  const dateStr=$('logDate').value;
+  let logs=[...dev.logs].map((l,i)=>({...l,_idx:i}));
+  if(filter==='alarm')logs=logs.filter(l=>l.alarm);
+  if(filter==='normal')logs=logs.filter(l=>!l.alarm);
+  if(filter==='noted')logs=logs.filter(l=>l.note&&l.note.trim());
+  if(dateStr)logs=logs.filter(l=>new Date(l.ts).toISOString().startsWith(dateStr));
+  if(search)logs=logs.filter(l=>new Date(l.ts).toLocaleString().toLowerCase().includes(search)||String(l.t).includes(search)||((l.note||'').toLowerCase().includes(search)));
+  if(!logs.length){toast(T[lang].toastNoData,'warn');return;}
+  const rows=logs.map(l=>`${new Date(l.ts).toISOString()},${l.t},${l.h},${l.b||0},${l.alarm},"${(l.note||'').replace(/"/g,"'")}"`).join('\n');
   dl('Timestamp,Temperature_C,Humidity_%,Battery_%,Alarm,Note\n'+rows,'text/csv',`${(dev.name||'device').replace(/\s+/g,'_')}_log.csv`);
 }
+// FIX 6: exportPDF with popup-blocked fallback (download HTML instead)
 function exportPDF(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs.length){toast(T[lang].toastNoData,'warn');return;}
+  const fallbackEl=$('pdfFallback');if(fallbackEl)fallbackEl.style.display='none';
   const rows=dev.logs.slice(-150).map(l=>`<tr ${l.alarm?'style="background:#ffebee"':''}>
     <td>${new Date(l.ts).toLocaleString()}</td><td>${l.t!=null?toDisp(l.t):'--'}</td>
     <td>${l.h!=null?Math.round(l.h)+'%':'--'}</td><td>${l.b!=null?Math.round(l.b)+'%':'--'}</td>
-    <td>${l.alarm?'⚠️':''}</td><td style="color:#667eea;font-style:italic">${l.note||''}</td>
+    <td>${l.alarm?'⚠️':''}</td><td style="color:#5D676F;font-style:italic">${l.note||''}</td>
   </tr>`).join('');
-  const w=window.open('','_blank');
-  w.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${dev.name}</title>
-  <style>body{font-family:sans-serif;padding:22px}h1{color:#667eea}table{width:100%;border-collapse:collapse;margin-top:14px}
-  th,td{border:1px solid #ddd;padding:7px;font-size:11px}th{background:#667eea;color:#fff}tr:nth-child(even){background:#f9f9f9}
-  .limits{margin-top:10px;background:#f5f5f5;padding:10px;border-radius:8px;font-size:12px;color:#333}
+  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${dev.name}</title>
+  <style>body{font-family:sans-serif;padding:22px}h1{color:#5D676F}table{width:100%;border-collapse:collapse;margin-top:14px;border:1px solid #ccc}
+  th,td{border:1px solid #ccc;padding:7px;font-size:11px}th{background:#A7CE39;color:#fff}tr:nth-child(even){background:#f9f9f9}
+  .limits{margin-top:10px;background:#f4f6f8;padding:10px;border-radius:8px;font-size:12px;color:#333;border:1px solid #d0d5da}
   </style></head>
   <body><h1>📊 USCE Lab — ${dev.name}</h1>
   <p style="color:#666;font-size:12px">Generated: ${new Date().toLocaleString()} | Readings: ${dev.logs.length}</p>
-  <div class="limits">🌡️ Temp Limits: UCL ${dev.maxT}°C / LCL ${dev.minT}°C &nbsp;|&nbsp; 💧 Humidity Limits: UCL ${dev.maxH}% / LCL ${dev.minH}%</div>
-  <table><thead><tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Alarm</th><th>Note</th></tr></thead><tbody>${rows}</tbody></table></body></html>`);
-  w.document.close();setTimeout(()=>w.print(),500);
+  <div class="limits">🌡️ Temp Limits: UCL ${dev.maxT}°C / LCL ${dev.minT}°C &nbsp;|&nbsp; 💧 Humidity: UCL ${dev.maxH}% / LCL ${dev.minH}%</div>
+  <table><thead><tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Alarm</th><th>Note</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
+  // Try popup first; if blocked fall back to HTML download
+  const w=window.open('','_blank');
+  if(w&&!w.closed){
+    w.document.write(html);w.document.close();setTimeout(()=>w.print(),500);
+  }else{
+    // FIX 6: fallback — download as HTML file
+    dl(html,'text/html',`${(dev.name||'device').replace(/\s+/g,'_')}_report.html`);
+    if(fallbackEl){
+      fallbackEl.style.display='block';
+      fallbackEl.textContent=lang==='ar'?'⚠️ تم حفظ التقرير كملف HTML — افتحه واطبعه يدوياً':'⚠️ Report saved as HTML file — open it to print';
+      setTimeout(()=>{fallbackEl.style.display='none';},6000);
+    }
+  }
 }
 function dl(content,mime,filename){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();}
 
-// ============================================================
-// SETTINGS
-// ============================================================
 async function saveName(){
   const dev=devices.find(d=>d.id===currentId);if(!dev)return;
   const n=$('editName').value.trim();if(!n){toast(lang==='ar'?'أدخل اسمًا':'Enter a name','warn');return;}
   dev.name=n;save();render();$('detailName').textContent=n+(dev.isSim?' ':'');toast(T[lang].toastNameSave,'ok');
 }
+// FIX 12: save editable DB URL
+function saveDbUrl(){
+  const val=($('dbUrlInput')?.value||'').trim();
+  if(!val){toast(lang==='ar'?'أدخل رابطاً صحيحاً':'Enter a valid URL','warn');return;}
+  if(!val.startsWith('http')){toast(lang==='ar'?'❌ الرابط غير صحيح':'❌ Invalid URL format','err');return;}
+  SHEETS_URL=val;
+  try{localStorage.setItem('usce_db_url',val);}catch(e){}
+  toast(lang==='ar'?'✅ تم حفظ الرابط':'✅ URL saved','ok');
+}
 async function removeDevice(){
   if(!confirm(T[lang].confirmRemove))return;
-  devices=devices.filter(d=>d.id!==currentId);save();render();closeDetail();toast(T[lang].toastRemoved,'info');
+  if(bleIntervals[currentId]){clearInterval(bleIntervals[currentId]);delete bleIntervals[currentId];}
+  if(bleIntervals[currentId+'_bat']){clearInterval(bleIntervals[currentId+'_bat']);delete bleIntervals[currentId+'_bat'];}
+  if(reconnTimers[currentId]){clearTimeout(reconnTimers[currentId]);delete reconnTimers[currentId];}
+  if(watchdogIntervals[currentId]){clearInterval(watchdogIntervals[currentId]);delete watchdogIntervals[currentId];}
+  // FIX 5: clear snooze timers
+  if(snoozeTimers[currentId]){clearTimeout(snoozeTimers[currentId].timer);clearInterval(snoozeTimers[currentId].interval);delete snoozeTimers[currentId];}
+  // FIX 4: clear db retry queue
+  if(dbRetryQueue[currentId]){clearTimeout(dbRetryQueue[currentId]);delete dbRetryQueue[currentId];}
+  const dev=devices.find(d=>d.id===currentId);
+  if(dev?.loggingInterval){clearInterval(dev.loggingInterval);dev.loggingInterval=null;}
+  devices=devices.filter(d=>d.id!==currentId);
+  if(devices.length<2&&compareChartOpen)closeCompare();
+  save();render();closeDetail();toast(T[lang].toastRemoved,'info');
 }
 
-// ============================================================
-// BACKUP
-// ============================================================
 function openBackup(){
   const t=T[lang];$('backupTitle').textContent=t.backupTitle;$('exportBackupBtn').textContent=t.exportBackupBtn;
   $('importBackupBtn').textContent=t.importBackupBtn;$('backupDropMsg').textContent=t.backupDropMsg;
@@ -1535,12 +1681,41 @@ function doExportBackup(){
 async function doImportBackup(e){
   const file=e.target.files[0];if(!file)return;
   try{
-    const text=await file.text();const data=JSON.parse(text);
-    if(!data.devices||!Array.isArray(data.devices))throw new Error('invalid');
+    // FIX 7: validate file type
+    if(!file.name.endsWith('.json')&&file.type!=='application/json'){
+      toast(lang==='ar'?'❌ الملف يجب أن يكون JSON':'❌ File must be .json format','err');
+      e.target.value='';return;
+    }
+    const text=await file.text();
+    let data;
+    try{data=JSON.parse(text);}
+    catch(pe){toast(lang==='ar'?'❌ الملف تالف أو غير صالح':'❌ File is corrupt or invalid JSON','err');e.target.value='';return;}
+    if(!data.devices||!Array.isArray(data.devices)){
+      toast(lang==='ar'?'❌ الملف لا يحتوي على بيانات أجهزة':'❌ No device data found in file','err');
+      e.target.value='';return;
+    }
+    if(data.devices.length===0){
+      toast(lang==='ar'?'⚠️ الملف لا يحتوي على أي جهاز':'⚠️ File contains no devices','warn');
+      e.target.value='';return;
+    }
     const simDevs=devices.filter(d=>d.isSim);
-    devices=[...simDevs,...data.devices.map(d=>({...d,connected:false,bleDevice:null,server:null,alarmActive:d.alarmActive||false,alarmType:d.alarmType||'',snoozed:false,logs:d.logs||[],alarmHistory:d.alarmHistory||[],sound:d.sound||'beep'}))];
-    save();render();applyLang();closeBackup();toast(T[lang].toastImported,'ok');
-  }catch(err){toast(T[lang].toastImportErr,'err');}
+    const existingIds=new Set(devices.filter(d=>!d.isSim).map(d=>d.id));
+    // FIX 4: deduplicate — reassign IDs that clash with existing devices
+    const imported=data.devices.map(d=>{
+      const base={...d,connected:false,bleDevice:null,server:null,
+        alarmActive:d.alarmActive||false,alarmType:d.alarmType||'',snoozed:false,
+        loggingInterval:null,logging:false,
+        logs:Array.isArray(d.logs)?d.logs:[],
+        alarmHistory:Array.isArray(d.alarmHistory)?d.alarmHistory:[],
+        sound:d.sound||'beep'};
+      if(existingIds.has(base.id))base.id='d'+Date.now()+Math.random().toString(36).slice(2,6);
+      return base;
+    });
+    devices=[...simDevs,...imported];
+    toast((lang==='ar'?`✅ تم استيراد ${data.devices.length} جهاز`:`✅ Imported ${data.devices.length} device(s)`),'ok');
+  }catch(err){
+    toast(lang==='ar'?'❌ خطأ غير متوقع في الاستيراد':'❌ Unexpected error during import','err');
+  }
   e.target.value='';
 }
 const dz=$('backupDropZone');
@@ -1548,14 +1723,14 @@ dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='#667
 dz.addEventListener('dragleave',()=>{dz.style.borderColor='';});
 dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';const f=e.dataTransfer.files[0];if(f)doImportBackup({target:{files:[f],value:''}});});
 
-// ============================================================
-// INIT
-// ============================================================
 loadDevices();
 requestNotifPerm();
-// Re-render time-ago labels every 30s
+// Existing 30s render tick (refreshes cards including last-seen)
 setInterval(()=>{if(devices.length)render();},30000);
-// Auto-save every 30 seconds (catches any unsaved log entries)
+// FIX 12: also refresh dLast text in open modal every 30s
+setInterval(()=>{
+  if(currentId&&$('detailModal').style.display==='block'&&activeTab==='live')updateLive();
+},30000);
 setInterval(()=>save(),30000);
 </script>
 </body>
