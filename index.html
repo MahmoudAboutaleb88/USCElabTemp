@@ -230,21 +230,8 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 
 /* FIX 6: PDF fallback notice */
 #pdfFallback{display:none;background:#fff8e1;border:1px solid var(--brand-orange);border-radius:7px;padding:6px 11px;font-size:11px;color:#7a4f00;margin-top:6px}
-<style id="lic-css">
-#licBtn{
-  display:inline-flex;align-items:center;
-  padding:6px 14px;
-  border-radius:20px;
-  background:#4a7c1f;
-  border:none;
-  color:#fff;
-  font-size:12px;font-weight:700;
-  cursor:pointer;transition:.2s;
-  font-family:inherit;
-  letter-spacing:.2px;
-  box-shadow:0 2px 6px rgba(0,0,0,.2);
-}
-
+</style>
+<style>
 /* LICENSE */
 #licBtn{display:inline-flex;align-items:center;padding:6px 14px;border-radius:20px;background:#4a7c1f;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;letter-spacing:.2px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 #licBtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
@@ -265,7 +252,6 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 .lic-copy:hover{color:var(--brand-green)}
 .lic-foot{padding:12px 26px 18px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .lic-notice{font-size:10px;color:var(--sub);line-height:1.5;flex:1}
-
 </style>
 </head>
 <body>
@@ -1048,6 +1034,8 @@ async function connectDevice(deviceId,bleDevice){
       dev.connected=false;
       if(bleIntervals[deviceId]){clearInterval(bleIntervals[deviceId]);delete bleIntervals[deviceId];}
       if(watchdogIntervals[deviceId]){clearInterval(watchdogIntervals[deviceId]);delete watchdogIntervals[deviceId];}
+      // STOP logging when disconnected — no more entries while offline
+      if(dev.loggingInterval){clearInterval(dev.loggingInterval);dev.loggingInterval=null;dev.logging=false;}
       render();scheduleAutoReconnect(deviceId);
     });
     await startReading(deviceId);
@@ -1070,6 +1058,8 @@ function startWatchdog(deviceId){
     if(stale){
       dev.connected=false;
       clearInterval(watchdogIntervals[deviceId]);delete watchdogIntervals[deviceId];
+      // STOP logging on silent disconnect
+      if(dev.loggingInterval){clearInterval(dev.loggingInterval);dev.loggingInterval=null;dev.logging=false;}
       render();scheduleAutoReconnect(deviceId);
       toast(lang==='ar'?'📡 انقطع الاتصال صامتاً — إعادة محاولة':'📡 Silent disconnect — retrying','warn');
     }
@@ -1531,7 +1521,7 @@ function startLog(){
   const interval=parseInt($('logInterval').value)||60000;
   dev.logInterval=interval;dev.logging=true;
   dev.loggingInterval=setInterval(()=>{
-    if(dev.temperature==null)return;
+    if(!dev.connected||dev.temperature==null)return;
     if(dev.logs.length>=LOG_LIMIT)dev.logs.shift();
     dev.logs.push({ts:Date.now(),t:dev.temperature,h:dev.humidity,b:dev.battery,alarm:dev.alarmActive,note:''});
     save();if(activeTab==='log')renderLog();if(compareChartOpen)buildCompareChart();
@@ -1801,6 +1791,10 @@ function closeLicense(){$('licenseModal').classList.remove('show');}
 function copyLicKey(){
   var k=$('licKeyTxt');
   if(k&&navigator.clipboard)navigator.clipboard.writeText(k.textContent).then(function(){toast('Copied','info');});
+}
+function updateLicBtn(){
+  // Update license button label when language changes (if needed)
+  // Currently static — placeholder for future i18n
 }
 loadDevices();
 requestNotifPerm();
