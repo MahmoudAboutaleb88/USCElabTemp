@@ -2,6 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📊</text></svg>">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>USCE Lab — Analytics Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -124,6 +125,32 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
 .lic-copy:hover{color:var(--brand-green)}
 .lic-foot{padding:12px 26px 18px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .lic-notice{font-size:10px;color:var(--sub);line-height:1.5;flex:1}
+
+/* BACK TO TOP */
+#backToTop{position:fixed;bottom:26px;right:24px;width:40px;height:40px;border-radius:50%;background:var(--brand-green);color:#fff;border:none;font-size:18px;cursor:pointer;display:none;align-items:center;justify-content:center;box-shadow:0 4px 14px rgba(167,206,57,.4);z-index:8000;transition:.3s}
+#backToTop:hover{transform:translateY(-3px)}
+#backToTop.show{display:flex}
+/* REFRESH INDICATOR */
+#refreshDot{width:8px;height:8px;border-radius:50%;background:var(--brand-green);display:inline-block;margin-left:5px;opacity:0;transition:.3s}
+#refreshDot.spin{opacity:1;animation:rfpulse .6s infinite alternate}
+@keyframes rfpulse{from{transform:scale(1);opacity:.6}to{transform:scale(1.4);opacity:1}}
+/* COUNTDOWN */
+#refreshCountdown{font-size:10px;color:var(--sub);font-weight:700;padding:5px 10px;background:var(--sec);border-radius:8px;border:1px solid var(--bd);font-family:var(--mono)}
+/* SETTINGS MODAL */
+#settingsModal{display:none;position:fixed;inset:0;background:rgba(20,25,33,.72);z-index:10000;align-items:center;justify-content:center;padding:16px}
+#settingsModal.show{display:flex}
+.set-box{background:var(--card);border-radius:20px;max-width:520px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.3);overflow:hidden;border:1.5px solid var(--bd)}
+.set-head{background:linear-gradient(135deg,#2c3e50,var(--brand-gray));padding:20px 24px;color:#fff;font-size:16px;font-weight:900}
+.set-body{padding:20px 24px}
+.set-field{margin-bottom:14px}
+.set-field label{font-size:11px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:5px}
+.set-input{width:100%;padding:9px 12px;border:1.5px solid var(--bd);border-radius:9px;font-size:12px;background:var(--inp);color:var(--tx);font-family:var(--mono);outline:none;transition:.2s}
+.set-input:focus{border-color:var(--brand-green)}
+.set-foot{padding:14px 24px;border-top:1px solid var(--bd);display:flex;justify-content:flex-end;gap:8px}
+/* CHART PNG BUTTON */
+.chart-dl-btn{position:absolute;top:8px;right:8px;background:var(--sec);border:1px solid var(--bd);border-radius:7px;color:var(--sub);font-size:11px;font-weight:700;padding:4px 9px;cursor:pointer;font-family:inherit;transition:.2s;z-index:10;opacity:0}
+.chart-box:hover .chart-dl-btn{opacity:1}
+.chart-dl-btn:hover{background:var(--brand-green);color:#fff;border-color:var(--brand-green)}
 </style>
 </head>
 <body>
@@ -137,7 +164,7 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
 <div class="wrap" id="mainWrap" style="display:none">
   <div class="header">
     <div>
-      <h1>📊 USCE Lab — Analytics Dashboard</h1>
+      <h1>📊 USCE Lab — Data Logger</h1>
       <div class="header-sub">Environmental Monitoring Analytics Dashboard</div>
     </div>
     <div class="hbtns">
@@ -146,14 +173,26 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
       <button id="licBtn" onclick="openLicense()">✓ Licensed</button>
       <button class="btn bgy bsm" onclick="toggleDark()" id="darkBtn">🌙</button>
       <button class="btn bgy bsm" onclick="exportCSV()">📥 CSV</button>
-      <button class="btn bp bsm" onclick="refreshData()">🔄 Refresh</button>
+      <span id="refreshCountdown">⏱ 2:00</span><span id="refreshDot"></span><button class="btn bp bsm" onclick="refreshData()">🔄 Refresh</button><button class="btn bgy bsm" onclick="openSettings()">⚙️ Settings</button>
       <button class="btn bo bsm" onclick="window.print()">📄 PDF</button>
     </div>
   </div>
   <div class="ctrl-bar">
     <div><label>Device</label><select id="devFilter" onchange="applyFilters()"><option value="all">All Devices</option></select></div>
-    <div><label>From</label><input type="date" id="dateFrom" onchange="applyFilters()"></div>
-    <div><label>To</label><input type="date" id="dateTo" onchange="applyFilters()"></div>
+    <div>
+      <label>From</label>
+      <div style="display:flex;gap:4px">
+        <input type="date" id="dateFrom" onchange="applyFilters()">
+        <input type="time" id="timeFrom" onchange="applyFilters()" style="width:100px">
+      </div>
+    </div>
+    <div>
+      <label>To</label>
+      <div style="display:flex;gap:4px">
+        <input type="date" id="dateTo" onchange="applyFilters()">
+        <input type="time" id="timeTo" onchange="applyFilters()" style="width:100px">
+      </div>
+    </div>
     <div><label>Quick Range</label><select id="quickRange" onchange="setQuickRange()">
       <option value="0">Custom</option><option value="1">Today</option>
       <option value="7" selected>Last 7 Days</option><option value="30">Last 30 Days</option>
@@ -191,8 +230,8 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
   <div class="page on" id="page-overview">
     <div class="kpi-grid" id="kpiGrid"></div>
     <div class="two-col">
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ Temperature Trend</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewTempChart"></canvas></div></div>
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity Trend</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewHumChart"></canvas></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ Temperature Trend</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div></div><div class="chart-box" style="position:relative"><button class="chart-dl-btn" onclick="dlChart('overviewTempChart','temp_trend')">📷</button><canvas id="overviewTempChart"></canvas></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity Trend</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box" style="position:relative"><button class="chart-dl-btn" onclick="dlChart('overviewHumChart','hum_trend')">📷</button><canvas id="overviewHumChart"></canvas></div></div>
     </div>
     <div class="two-col">
       <div class="sec"><div class="sec-hdr"><div class="sec-title">📡 Device Status</div></div><div id="deviceStatusList"></div></div>
@@ -225,9 +264,9 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
           <button class="btn bgy bsm" onclick="setTrendRange(100)">Last 100</button>
           <button class="btn bgy bsm" onclick="setTrendRange(0)">All</button>
         </div></div>
-      <div class="chart-box tall"><canvas id="trendTempChart"></canvas></div>
+      <div class="chart-box tall" style="position:relative"><button class="chart-dl-btn" onclick="dlChart('trendTempChart','temp_control')">📷</button><canvas id="trendTempChart"></canvas></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity with Control Limits</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box tall"><canvas id="trendHumChart"></canvas></div></div>
+    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity with Control Limits</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box tall" style="position:relative"><button class="chart-dl-btn" onclick="dlChart('trendHumChart','hum_control')">📷</button><canvas id="trendHumChart"></canvas></div></div>
     <div class="sec"><div class="sec-hdr"><div class="sec-title">🔋 Battery Level</div><div class="sec-sub">Battery Level Trend</div></div><div class="chart-box short"><canvas id="trendBatChart"></canvas></div></div>
     <div class="sec">
       <div class="sec-hdr"><div><div class="sec-title">📉 Moving Average</div><div class="sec-sub">7-Point Moving Average for Trend Detection</div></div>
@@ -237,7 +276,7 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
           <button class="btn bgy bsm" onclick="setMAWindow(14)">MA-14</button>
         </div>
       </div>
-      <div class="chart-box"><canvas id="maChart"></canvas></div>
+      <div class="chart-box" style="position:relative"><button class="chart-dl-btn" onclick="dlChart('maChart','moving_avg')">📷</button><canvas id="maChart"></canvas></div>
     </div>
   </div>
 
@@ -287,15 +326,39 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
     <div class="sec">
       <div class="sec-hdr">
         <div><div class="sec-title">📜 Complete Data Log</div><div class="sec-sub">Full Data Log with Advanced Filters</div></div>
-        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
-          <input id="logSearch" placeholder="🔍 Search log..." style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif;min-width:160px" oninput="renderLogPage()">
-          <select id="logTypeFilter" onchange="renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 10px;font-size:12px;outline:none;font-family:'Nunito',sans-serif">
+        <button class="btn bgy bsm" onclick="exportCSV()">📥 CSV</button>
+      </div>
+      <!-- FILTERS ROW -->
+      <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end;margin-bottom:12px;padding:12px;background:var(--sec);border-radius:10px;border:1px solid var(--bd)">
+        <div>
+          <div style="font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Search</div>
+          <input id="logSearch" placeholder="🔍 keyword..." style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif;min-width:140px" oninput="logCurrentPage=0;renderLogPage()">
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">Status</div>
+          <select id="logTypeFilter" onchange="logCurrentPage=0;renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 10px;font-size:12px;outline:none;font-family:'Nunito',sans-serif">
             <option value="all">All</option>
             <option value="alarm">Alarms Only</option>
             <option value="ok">Within Limits</option>
             <option value="noted">Has Notes</option>
           </select>
-          <button class="btn bgy bsm" onclick="exportCSV()">📥 CSV</button>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">From Date & Time</div>
+          <div style="display:flex;gap:4px">
+            <input type="date" id="logDateFrom" onchange="logCurrentPage=0;renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 9px;font-size:12px;outline:none;font-family:'Nunito',sans-serif">
+            <input type="time" id="logTimeFrom" onchange="logCurrentPage=0;renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 9px;font-size:12px;outline:none;font-family:'Nunito',sans-serif;width:100px">
+          </div>
+        </div>
+        <div>
+          <div style="font-size:10px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">To Date & Time</div>
+          <div style="display:flex;gap:4px">
+            <input type="date" id="logDateTo" onchange="logCurrentPage=0;renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 9px;font-size:12px;outline:none;font-family:'Nunito',sans-serif">
+            <input type="time" id="logTimeTo" onchange="logCurrentPage=0;renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 9px;font-size:12px;outline:none;font-family:'Nunito',sans-serif;width:100px">
+          </div>
+        </div>
+        <div style="align-self:flex-end">
+          <button class="btn bgy bsm" onclick="clearLogFilters()">↺ Clear</button>
         </div>
       </div>
       <div style="font-size:11px;color:var(--sub);font-weight:700;margin-bottom:8px" id="logPageInfo">0 Records</div>
@@ -325,13 +388,14 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
       <div class="sec"><div class="sec-title" style="margin-bottom:12px">📋 Measurement Traceability</div><div id="isoTraceTable"></div></div>
       <div class="sec"><div class="sec-hdr"><div class="sec-title">✅ ISO 17025 Requirements</div></div><div id="isoChecklist"></div></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">📄 Technical Report</div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">📄 Technical Report</div><button class="btn bgy bsm" onclick="copyReport()">📋 Copy</button></div>
       <div id="isoReport" style="font-family:var(--mono);font-size:11px;color:var(--sub);line-height:2;padding:12px;background:var(--sec);border-radius:10px;border:1px solid var(--bd);white-space:pre"></div></div>
   </div>
 </div>
 
 <script>
-const SHEETS_URL='https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5UtuQH817DYpkUWjOTIxfne88jglzTWaRIkuOZOjvYc37Cb/exec';
+const DEFAULT_URL='https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5UtuQH817DYpkUWjOTIxfne88jglzTWaRIkuOZOjvYc37Cb/exec';
+let SHEETS_URL=localStorage.getItem('usce_analytics_url')||DEFAULT_URL;
 let rawData=[],filteredData=[],devices=[],charts={},trendRange=0,dark=false,allAlarms=[];
 const $=id=>document.getElementById(id);
 const COLORS=['#A7CE39','#EF9600','#5D676F','#e74c3c','#00bcd4','#9c27b0','#ff5722','#009688'];
@@ -391,19 +455,35 @@ function setQuickRange(){
 }
 function applyFilters(){
   const dev=$('devFilter').value,af=$('alarmFilter').value;
-  const from=$('dateFrom').value?new Date($('dateFrom').value):null;
-  const to=$('dateTo').value?new Date($('dateTo').value+'T23:59:59'):null;
+  const dateFrom=$('dateFrom').value;
+  const timeFrom=$('timeFrom').value||'00:00';
+  const dateTo=$('dateTo').value;
+  const timeTo=$('timeTo').value||'23:59';
+  const from=dateFrom?new Date(dateFrom+'T'+timeFrom+':00'):null;
+  const to=dateTo?new Date(dateTo+'T'+timeTo+':59'):null;
   filteredData=rawData.filter(r=>{
     if(dev!=='all'&&r.dev!==dev)return false;
-    if(from&&r.ts<from)return false;if(to&&r.ts>to)return false;
-    if(af==='alarm'&&!r.alarm)return false;if(af==='ok'&&r.alarm)return false;
+    if(from&&r.ts<from)return false;
+    if(to&&r.ts>to)return false;
+    if(af==='alarm'&&!r.alarm)return false;
+    if(af==='ok'&&r.alarm)return false;
     return true;
   });
   $('dataCount').textContent=filteredData.length+' Records';rebuildAll();updateContextBar();
 }
-function resetFilters(){$('devFilter').value='all';$('dateFrom').value='';$('dateTo').value='';$('alarmFilter').value='all';$('quickRange').value='all';applyFilters();}
+function resetFilters(){
+  $('devFilter').value='all';
+  $('dateFrom').value='';$('timeFrom').value='';
+  $('dateTo').value='';$('timeTo').value='';
+  $('alarmFilter').value='all';$('quickRange').value='all';
+  applyFilters();
+}
 function setTrendRange(n){trendRange=n;buildTrends();}
-function rebuildAll(){buildOverview();buildCPK();buildTrends();buildStats();buildAlarms();buildHeatmap();buildCompare();buildISO();}
+function rebuildAll(){
+  buildOverview();buildCPK();buildTrends();buildStats();buildAlarms();buildHeatmap();buildCompare();buildISO();
+  // if log tab is currently open, refresh it too
+  if($('page-log').classList.contains('on')) renderLogPage();
+}
 
 const gc=()=>dark?'rgba(255,255,255,.07)':'rgba(0,0,0,.06)';
 const tc=()=>dark?'#9aa0a6':'#5D676F';
@@ -548,7 +628,7 @@ function buildHistogram(cid,data,label,color,usl,lsl,unit){
 function buildTrends(){
   if(!filteredData.length)return;
   const data=trendRange>0?filteredData.slice(-trendRange):filteredData;
-  const labels=data.map(r=>r.ts.toLocaleString('ar',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
+  const labels=data.map(r=>r.ts.toLocaleString('en-GB',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
   const limMap=getLimitsPerDev();
   // Temperature datasets — each device line + its own UCL/LCL
   const dsT=[];
@@ -774,16 +854,24 @@ function buildLogPage(){logCurrentPage=0;renderLogPage();}
 function renderLogPage(){
   const search=($('logSearch')?.value||'').toLowerCase();
   const typeF=$('logTypeFilter')?.value||'all';
+  const dateFrom=$('logDateFrom')?.value||'';
+  const timeFrom=$('logTimeFrom')?.value||'00:00';
+  const dateTo=$('logDateTo')?.value||'';
+  const timeTo=$('logTimeTo')?.value||'23:59';
+  const tsFrom=dateFrom?new Date(dateFrom+'T'+timeFrom+':00'):null;
+  const tsTo=dateTo?new Date(dateTo+'T'+timeTo+':59'):null;
   logFiltered=filteredData.filter(r=>{
     if(typeF==='alarm'&&!r.alarm)return false;
     if(typeF==='ok'&&r.alarm)return false;
     if(typeF==='noted'&&!r.note)return false;
+    if(tsFrom&&r.ts<tsFrom)return false;
+    if(tsTo&&r.ts>tsTo)return false;
     if(search&&!(r.dev.toLowerCase().includes(search)||
       r.ts.toLocaleString().toLowerCase().includes(search)||
       String(r.t||'').includes(search)||
       (r.note||'').toLowerCase().includes(search)))return false;
     return true;
-  }).slice().reverse();
+  }).slice().sort((a,b)=>b.ts-a.ts);
   const total=logFiltered.length;
   const totalPages=Math.max(1,Math.ceil(total/LOG_PG_SIZE));
   if(logCurrentPage>=totalPages)logCurrentPage=totalPages-1;
@@ -793,7 +881,7 @@ function renderLogPage(){
   $('logTableBody').innerHTML=page.map((r,i)=>{
     const alarm=r.alarm;
     const bg=alarm?' style="background:rgba(231,76,60,.05)"':'';
-    return'<tr'+bg+'><td style="color:var(--sub)">'+(start+i+1)+'</td>'+
+    return'<tr'+bg+'><td style="color:var(--sub)">'+(total-start-i)+'</td>'+
       '<td style="font-family:var(--mono);font-size:10px">'+r.ts.toLocaleString('en-GB')+'</td>'+
       '<td style="color:var(--brand-green);font-weight:800">'+r.dev+'</td>'+
       '<td style="color:'+(r.t!=null&&r.maxT&&(r.t>r.maxT||r.t<r.minT)?'#e74c3c':'var(--tx)')+'">'+
@@ -816,6 +904,13 @@ function renderLogPage(){
   pg.innerHTML=html;
 }
 function goLogPg(p){logCurrentPage=p;renderLogPage();$('logTableBody')?.scrollIntoView({behavior:'smooth',block:'start'});}
+function clearLogFilters(){
+  $('logSearch').value='';
+  $('logTypeFilter').value='all';
+  $('logDateFrom').value='';$('logTimeFrom').value='';
+  $('logDateTo').value='';$('logTimeTo').value='';
+  logCurrentPage=0;renderLogPage();
+}
 
 // ── MOVING AVERAGE ──
 let maWindow=7;
@@ -823,7 +918,7 @@ function setMAWindow(w){maWindow=w;buildMA();}
 function buildMA(){
   if(!filteredData.length)return;
   const data=trendRange>0?filteredData.slice(-trendRange):filteredData;
-  const labels=data.map(r=>r.ts.toLocaleString('ar',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
+  const labels=data.map(r=>r.ts.toLocaleString('en-GB',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
   const temps=data.map(r=>r.t);
   const hums=data.map(r=>r.h);
   function movAvg(arr,w){return arr.map((_,i)=>{const sl=arr.slice(Math.max(0,i-Math.floor(w/2)),i+Math.floor(w/2)+1).filter(v=>v!=null);return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:null;});}
@@ -846,6 +941,7 @@ function showPage(id,btn){
   if(id==='heatmap')buildHeatmap();
   if(id==='log')buildLogPage();
   if(id==='trends')buildMA();
+  updatePageTitle(id);
 }
 
 let toastTmr;
@@ -872,7 +968,7 @@ async function silentRefresh(){
     rawData.sort((a,b)=>a.ts-b.ts);
     devices=[...new Set(rawData.map(r=>r.dev))];
     const curDev=$('devFilter').value;
-    const opts='<option value="all">\u0643\u0644 \u0627\u0644\u0623\u062c\u0647\u0632\u0629</option>'+devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
+    const opts='<option value="all">All Devices</option>'+devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
     $('devFilter').innerHTML=opts;
     $('hmDevice').innerHTML=devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
     if(curDev)$('devFilter').value=curDev;
@@ -900,8 +996,152 @@ function copyLicKey(){
   var k=$('licKeyTxt');
   if(k&&navigator.clipboard)navigator.clipboard.writeText(k.textContent).then(function(){toast('Copied','info');});
 }
-setInterval(silentRefresh,2*60*1000);
+
+// ── SETTINGS ──
+let refreshInterval = 2*60*1000;
+let refreshTimer = null;
+let countdownTimer = null;
+let countdownSecs = 120;
+
+function openSettings(){
+  const iv = Math.round(refreshInterval/1000);
+  $('settingsInterval').value = iv > 0 ? String(iv) : '0';
+  $('settingsModal').classList.add('show');
+}
+function closeSettings(){ $('settingsModal').classList.remove('show'); }
+function saveSettings(){
+  const iv = parseInt($('settingsInterval').value) || 0;
+  refreshInterval = iv * 1000;
+  localStorage.setItem('usce_refresh_interval', String(iv));
+  resetRefreshTimer();
+  closeSettings();
+  toast('✅ Settings saved','ok');
+}
+
+// ── REFRESH TIMER / COUNTDOWN ──
+function resetRefreshTimer(){
+  if(refreshTimer){ clearInterval(refreshTimer); refreshTimer=null; }
+  if(countdownTimer){ clearInterval(countdownTimer); countdownTimer=null; }
+  if(refreshInterval <= 0){
+    $('refreshCountdown').textContent = '⏱ Off';
+    return;
+  }
+  countdownSecs = Math.round(refreshInterval/1000);
+  updateCountdown();
+  countdownTimer = setInterval(()=>{
+    countdownSecs--;
+    updateCountdown();
+    if(countdownSecs <= 0){ countdownSecs = Math.round(refreshInterval/1000); }
+  }, 1000);
+  refreshTimer = setInterval(()=>{
+    showRefreshDot();
+    silentRefresh();
+  }, refreshInterval);
+}
+function updateCountdown(){
+  const m = Math.floor(countdownSecs/60);
+  const s = countdownSecs % 60;
+  $('refreshCountdown').textContent = '⏱ '+m+':'+(s<10?'0':'')+s;
+}
+function showRefreshDot(){
+  const d = $('refreshDot');
+  d.classList.add('spin');
+  setTimeout(()=>d.classList.remove('spin'), 3000);
+}
+
+// ── BACK TO TOP ──
+window.addEventListener('scroll', ()=>{
+  $('backToTop').classList.toggle('show', window.scrollY > 300);
+});
+
+// ── KEYBOARD SHORTCUTS ──
+document.addEventListener('keydown', e=>{
+  if(e.target.tagName==='INPUT'||e.target.tagName==='SELECT'||e.target.tagName==='TEXTAREA') return;
+  if(e.key==='r'||e.key==='R'){ refreshData(); }
+  if(e.key==='e'||e.key==='E'){ exportCSV(); }
+  if(e.key==='s'||e.key==='S'){ openSettings(); }
+  if(e.key==='Escape'){
+    closeSettings(); closeLicense();
+    document.querySelectorAll('.page').forEach((p,i)=>{
+      if(p.classList.contains('on')){}
+    });
+  }
+  // number keys 1-9 for tabs
+  const pages=['overview','cpk','trends','stats','alarms','heatmap','compare','iso','log'];
+  const n=parseInt(e.key);
+  if(n>=1&&n<=9&&!e.ctrlKey&&!e.altKey){
+    const btn=document.querySelectorAll('.nav-btn')[n-1];
+    if(btn) btn.click();
+  }
+});
+
+// ── CHART PNG DOWNLOAD ──
+function dlChart(canvasId, filename){
+  const canvas = $(canvasId);
+  if(!canvas){ toast('Chart not available','err'); return; }
+  const tmp = document.createElement('canvas');
+  tmp.width = canvas.width; tmp.height = canvas.height;
+  const ctx = tmp.getContext('2d');
+  ctx.fillStyle = document.body.classList.contains('dark') ? '#1e2430' : '#ffffff';
+  ctx.fillRect(0,0,tmp.width,tmp.height);
+  ctx.drawImage(canvas,0,0);
+  const a = document.createElement('a');
+  a.download = 'USCE_'+filename+'_'+new Date().toISOString().slice(0,10)+'.png';
+  a.href = tmp.toDataURL('image/png');
+  document.body.appendChild(a); a.click(); document.body.removeChild(a);
+  toast('📷 Chart saved as PNG','ok');
+}
+
+// ── COPY ISO REPORT ──
+function copyReport(){
+  const el = $('isoReport');
+  if(!el) return;
+  if(navigator.clipboard){
+    navigator.clipboard.writeText(el.textContent).then(()=>toast('📋 Report copied to clipboard','ok'));
+  } else {
+    const r=document.createRange(); r.selectNode(el);
+    window.getSelection().removeAllRanges(); window.getSelection().addRange(r);
+    document.execCommand('copy'); window.getSelection().removeAllRanges();
+    toast('📋 Report copied','ok');
+  }
+}
+
+// ── PAGE TITLE UPDATE ──
+function updatePageTitle(id){
+  const names={overview:'Overview',cpk:'CPK Analysis',trends:'Trends',stats:'Statistics',
+    alarms:'Alarms',heatmap:'Heatmap',compare:'Comparison',iso:'ISO 17025',log:'Data Log'};
+  document.title = (names[id]||id) + ' — USCE Lab Analytics';
+}
+
+// start refresh timer
+resetRefreshTimer();
 </script>
+
+
+<!-- SETTINGS MODAL -->
+<div id="settingsModal">
+  <div class="set-box">
+    <div class="set-head">⚙️ Settings</div>
+    <div class="set-body">
+      <div class="set-field">
+        <label>Auto-Refresh Interval</label>
+        <select class="set-input" id="settingsInterval" style="font-family:inherit">
+          <option value="60">Every 1 minute</option>
+          <option value="120" selected>Every 2 minutes</option>
+          <option value="300">Every 5 minutes</option>
+          <option value="600">Every 10 minutes</option>
+          <option value="0">Disabled</option>
+        </select>
+      </div>
+    </div>
+    <div class="set-foot">
+      <button class="btn bgy bsm" onclick="closeSettings()">Cancel</button>
+      <button class="btn bp bsm" onclick="saveSettings()">💾 Save & Reload</button>
+    </div>
+  </div>
+</div>
+<!-- BACK TO TOP -->
+<button id="backToTop" onclick="window.scrollTo({top:0,behavior:'smooth'})" title="Back to top">↑</button>
 
 <!-- LICENSE MODAL -->
 <div id="licenseModal">
@@ -916,7 +1156,7 @@ setInterval(silentRefresh,2*60*1000);
         <div class="lic-field"><label>Licensed To</label><div class="lic-val">Savola - USCE</div></div>
         <div class="lic-field"><label>Department</label><div class="lic-val">Quality Control Lab</div></div>
         <div class="lic-field"><label>Version</label><div class="lic-val">v6.0.0 (2026)</div></div>
-        <div class="lic-field"><label>Valid Until</label><div class="lic-val" id="licExpiry">Dec 31, 2026</div></div>
+        <div class="lic-field"><label>Valid Until</label><div class="lic-val" id="licExpiry">Dec 31, 2030</div></div>
       </div>
       <div class="lic-field" style="margin-bottom:10px">
         <label>License Key</label>
