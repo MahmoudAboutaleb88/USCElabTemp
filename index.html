@@ -77,7 +77,7 @@ body.dark #notifBar{background:#3e2f00;border-color:var(--brand-orange);color:#f
 
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
 
-.card{border-radius:14px;padding:12px 14px;box-shadow:var(--sh);cursor:pointer;transition:.25s;color:var(--tx);position:relative;user-select:none;border:1.5px solid var(--bd);background:var(--card)}
+.card{border-radius:12px;padding:9px 11px;box-shadow:var(--sh);cursor:pointer;transition:.25s;color:var(--tx);position:relative;user-select:none;border:1.5px solid var(--bd);background:var(--card)}
 .card:hover{transform:translateY(-3px);box-shadow:0 10px 28px rgba(93,103,111,.18)}
 .card.alarm{animation:pulse 1s infinite;border-color:#e74c3c!important}
 .card.snoozed{border-color:var(--brand-orange)!important;animation:none}
@@ -97,25 +97,25 @@ body.dark .card.temp-cool{background:linear-gradient(160deg,#1b5e2018 0%,var(--c
 body.dark .card.temp-warm{background:linear-gradient(160deg,#f57f1718 0%,var(--card) 55%)}
 body.dark .card.temp-hot{background:linear-gradient(160deg,#b71c1c18 0%,var(--card) 55%)}
 
-.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
-.card-name{font-size:13px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:6px}
+.card-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.card-name{font-size:11px;font-weight:700;color:var(--tx);display:flex;align-items:center;gap:5px}
 .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
 .don{background:var(--brand-green)}.doff{background:#9e9e9e}.dalarm{background:#e74c3c}.dsnooze{background:var(--brand-orange)}.dsim{background:var(--brand-orange)}
 .drag-handle{cursor:grab;color:var(--sub);font-size:16px;padding:2px 3px;opacity:.4}
 .drag-handle:hover{opacity:.8}
 
-.data-box{border-radius:10px;padding:10px 12px;text-align:center;border:1px solid rgba(0,0,0,.06)}
+.data-box{border-radius:8px;padding:7px 10px;text-align:center;border:1px solid rgba(0,0,0,.06)}
 .db-cold{background:linear-gradient(135deg,#dbeeff,#c5e0f8)}
 .db-cool{background:linear-gradient(135deg,#d9f5df,#c1edd0)}
 .db-normal{background:linear-gradient(135deg,#f0f7ff,#ddeeff)}
 .db-warm{background:linear-gradient(135deg,#fff8dc,#ffeaa0)}
 .db-hot{background:linear-gradient(135deg,#fde8d8,#f9c8a8)}
 body.dark .data-box{background:linear-gradient(135deg,#252d3a,#1e2430)!important;border-color:var(--bd)}
-.big-temp{font-size:28px;font-weight:800;line-height:1}
-.big-hum{font-size:15px;margin:4px 0;font-weight:600}
+.big-temp{font-size:22px;font-weight:800;line-height:1}
+.big-hum{font-size:12px;margin:3px 0;font-weight:600}
 
-.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:4px;margin-top:7px}
-.ms{background:rgba(93,103,111,.07);border-radius:7px;padding:4px 2px;text-align:center}
+.mini-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;margin-top:5px}
+.ms{background:rgba(93,103,111,.07);border-radius:5px;padding:3px 2px;text-align:center}
 body.dark .ms{background:rgba(255,255,255,.06)}
 .msv{font-size:11px;font-weight:700;color:var(--tx)}
 .msl{font-size:9px;color:var(--sub)}
@@ -230,6 +230,40 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 
 /* FIX 6: PDF fallback notice */
 #pdfFallback{display:none;background:#fff8e1;border:1px solid var(--brand-orange);border-radius:7px;padding:6px 11px;font-size:11px;color:#7a4f00;margin-top:6px}
+<style id="lic-css">
+#licBtn{
+  display:inline-flex;align-items:center;
+  padding:6px 14px;
+  border-radius:20px;
+  background:#4a7c1f;
+  border:none;
+  color:#fff;
+  font-size:12px;font-weight:700;
+  cursor:pointer;transition:.2s;
+  font-family:inherit;
+  letter-spacing:.2px;
+  box-shadow:0 2px 6px rgba(0,0,0,.2);
+}
+#licBtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+#licBtn:active{transform:translateY(0)}
+.lic-dot{display:none}
+.lic-tag{display:contents;color:#fff;font-size:12px;font-weight:700}
+#licenseModal{display:none;position:fixed;inset:0;background:rgba(20,25,33,.72);z-index:10000;align-items:center;justify-content:center;padding:16px}
+#licenseModal.show{display:flex}
+.lic-box{background:var(--card);border-radius:20px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.3);overflow:hidden;border:1.5px solid var(--bd)}
+.lic-head{background:linear-gradient(135deg,#2c3e50,var(--brand-gray));padding:24px 26px 20px;position:relative}
+.lic-head-name{font-size:19px;font-weight:900;color:#fff;display:flex;align-items:center;gap:9px}
+.lic-head-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.7px;text-transform:uppercase;font-weight:600}
+.lic-badge{position:absolute;top:20px;right:20px;background:var(--brand-green);color:#fff;font-size:10px;font-weight:800;padding:4px 11px;border-radius:20px;letter-spacing:.6px}
+.lic-body{padding:20px 26px 18px}
+.lic-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.lic-field label{font-size:9px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:3px}
+.lic-val{font-size:12px;font-weight:700;color:var(--tx);background:var(--sec);border-radius:7px;padding:7px 11px;border:1px solid var(--bd)}
+.lic-val.mono{font-family:monospace;letter-spacing:2px;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+.lic-copy{background:none;border:none;cursor:pointer;color:var(--sub);font-size:14px;padding:2px 5px;border-radius:4px;transition:.2s}
+.lic-copy:hover{color:var(--brand-green)}
+.lic-foot{padding:12px 26px 18px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lic-notice{font-size:10px;color:var(--sub);line-height:1.5;flex:1}
 </style>
 </head>
 <body>
@@ -245,6 +279,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
   <div class="header">
     <h1 id="appTitle">📊 USCE Lab Data Loggers</h1>
     <div class="hbtns">
+      <button id="licBtn" onclick="openLicense()">✓ Licensed</button>
       <div class="pill" id="unitPill"><button class="on" onclick="setUnit('C')" aria-label="Celsius">°C</button><button onclick="setUnit('F')" aria-label="Fahrenheit">°F</button></div>
       <div class="pill" id="langPill"><button class="on" onclick="setLang('ar')" aria-label="Arabic">عربي</button><button onclick="setLang('en')" aria-label="English">EN</button></div>
       <button class="btn bdk" onclick="toggleDark()" id="darkBtn" aria-label="Toggle dark mode">🌙</button>
@@ -435,15 +470,6 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
         <button class="btn bp" style="width:100%;justify-content:center;margin-top:12px" onclick="saveAlarm()" id="saveAlarmBtn"></button>
       </div>
       <button class="btn br" style="width:100%;justify-content:center;margin-top:9px" onclick="removeDevice()" id="removeBtn"></button>
-      <!-- FIX 12: DB URL setting -->
-      <div class="sec" style="margin-top:10px">
-        <h3 id="dbUrlTitle"></h3>
-        <div class="fg">
-          <label id="dbUrlLabel"></label>
-          <input type="url" id="dbUrlInput" placeholder="https://script.google.com/..." style="font-size:11px">
-        </div>
-        <button class="btn bp bsm" style="margin-top:7px" onclick="saveDbUrl()" id="saveDbUrlBtn"></button>
-      </div>
     </div>
 
   </div>
@@ -473,6 +499,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
     </div>
   </div>
 </div>
+
 
 <!-- NOTE MODAL -->
 <div class="modal" id="noteModal" style="z-index:2000">
@@ -572,7 +599,7 @@ ar:{
   autoReconn:'🔄 إعادة اتصال تلقائية...',
 },
 en:{
-  title:'📊 USCE Lab Data Loggers',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
+  title:'Environmental Monitoring System',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
   compareBtn:'📊 Compare',backupBtn:'💾 Backup',simBtn:' Demo',stopSimBtn:'⏹️ Stop Demo',
   simBannerMsg:'Simulation Mode Active — Data is simulated',darkOn:'🌙',darkOff:'☀️',
   emptyTitle:'🔌 No Devices',emptySub:'Click "Add" or " Demo" to start',
@@ -822,6 +849,7 @@ function setLang(l){
   lang=l;document.documentElement.lang=l;document.documentElement.dir=l==='ar'?'rtl':'ltr';
   $('langPill').querySelectorAll('button').forEach((b,i)=>b.classList.toggle('on',i===(l==='ar'?0:1)));
   savePrefs();applyLang();render();if(currentId)updateDetailUI();
+  updateLicBtn();
 }
 function applyLang(){
   const t=T[lang];
@@ -1180,7 +1208,12 @@ function cancelSnooze(){
   toast(T[lang].toastSnoozeCancel,'warn');render();updateLive();
 }
 
-async function requestNotifPerm(){if('Notification' in window&&Notification.permission==='default')await Notification.requestPermission();}
+async function requestNotifPerm(){
+  if(!('Notification' in window))return;
+  // Only ask if user hasn't answered yet (default = never been asked)
+  if(Notification.permission==='default')await Notification.requestPermission();
+  // If denied or granted — do nothing, never ask again
+}
 function sendNotif(dev){
   const msg=T[lang].notifAlarm.replace('{name}',dev.name||'Device')+' — '+getAlarmMsg(dev);
   if('Notification' in window&&Notification.permission==='granted')new Notification('⚠️ USCE Lab',{body:msg});
@@ -1606,33 +1639,57 @@ function exportCSV(){
 function exportPDF(){
   const dev=devices.find(d=>d.id===currentId);if(!dev||!dev.logs.length){toast(T[lang].toastNoData,'warn');return;}
   const fallbackEl=$('pdfFallback');if(fallbackEl)fallbackEl.style.display='none';
-  const rows=dev.logs.slice(-150).map(l=>`<tr ${l.alarm?'style="background:#ffebee"':''}>
-    <td>${new Date(l.ts).toLocaleString()}</td><td>${l.t!=null?toDisp(l.t):'--'}</td>
-    <td>${l.h!=null?Math.round(l.h)+'%':'--'}</td><td>${l.b!=null?Math.round(l.b)+'%':'--'}</td>
-    <td>${l.alarm?'⚠️':''}</td><td style="color:#5D676F;font-style:italic">${l.note||''}</td>
-  </tr>`).join('');
-  const html=`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>${dev.name}</title>
-  <style>body{font-family:sans-serif;padding:22px}h1{color:#5D676F}table{width:100%;border-collapse:collapse;margin-top:14px;border:1px solid #ccc}
-  th,td{border:1px solid #ccc;padding:7px;font-size:11px}th{background:#A7CE39;color:#fff}tr:nth-child(even){background:#f9f9f9}
-  .limits{margin-top:10px;background:#f4f6f8;padding:10px;border-radius:8px;font-size:12px;color:#333;border:1px solid #d0d5da}
-  </style></head>
-  <body><h1>📊 USCE Lab — ${dev.name}</h1>
-  <p style="color:#666;font-size:12px">Generated: ${new Date().toLocaleString()} | Readings: ${dev.logs.length}</p>
-  <div class="limits">🌡️ Temp Limits: UCL ${dev.maxT}°C / LCL ${dev.minT}°C &nbsp;|&nbsp; 💧 Humidity: UCL ${dev.maxH}% / LCL ${dev.minH}%</div>
-  <table><thead><tr><th>Timestamp</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Alarm</th><th>Note</th></tr></thead><tbody>${rows}</tbody></table></body></html>`;
-  // Try popup first; if blocked fall back to HTML download
-  const w=window.open('','_blank');
-  if(w&&!w.closed){
-    w.document.write(html);w.document.close();setTimeout(()=>w.print(),500);
-  }else{
-    // FIX 6: fallback — download as HTML file
-    dl(html,'text/html',`${(dev.name||'device').replace(/\s+/g,'_')}_report.html`);
-    if(fallbackEl){
-      fallbackEl.style.display='block';
-      fallbackEl.textContent=lang==='ar'?'⚠️ تم حفظ التقرير كملف HTML — افتحه واطبعه يدوياً':'⚠️ Report saved as HTML file — open it to print';
-      setTimeout(()=>{fallbackEl.style.display='none';},6000);
-    }
-  }
+  const isAR=lang==='ar';
+  const rows=dev.logs.slice(-150).map(function(l){
+    var ts=new Date(l.ts).toLocaleString();
+    var tv=l.t!=null?toDisp(l.t):'--';
+    var hv=l.h!=null?Math.round(l.h)+'%':'--';
+    var bv=l.b!=null?Math.round(l.b)+'%':'--';
+    var alarm=l.alarm?'\u26a0\ufe0f':'';
+    var note=(l.note||'').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    var bg=l.alarm?' style="background:#ffebee"':'';
+    return '<tr'+bg+'><td>'+ts+'</td><td>'+tv+'</td><td>'+hv+'</td><td>'+bv+'</td><td>'+alarm+'</td><td style="color:#5D676F;font-style:italic">'+note+'</td></tr>';
+  }).join('');
+  var th_ts=isAR?'\u0627\u0644\u0648\u0642\u062a':'Timestamp';
+  var th_t=isAR?'\u0627\u0644\u062d\u0631\u0627\u0631\u0629':'Temperature';
+  var th_h=isAR?'\u0627\u0644\u0631\u0637\u0648\u0628\u0629':'Humidity';
+  var th_b=isAR?'\u0627\u0644\u0628\u0637\u0627\u0631\u064a\u0629':'Battery';
+  var th_a=isAR?'\u062a\u0646\u0628\u064a\u0647':'Alarm';
+  var th_n=isAR?'\u0645\u0644\u0627\u062d\u0638\u0629':'Note';
+  var genLabel=isAR?'\u062a\u0627\u0631\u064a\u062e:':'Generated:';
+  var readLabel=isAR?'\u0642\u0631\u0627\u0621\u0629':'Readings';
+  var dir=isAR?'rtl':'ltr';
+  var html='<!DOCTYPE html><html dir="'+dir+'"><head><meta charset="UTF-8">'
+    +'<title>USCE Lab - '+dev.name+'</title>'
+    +'<style>'
+    +'body{font-family:Arial,sans-serif;padding:22px;direction:'+dir+';margin:0}'
+    +'h1{color:#5D676F;font-size:18px;margin-bottom:6px}'
+    +'.meta{color:#666;font-size:11px;margin-bottom:10px}'
+    +'.limits{margin-bottom:14px;background:#f4f6f8;padding:10px 14px;border-radius:8px;font-size:12px;color:#333;border:1px solid #d0d5da}'
+    +'table{width:100%;border-collapse:collapse;font-size:11px}'
+    +'th,td{border:1px solid #ccc;padding:6px 8px;text-align:'+dir+'}'
+    +'th{background:#A7CE39;color:#fff;font-weight:700}'
+    +'tr:nth-child(even){background:#f9f9f9}'
+    +'@media print{body{padding:8px}button{display:none}}'
+    +'</style></head><body>'
+    +'<h1>USCE Lab - '+dev.name+'</h1>'
+    +'<div class="meta">'+genLabel+' '+new Date().toLocaleString()+' | '+dev.logs.length+' '+readLabel+'</div>'
+    +'<div class="limits">UCL '+dev.maxT+'C / LCL '+dev.minT+'C | UCL '+dev.maxH+'% / LCL '+dev.minH+'%</div>'
+    +'<table><thead><tr>'
+    +'<th>'+th_ts+'</th><th>'+th_t+'</th><th>'+th_h+'</th><th>'+th_b+'</th><th>'+th_a+'</th><th>'+th_n+'</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table>'
+    +'<script>window.onload=function(){window.print();};<\/script>'
+    +'</body></html>';
+
+  // Use Blob URL — works even when popups are blocked, renders correctly
+  var blob=new Blob([html],{type:'text/html;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.target='_blank';a.rel='noopener';
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);
+  setTimeout(function(){URL.revokeObjectURL(url);},10000);
+  toast(isAR?'📄 جارٍ فتح التقرير':'📄 Opening report...','info');
 }
 function dl(content,mime,filename){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([content],{type:mime}));a.download=filename;a.click();}
 
@@ -1723,6 +1780,25 @@ dz.addEventListener('dragover',e=>{e.preventDefault();dz.style.borderColor='#667
 dz.addEventListener('dragleave',()=>{dz.style.borderColor='';});
 dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';const f=e.dataTransfer.files[0];if(f)doImportBackup({target:{files:[f],value:''}});});
 
+// LICENSE
+function openLicense(){
+  var exp=new Date('2026-12-31');
+  var days=Math.ceil((exp-new Date())/86400000);
+  var eEl=$('licExpiry');
+  if(eEl)eEl.textContent=exp.toLocaleDateString(lang==='ar'?'ar-EG':'en-GB',{year:'numeric',month:'long',day:'numeric'});
+  var badge=$('licBadge');
+  if(badge){
+    if(days<0){badge.textContent='Expired';badge.style.background='#e74c3c';}
+    else if(days<=30){badge.textContent='Expires '+days+'d';badge.style.background='var(--brand-orange)';}
+    else{badge.textContent='\u2713 Licensed';badge.style.background='var(--brand-green)';}
+  }
+  $('licenseModal').classList.add('show');
+}
+function closeLicense(){$('licenseModal').classList.remove('show');}
+function copyLicKey(){
+  var k=$('licKeyTxt');
+  if(k&&navigator.clipboard)navigator.clipboard.writeText(k.textContent).then(function(){toast('Copied','info');});
+}
 loadDevices();
 requestNotifPerm();
 // Existing 30s render tick (refreshes cards including last-seen)
@@ -1733,5 +1809,35 @@ setInterval(()=>{
 },30000);
 setInterval(()=>save(),30000);
 </script>
+<!-- LICENSE MODAL -->
+<div id="licenseModal">
+  <div class="lic-box">
+    <div class="lic-head">
+      <div class="lic-head-name">USCE Lab Data Loggers</div>
+      <div class="lic-head-sub">Environmental Monitoring System</div>
+      <div class="lic-badge" id="licBadge">&#10003; Licensed</div>
+    </div>
+    <div class="lic-body">
+      <div class="lic-row">
+        <div class="lic-field"><label>Licensed To</label><div class="lic-val">Savola - USCE</div></div>
+        <div class="lic-field"><label>Department</label><div class="lic-val">Quality Control Lab</div></div>
+        <div class="lic-field"><label>Version</label><div class="lic-val">v6.0.0 (2026)</div></div>
+        <div class="lic-field"><label>Valid Until</label><div class="lic-val" id="licExpiry">Dec 31, 2030</div></div>
+      </div>
+      <div class="lic-field" style="margin-bottom:10px">
+        <label>License Key</label>
+        <div class="lic-val mono"><span id="licKeyTxt">USCE-QLAB-2026-0001-A7CE</span><button class="lic-copy" onclick="copyLicKey()" title="Copy">&#x29C9;</button></div>
+      </div>
+      <div class="lic-field">
+        <label>Support &amp; Contact</label>
+        <div class="lic-val" style="font-family:inherit;font-size:11px">mamahmoud@savola.com &nbsp;|&nbsp; Mahmoud Abou taleb</div>
+      </div>
+    </div>
+    <div class="lic-foot">
+      <div class="lic-notice">Licensed for internal use only.<br>Unauthorized distribution is prohibited.</div>
+      <button class="btn bp bsm" onclick="closeLicense()">&#x2715; Close</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
