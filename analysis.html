@@ -594,12 +594,13 @@ async function loadData() {
     setQuickRange();
     hideLoading();
     toast(`✅ تم تحميل ${rawData.length} سجل`, 'ok');
-  } catch (e) {
-    $('loadMsg').textContent = '❌ خطأ في التحميل — تحقق من الإعدادات';
-    setTimeout(hideLoading, 2000);
-    showSetup();
-    toast('❌ ' + e.message, 'err');
-  }
+} catch(e) {
+  console.error(e);
+  $('loadMsg').textContent = '❌ خطأ: ' + e.message;
+  // أضف السطر ده:
+  hideLoading();
+  toast('❌ ' + e.message, 'err');
+}
 }
 
 function hideLoading() {
