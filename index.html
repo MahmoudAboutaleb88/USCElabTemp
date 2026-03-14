@@ -244,10 +244,11 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
   letter-spacing:.2px;
   box-shadow:0 2px 6px rgba(0,0,0,.2);
 }
+
+/* LICENSE */
+#licBtn{display:inline-flex;align-items:center;padding:6px 14px;border-radius:20px;background:#4a7c1f;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;letter-spacing:.2px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
 #licBtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
 #licBtn:active{transform:translateY(0)}
-.lic-dot{display:none}
-.lic-tag{display:contents;color:#fff;font-size:12px;font-weight:700}
 #licenseModal{display:none;position:fixed;inset:0;background:rgba(20,25,33,.72);z-index:10000;align-items:center;justify-content:center;padding:16px}
 #licenseModal.show{display:flex}
 .lic-box{background:var(--card);border-radius:20px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.3);overflow:hidden;border:1.5px solid var(--bd)}
@@ -264,6 +265,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
 .lic-copy:hover{color:var(--brand-green)}
 .lic-foot{padding:12px 26px 18px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
 .lic-notice{font-size:10px;color:var(--sub);line-height:1.5;flex:1}
+
 </style>
 </head>
 <body>
@@ -279,6 +281,7 @@ body.dark .snooze-bar{background:#3e2f00;color:#ffe082}
   <div class="header">
     <h1 id="appTitle">📊 USCE Lab Data Loggers</h1>
     <div class="hbtns">
+      <a href="https://usc-elab-temp.vercel.app/analysis.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:9px;background:var(--brand-gray);color:#fff;font-size:12px;font-weight:700;text-decoration:none;transition:.2s;font-family:inherit;box-shadow:0 2px 6px rgba(0,0,0,.15)" onmouseover="this.style.filter='brightness(1.1)'" onmouseout="this.style.filter=''">📊 Dashboard</a>
       <button id="licBtn" onclick="openLicense()">✓ Licensed</button>
       <div class="pill" id="unitPill"><button class="on" onclick="setUnit('C')" aria-label="Celsius">°C</button><button onclick="setUnit('F')" aria-label="Fahrenheit">°F</button></div>
       <div class="pill" id="langPill"><button class="on" onclick="setLang('ar')" aria-label="Arabic">عربي</button><button onclick="setLang('en')" aria-label="English">EN</button></div>
@@ -599,7 +602,7 @@ ar:{
   autoReconn:'🔄 إعادة اتصال تلقائية...',
 },
 en:{
-  title:'Environmental Monitoring System',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
+  title:'📊 USCE Lab Data Loggers',addBtn:'➕ Add',reconnBtn:'🔄 Reconnect',
   compareBtn:'📊 Compare',backupBtn:'💾 Backup',simBtn:' Demo',stopSimBtn:'⏹️ Stop Demo',
   simBannerMsg:'Simulation Mode Active — Data is simulated',darkOn:'🌙',darkOff:'☀️',
   emptyTitle:'🔌 No Devices',emptySub:'Click "Add" or " Demo" to start',
@@ -1782,7 +1785,7 @@ dz.addEventListener('drop',e=>{e.preventDefault();dz.style.borderColor='';const 
 
 // LICENSE
 function openLicense(){
-  var exp=new Date('2026-12-31');
+  var exp=new Date('2030-12-31');
   var days=Math.ceil((exp-new Date())/86400000);
   var eEl=$('licExpiry');
   if(eEl)eEl.textContent=exp.toLocaleDateString(lang==='ar'?'ar-EG':'en-GB',{year:'numeric',month:'long',day:'numeric'});
@@ -1830,7 +1833,7 @@ setInterval(()=>save(),30000);
       </div>
       <div class="lic-field">
         <label>Support &amp; Contact</label>
-        <div class="lic-val" style="font-family:inherit;font-size:11px">mamahmoud@savola.com &nbsp;|&nbsp; Mahmoud Abou taleb</div>
+        <div class="lic-val" style="font-family:inherit;font-size:11px">mamahmoud@savola.com &nbsp;|&nbsp; Mahmoud Abou Taleb</div>
       </div>
     </div>
     <div class="lic-foot">
