@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -59,7 +59,7 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:14px}
 @media(max-width:900px){.two-col,.three-col{grid-template-columns:1fr}}
 .cpk-table{width:100%;border-collapse:collapse;font-size:12px}
-.cpk-table th{background:var(--sec);color:var(--sub);padding:9px 11px;text-align:right;font-weight:800;border-bottom:1.5px solid var(--bd);font-size:10px}
+.cpk-table th{background:var(--sec);color:var(--sub);padding:9px 11px;text-align:left;font-weight:800;border-bottom:1.5px solid var(--bd);font-size:10px}
 .cpk-table td{padding:9px 11px;border-bottom:1px solid var(--bd);color:var(--tx);font-family:var(--mono);font-size:11px}
 .cpk-table tr:hover td{background:var(--sec)}
 .cpk-badge{display:inline-block;padding:3px 9px;border-radius:20px;font-size:10px;font-weight:800;font-family:"Nunito",sans-serif}
@@ -91,6 +91,39 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
 .iso-val{font-size:20px;font-weight:900;font-family:var(--mono)}.iso-desc{font-size:10px;color:var(--sub);margin-top:3px}
 @media print{.ctrl-bar,.nav,.hbtns{display:none}.sec{box-shadow:none;border:1px solid #ddd}.page{display:block!important}}
 ::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:var(--bg)}::-webkit-scrollbar-thumb{background:var(--bd);border-radius:3px}
+.empty-state{text-align:center;padding:50px 20px;color:var(--sub)}
+.empty-state .es-icon{font-size:44px;margin-bottom:12px}
+.empty-state h3{font-size:16px;font-weight:800;color:var(--tx);margin-bottom:6px}
+.empty-state p{font-size:12px}
+@media(max-width:600px){
+  .header{padding:10px 14px}.header h1{font-size:16px}
+  .kpi-grid{grid-template-columns:1fr 1fr}
+  .kpi-val{font-size:18px}
+  .ctrl-bar{gap:8px}.ctrl-bar select,.ctrl-bar input{min-width:100px}
+  .nav-btn{padding:7px 10px;font-size:11px}
+  #contextBar{font-size:10px}
+}
+
+/* LICENSE */
+#licBtn{display:inline-flex;align-items:center;padding:6px 14px;border-radius:20px;background:#4a7c1f;border:none;color:#fff;font-size:12px;font-weight:700;cursor:pointer;transition:.2s;font-family:inherit;letter-spacing:.2px;box-shadow:0 2px 6px rgba(0,0,0,.2)}
+#licBtn:hover{filter:brightness(1.1);transform:translateY(-1px)}
+#licBtn:active{transform:translateY(0)}
+#licenseModal{display:none;position:fixed;inset:0;background:rgba(20,25,33,.72);z-index:10000;align-items:center;justify-content:center;padding:16px}
+#licenseModal.show{display:flex}
+.lic-box{background:var(--card);border-radius:20px;max-width:480px;width:100%;box-shadow:0 24px 64px rgba(0,0,0,.3);overflow:hidden;border:1.5px solid var(--bd)}
+.lic-head{background:linear-gradient(135deg,#2c3e50,var(--brand-gray));padding:24px 26px 20px;position:relative}
+.lic-head-name{font-size:19px;font-weight:900;color:#fff;display:flex;align-items:center;gap:9px}
+.lic-head-sub{font-size:10px;color:rgba(255,255,255,.5);margin-top:4px;letter-spacing:.7px;text-transform:uppercase;font-weight:600}
+.lic-badge{position:absolute;top:20px;right:20px;background:var(--brand-green);color:#fff;font-size:10px;font-weight:800;padding:4px 11px;border-radius:20px;letter-spacing:.6px}
+.lic-body{padding:20px 26px 18px}
+.lic-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px}
+.lic-field label{font-size:9px;font-weight:800;color:var(--sub);text-transform:uppercase;letter-spacing:.8px;display:block;margin-bottom:3px}
+.lic-val{font-size:12px;font-weight:700;color:var(--tx);background:var(--sec);border-radius:7px;padding:7px 11px;border:1px solid var(--bd)}
+.lic-val.mono{font-family:monospace;letter-spacing:2px;font-size:11px;display:flex;justify-content:space-between;align-items:center}
+.lic-copy{background:none;border:none;cursor:pointer;color:var(--sub);font-size:14px;padding:2px 5px;border-radius:4px;transition:.2s}
+.lic-copy:hover{color:var(--brand-green)}
+.lic-foot{padding:12px 26px 18px;border-top:1px solid var(--bd);display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.lic-notice{font-size:10px;color:var(--sub);line-height:1.5;flex:1}
 </style>
 </head>
 <body>
@@ -98,56 +131,72 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
   <div class="load-logo">📊</div>
   <div class="load-title">USCE Lab Analytics</div>
   <div class="load-bar"><div class="load-fill"></div></div>
-  <div class="load-msg" id="loadMsg">جارٍ تحميل البيانات...</div>
+  <div class="load-msg" id="loadMsg">Loading data...</div>
 </div>
 <div id="toast"></div>
 <div class="wrap" id="mainWrap" style="display:none">
   <div class="header">
     <div>
-      <h1>📊 USCE Lab — لوحة التحليل الشامل</h1>
+      <h1>📊 USCE Lab — Analytics Dashboard</h1>
       <div class="header-sub">Environmental Monitoring Analytics Dashboard</div>
     </div>
     <div class="hbtns">
       <span class="iso-badge">ISO/IEC 17025:2017</span>
+      <div id="lastUpdateBadge" style="font-size:10px;color:var(--sub);font-weight:700;padding:5px 10px;background:var(--sec);border-radius:8px;border:1px solid var(--bd);display:none">🕐 Last Update: <span id="lastUpdateTime">--</span></div>
+      <button id="licBtn" onclick="openLicense()">✓ Licensed</button>
       <button class="btn bgy bsm" onclick="toggleDark()" id="darkBtn">🌙</button>
-      <button class="btn bp bsm" onclick="refreshData()">🔄 تحديث</button>
+      <button class="btn bgy bsm" onclick="exportCSV()">📥 CSV</button>
+      <button class="btn bp bsm" onclick="refreshData()">🔄 Refresh</button>
       <button class="btn bo bsm" onclick="window.print()">📄 PDF</button>
     </div>
   </div>
   <div class="ctrl-bar">
-    <div><label>الجهاز</label><select id="devFilter" onchange="applyFilters()"><option value="all">كل الأجهزة</option></select></div>
-    <div><label>من</label><input type="date" id="dateFrom" onchange="applyFilters()"></div>
-    <div><label>إلى</label><input type="date" id="dateTo" onchange="applyFilters()"></div>
-    <div><label>الفترة السريعة</label><select id="quickRange" onchange="setQuickRange()">
-      <option value="0">مخصص</option><option value="1">اليوم</option>
-      <option value="7" selected>آخر 7 أيام</option><option value="30">آخر 30 يوم</option>
-      <option value="90">آخر 3 أشهر</option><option value="all">كل البيانات</option></select></div>
-    <div><label>الحالة</label><select id="alarmFilter" onchange="applyFilters()">
-      <option value="all">الكل</option><option value="alarm">تنبيهات فقط</option><option value="ok">ضمن الحدود</option></select></div>
-    <div><button class="btn bgy bsm" onclick="resetFilters()" style="margin-top:2px">↺ إعادة</button></div>
-    <div id="dataCount" style="margin-right:auto">0 سجل</div>
+    <div><label>Device</label><select id="devFilter" onchange="applyFilters()"><option value="all">All Devices</option></select></div>
+    <div><label>From</label><input type="date" id="dateFrom" onchange="applyFilters()"></div>
+    <div><label>To</label><input type="date" id="dateTo" onchange="applyFilters()"></div>
+    <div><label>Quick Range</label><select id="quickRange" onchange="setQuickRange()">
+      <option value="0">Custom</option><option value="1">Today</option>
+      <option value="7" selected>Last 7 Days</option><option value="30">Last 30 Days</option>
+      <option value="90">Last 3 Months</option><option value="all">All Data</option></select></div>
+    <div><label>Status</label><select id="alarmFilter" onchange="applyFilters()">
+      <option value="all">All</option><option value="alarm">Alarms Only</option><option value="ok">Within Limits</option></select></div>
+    <div><button class="btn bgy bsm" onclick="resetFilters()" style="margin-top:2px">↺ Reset</button></div>
+    <div id="dataCount" style="margin-right:auto">0 Records</div>
+  </div>
+  <!-- BREADCRUMB / CONTEXT BAR -->
+  <div id="contextBar" style="display:none;background:var(--card);border-radius:10px;padding:9px 16px;margin-bottom:10px;box-shadow:var(--sh);border:1.5px solid var(--bd);display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;font-weight:700;color:var(--sub)">
+    <span>📡 Device: <strong id="ctxDev" style="color:var(--brand-green)">--</strong></span>
+    <span style="color:var(--bd)">|</span>
+    <span>📅 Period: <strong id="ctxPeriod" style="color:var(--tx)">--</strong></span>
+    <span style="color:var(--bd)">|</span>
+    <span>📊 <strong id="ctxCount" style="color:var(--tx)">0</strong> Records</span>
+    <span style="color:var(--bd)">|</span>
+    <span>⚠️ Alarms: <strong id="ctxAlarms" style="color:#e74c3c">0</strong></span>
+    <span style="color:var(--bd)">|</span>
+    <span>✅ Compliance: <strong id="ctxCompliance" style="color:var(--brand-green)">--%</strong></span>
   </div>
   <div class="nav">
-    <button class="nav-btn on" onclick="showPage('overview',this)">📊 نظرة عامة</button>
+    <button class="nav-btn on" onclick="showPage('overview',this)">📊 Overview</button>
     <button class="nav-btn" onclick="showPage('cpk',this)">📐 CPK Analysis</button>
-    <button class="nav-btn" onclick="showPage('trends',this)">📈 المنحنيات</button>
-    <button class="nav-btn" onclick="showPage('stats',this)">📋 الإحصائيات</button>
-    <button class="nav-btn" onclick="showPage('alarms',this)">🚨 التنبيهات</button>
+    <button class="nav-btn" onclick="showPage('trends',this)">📈 Trends</button>
+    <button class="nav-btn" onclick="showPage('stats',this)">📋 Statistics</button>
+    <button class="nav-btn" onclick="showPage('alarms',this)">🚨 Alarms</button>
     <button class="nav-btn" onclick="showPage('heatmap',this)">🌡️ Heatmap</button>
-    <button class="nav-btn" onclick="showPage('compare',this)">⚖️ مقارنة الأجهزة</button>
+    <button class="nav-btn" onclick="showPage('compare',this)">⚖️ Device Comparison</button>
     <button class="nav-btn" onclick="showPage('iso',this)">🏅 ISO 17025</button>
+    <button class="nav-btn" onclick="showPage('log',this)">📜 Data Log</button>
   </div>
 
   <!-- OVERVIEW -->
   <div class="page on" id="page-overview">
     <div class="kpi-grid" id="kpiGrid"></div>
     <div class="two-col">
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ منحنى الحرارة</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewTempChart"></canvas></div></div>
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 منحنى الرطوبة</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewHumChart"></canvas></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ Temperature Trend</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewTempChart"></canvas></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity Trend</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box"><canvas id="overviewHumChart"></canvas></div></div>
     </div>
     <div class="two-col">
-      <div class="sec"><div class="sec-hdr"><div class="sec-title">📡 حالة الأجهزة</div></div><div id="deviceStatusList"></div></div>
-      <div class="sec"><div class="sec-hdr"><div class="sec-title">⚠️ التنبيهات حسب الجهاز</div></div><div class="chart-box short"><canvas id="alarmByDevChart"></canvas></div></div>
+      <div class="sec"><div class="sec-hdr"><div class="sec-title">📡 Device Status</div></div><div id="deviceStatusList"></div></div>
+      <div class="sec"><div class="sec-hdr"><div class="sec-title">⚠️ Alarms by Device</div></div><div class="chart-box short"><canvas id="alarmByDevChart"></canvas></div></div>
     </div>
   </div>
 
@@ -155,31 +204,41 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
   <div class="page" id="page-cpk">
     <div class="sec" style="margin-bottom:12px;background:rgba(167,206,57,.04);border-color:rgba(167,206,57,.3)">
       <div style="font-size:12px;color:var(--sub);line-height:1.8"><strong style="color:var(--brand-green)">📐 Process Capability Analysis</strong><br>
-      <span style="font-family:var(--mono);font-size:11px">Cp=(USL−LSL)/(6σ) | Cpk=min[(USL−μ)/3σ,(μ−LSL)/3σ] | ≥1.67 ممتاز | ≥1.33 جيد | ≥1.00 مقبول | &lt;1.00 يحتاج تحسين</span></div>
+      <span style="font-family:var(--mono);font-size:11px">Cp=(USL−LSL)/(6σ) | Cpk=min[(USL−μ)/3σ,(μ−LSL)/3σ] | ≥1.67 Excellent | ≥1.33 Good | ≥1.00 Acceptable | &lt;1.00 Needs Improvement</span></div>
     </div>
     <div class="two-col">
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ CPK — الحرارة</div><div class="sec-sub">Temperature Process Capability</div></div></div>
-        <div style="overflow-x:auto"><table class="cpk-table" id="cpkTempTable"><thead><tr><th>الجهاز</th><th>N</th><th>Mean</th><th>σ</th><th>USL</th><th>LSL</th><th>Cp</th><th>Cpk</th><th>التقييم</th></tr></thead><tbody></tbody></table></div></div>
-      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 CPK — الرطوبة</div><div class="sec-sub">Humidity Process Capability</div></div></div>
-        <div style="overflow-x:auto"><table class="cpk-table" id="cpkHumTable"><thead><tr><th>الجهاز</th><th>N</th><th>Mean</th><th>σ</th><th>USL</th><th>LSL</th><th>Cp</th><th>Cpk</th><th>التقييم</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🌡️ CPK — Temperature</div><div class="sec-sub">Temperature Process Capability</div></div></div>
+        <div style="overflow-x:auto"><table class="cpk-table" id="cpkTempTable"><thead><tr><th>Device</th><th>N</th><th>Mean</th><th>σ</th><th>USL</th><th>LSL</th><th>Cp</th><th>Cpk</th><th>Rating</th></tr></thead><tbody></tbody></table></div></div>
+      <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 CPK — Humidity</div><div class="sec-sub">Humidity Process Capability</div></div></div>
+        <div style="overflow-x:auto"><table class="cpk-table" id="cpkHumTable"><thead><tr><th>Device</th><th>N</th><th>Mean</th><th>σ</th><th>USL</th><th>LSL</th><th>Cp</th><th>Cpk</th><th>Rating</th></tr></thead><tbody></tbody></table></div></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">📊 Histogram — توزيع القراءات</div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">📊 Histogram — Reading Distribution</div></div>
       <div class="two-col" style="margin-bottom:0"><div class="chart-box"><canvas id="histTempChart"></canvas></div><div class="chart-box"><canvas id="histHumChart"></canvas></div></div></div>
   </div>
 
   <!-- TRENDS -->
   <div class="page" id="page-trends">
     <div class="sec">
-      <div class="sec-hdr"><div><div class="sec-title">🌡️ الحرارة مع حدود التحكم</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div>
+      <div class="sec-hdr"><div><div class="sec-title">🌡️ Temperature with Control Limits</div><div class="sec-sub">Temperature Trend with UCL/LCL</div></div>
         <div style="display:flex;gap:5px">
-          <button class="btn bgy bsm" onclick="setTrendRange(50)">آخر 50</button>
-          <button class="btn bgy bsm" onclick="setTrendRange(100)">آخر 100</button>
-          <button class="btn bgy bsm" onclick="setTrendRange(0)">الكل</button>
+          <button class="btn bgy bsm" onclick="setTrendRange(50)">Last 50</button>
+          <button class="btn bgy bsm" onclick="setTrendRange(100)">Last 100</button>
+          <button class="btn bgy bsm" onclick="setTrendRange(0)">All</button>
         </div></div>
       <div class="chart-box tall"><canvas id="trendTempChart"></canvas></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 الرطوبة مع حدود التحكم</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box tall"><canvas id="trendHumChart"></canvas></div></div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">🔋 مستوى البطارية</div><div class="sec-sub">Battery Level Trend</div></div><div class="chart-box short"><canvas id="trendBatChart"></canvas></div></div>
+    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Humidity with Control Limits</div><div class="sec-sub">Humidity Trend with UCL/LCL</div></div></div><div class="chart-box tall"><canvas id="trendHumChart"></canvas></div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">🔋 Battery Level</div><div class="sec-sub">Battery Level Trend</div></div><div class="chart-box short"><canvas id="trendBatChart"></canvas></div></div>
+    <div class="sec">
+      <div class="sec-hdr"><div><div class="sec-title">📉 Moving Average</div><div class="sec-sub">7-Point Moving Average for Trend Detection</div></div>
+        <div style="display:flex;gap:5px">
+          <button class="btn bgy bsm" onclick="setMAWindow(5)">MA-5</button>
+          <button class="btn bgy bsm" onclick="setMAWindow(7)">MA-7</button>
+          <button class="btn bgy bsm" onclick="setMAWindow(14)">MA-14</button>
+        </div>
+      </div>
+      <div class="chart-box"><canvas id="maChart"></canvas></div>
+    </div>
   </div>
 
   <!-- STATS -->
@@ -188,39 +247,66 @@ body{font-family:"Nunito",sans-serif;background:var(--bg);min-height:100vh;color
   <!-- ALARMS -->
   <div class="page" id="page-alarms">
     <div class="three-col">
-      <div class="sec"><div class="sec-title" style="margin-bottom:12px">🔢 التنبيهات حسب الجهاز</div><div class="chart-box short"><canvas id="alarmTypeChart"></canvas></div></div>
-      <div class="sec"><div class="sec-title" style="margin-bottom:12px">📅 التنبيهات بالساعة</div><div class="chart-box short"><canvas id="alarmTimeChart"></canvas></div></div>
-      <div class="sec"><div class="sec-title" style="margin-bottom:12px">✅ نسبة الامتثال</div><div class="chart-box short"><canvas id="complianceChart"></canvas></div></div>
+      <div class="sec"><div class="sec-title" style="margin-bottom:12px">🔢 Alarms by Device</div><div class="chart-box short"><canvas id="alarmTypeChart"></canvas></div></div>
+      <div class="sec"><div class="sec-title" style="margin-bottom:12px">📅 Alarms by Hour</div><div class="chart-box short"><canvas id="alarmTimeChart"></canvas></div></div>
+      <div class="sec"><div class="sec-title" style="margin-bottom:12px">✅ Compliance Rate</div><div class="chart-box short"><canvas id="complianceChart"></canvas></div></div>
     </div>
     <div class="sec">
-      <div class="sec-hdr"><div class="sec-title">📋 سجل التنبيهات</div>
-        <input style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif" placeholder="🔍 بحث..." oninput="filterAlarmLog(this.value)"></div>
+      <div class="sec-hdr"><div class="sec-title">📋 Alarm Log</div>
+        <input style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif" placeholder="🔍 Search..." oninput="filterAlarmLog(this.value)"></div>
       <div style="max-height:380px;overflow-y:auto" id="alarmLogList"></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">⏱️ متوسط الوقت بين التنبيهات</div><div class="sec-sub">Mean Time Between Alarms (MTBA)</div></div><div id="mtbaContent"></div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">⏱️ Mean Time Between Alarms</div><div class="sec-sub">Mean Time Between Alarms (MTBA)</div></div><div id="mtbaContent"></div></div>
   </div>
 
   <!-- HEATMAP -->
   <div class="page" id="page-heatmap">
     <div class="sec">
-      <div class="sec-hdr"><div><div class="sec-title">🌡️ Heatmap — الحرارة</div><div class="sec-sub">Average Temperature by Hour & Day of Week</div></div>
+      <div class="sec-hdr"><div><div class="sec-title">🌡️ Heatmap — Temperature</div><div class="sec-sub">Average Temperature by Hour & Day of Week</div></div>
         <select id="hmDevice" onchange="buildHeatmap()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:7px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif"></select></div>
       <div style="overflow-x:auto;padding-bottom:8px"><div class="heatmap-grid" id="heatmapTemp" style="min-width:680px"></div></div>
       <div style="display:flex;align-items:center;gap:8px;margin-top:10px;font-size:11px;color:var(--sub);font-weight:700">
-        <span>بارد</span><div style="height:8px;width:180px;border-radius:4px;background:linear-gradient(90deg,#c5e0f8,#A7CE39,#EF9600,#e74c3c)"></div><span>حار</span></div>
+        <span>Cold</span><div style="height:8px;width:180px;border-radius:4px;background:linear-gradient(90deg,#c5e0f8,#A7CE39,#EF9600,#e74c3c)"></div><span>Hot</span></div>
     </div>
-    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Heatmap — الرطوبة</div><div class="sec-sub">Average Humidity by Hour & Day of Week</div></div></div>
+    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">💧 Heatmap — Humidity</div><div class="sec-sub">Average Humidity by Hour & Day of Week</div></div></div>
       <div style="overflow-x:auto;padding-bottom:8px"><div class="heatmap-grid" id="heatmapHum" style="min-width:680px"></div></div></div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">📊 متوسط الحرارة بالساعة</div><div class="sec-sub">Hourly Average Profile</div></div><div class="chart-box"><canvas id="hourlyChart"></canvas></div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">📊 Hourly Temperature Average</div><div class="sec-sub">Hourly Average Profile</div></div><div class="chart-box"><canvas id="hourlyChart"></canvas></div></div>
   </div>
 
   <!-- COMPARE -->
   <div class="page" id="page-compare">
-    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">📊 مقارنة الأجهزة — Min / Mean / Max</div><div class="sec-sub">Device Statistical Comparison</div></div></div>
+    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">📊 Device Comparison — Min / Mean / Max</div><div class="sec-sub">Device Statistical Comparison</div></div></div>
       <div class="two-col" style="margin-bottom:0"><div class="chart-box"><canvas id="boxTempChart"></canvas></div><div class="chart-box"><canvas id="boxHumChart"></canvas></div></div></div>
-    <div class="sec"><div class="sec-hdr"><div class="sec-title">📋 ملخص مقارن</div></div>
+    <div class="sec"><div class="sec-hdr"><div class="sec-title">📋 Comparison Summary</div></div>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px" id="cmpCards"></div></div>
-    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🔗 الارتباط — حرارة × رطوبة</div><div class="sec-sub">Temperature vs Humidity Scatter Plot</div></div></div><div class="chart-box tall"><canvas id="scatterChart"></canvas></div></div>
+    <div class="sec"><div class="sec-hdr"><div><div class="sec-title">🔗 Correlation — Temperature × Humidity</div><div class="sec-sub">Temperature vs Humidity Scatter Plot</div></div></div><div class="chart-box tall"><canvas id="scatterChart"></canvas></div></div>
+  </div>
+
+  <!-- LOG PAGE -->
+  <div class="page" id="page-log">
+    <div class="sec">
+      <div class="sec-hdr">
+        <div><div class="sec-title">📜 Complete Data Log</div><div class="sec-sub">Full Data Log with Advanced Filters</div></div>
+        <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:center">
+          <input id="logSearch" placeholder="🔍 Search log..." style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 11px;font-size:12px;outline:none;font-family:'Nunito',sans-serif;min-width:160px" oninput="renderLogPage()">
+          <select id="logTypeFilter" onchange="renderLogPage()" style="background:var(--inp);border:1.5px solid var(--bd);border-radius:8px;color:var(--tx);padding:6px 10px;font-size:12px;outline:none;font-family:'Nunito',sans-serif">
+            <option value="all">All</option>
+            <option value="alarm">Alarms Only</option>
+            <option value="ok">Within Limits</option>
+            <option value="noted">Has Notes</option>
+          </select>
+          <button class="btn bgy bsm" onclick="exportCSV()">📥 CSV</button>
+        </div>
+      </div>
+      <div style="font-size:11px;color:var(--sub);font-weight:700;margin-bottom:8px" id="logPageInfo">0 Records</div>
+      <div style="overflow-x:auto">
+        <table class="cpk-table" id="logTable">
+          <thead><tr><th>#</th><th>Timestamp</th><th>Device</th><th>Temperature</th><th>Humidity</th><th>Battery</th><th>Status</th><th>Note</th></tr></thead>
+          <tbody id="logTableBody"></tbody>
+        </table>
+      </div>
+      <div class="log-pagination" id="logPagination" style="display:flex;gap:5px;align-items:center;justify-content:center;margin-top:12px;flex-wrap:wrap"></div>
+    </div>
   </div>
 
   <!-- ISO -->
@@ -249,18 +335,18 @@ const SHEETS_URL='https://script.google.com/macros/s/AKfycbxNb_2A_88552nYjBcdD5U
 let rawData=[],filteredData=[],devices=[],charts={},trendRange=0,dark=false,allAlarms=[];
 const $=id=>document.getElementById(id);
 const COLORS=['#A7CE39','#EF9600','#5D676F','#e74c3c','#00bcd4','#9c27b0','#ff5722','#009688'];
-const DAYS=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+const DAYS=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
 window.onload=async()=>{await loadData();};
 
 function toggleDark(){dark=!dark;document.body.classList.toggle('dark',dark);$('darkBtn').textContent=dark?'☀️':'🌙';}
 
 async function loadData(){
-  $('loadMsg').textContent='جارٍ جلب البيانات...';
+  $('loadMsg').textContent='Loading data...';
   try{
     const res=await fetch(SHEETS_URL+'?t='+Date.now());
     const json=await res.json();
-    if(!Array.isArray(json))throw new Error('تنسيق البيانات غير صحيح');
+    if(!Array.isArray(json))throw new Error('Invalid data format');
     rawData=json.map(r=>({
       ts:new Date(r['Timestamp']||r['timestamp']),
       dev:r['Device']||r['device']||'Unknown',
@@ -277,9 +363,9 @@ async function loadData(){
     rawData.sort((a,b)=>a.ts-b.ts);
     devices=[...new Set(rawData.map(r=>r.dev))];
     populateFilters();setQuickRange();hideLoading();
-    toast('✅ تم تحميل '+rawData.length+' سجل','ok');
+    toast('✅ Loaded '+rawData.length+' records','ok');
   }catch(e){
-    $('loadMsg').textContent='❌ خطأ — '+e.message;
+    $('loadMsg').textContent='❌ Error — '+e.message;
     setTimeout(hideLoading,2500);toast('❌ '+e.message,'err');
   }
 }
@@ -292,7 +378,7 @@ async function refreshData(){
   $('mainWrap').style.display='none';await loadData();
 }
 function populateFilters(){
-  const opts='<option value="all">كل الأجهزة</option>'+devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
+  const opts='<option value="all">All Devices</option>'+devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
   $('devFilter').innerHTML=opts;$('hmDevice').innerHTML=devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
 }
 function setQuickRange(){
@@ -313,7 +399,7 @@ function applyFilters(){
     if(af==='alarm'&&!r.alarm)return false;if(af==='ok'&&r.alarm)return false;
     return true;
   });
-  $('dataCount').textContent=filteredData.length+' سجل';rebuildAll();
+  $('dataCount').textContent=filteredData.length+' Records';rebuildAll();updateContextBar();
 }
 function resetFilters(){$('devFilter').value='all';$('dateFrom').value='';$('dateTo').value='';$('alarmFilter').value='all';$('quickRange').value='all';applyFilters();}
 function setTrendRange(n){trendRange=n;buildTrends();}
@@ -339,12 +425,42 @@ function cpkCalc(mean,std,usl,lsl){
   return{cp:+((usl-lsl)/(6*std)).toFixed(3),cpk:+Math.min((usl-mean)/(3*std),(mean-lsl)/(3*std)).toFixed(3)};
 }
 function cpkBadge(v){
-  if(v>=1.67)return'<span class="cpk-badge cpk-exc">ممتاز ≥1.67</span>';
-  if(v>=1.33)return'<span class="cpk-badge cpk-good">جيد ≥1.33</span>';
-  if(v>=1.00)return'<span class="cpk-badge cpk-warn">مقبول ≥1.00</span>';
-  return'<span class="cpk-badge cpk-fail">يحتاج تحسين</span>';
+  if(v>=1.67)return'<span class="cpk-badge cpk-exc">Excellent ≥1.67</span>';
+  if(v>=1.33)return'<span class="cpk-badge cpk-good">Good ≥1.33</span>';
+  if(v>=1.00)return'<span class="cpk-badge cpk-warn">Acceptable ≥1.00</span>';
+  return'<span class="cpk-badge cpk-fail">Needs Improvement</span>';
 }
-function getLimits(rows){return{maxT:rows.find(r=>r.maxT)?.maxT,minT:rows.find(r=>r.minT)?.minT,maxH:rows.find(r=>r.maxH)?.maxH,minH:rows.find(r=>r.minH)?.minH};}
+// getLimits: returns per-row dynamic limits (each row carries its own UCL/LCL from the sheet)
+// For a single device: consistent limits. For multiple devices: each row has its own limits.
+function getLimits(rows){
+  // Get the most common (mode) limit value per type — handles mixed devices
+  function mode(arr){
+    const a=arr.filter(v=>v!=null&&!isNaN(v));
+    if(!a.length)return null;
+    const freq={};a.forEach(v=>{freq[v]=(freq[v]||0)+1;});
+    return+Object.entries(freq).sort((a,b)=>b[1]-a[1])[0][0];
+  }
+  return{
+    maxT:mode(rows.map(r=>r.maxT)),
+    minT:mode(rows.map(r=>r.minT)),
+    maxH:mode(rows.map(r=>r.maxH)),
+    minH:mode(rows.map(r=>r.minH))
+  };
+}
+// getLimitsPerDevice: returns limits map keyed by device name
+function getLimitsPerDev(){
+  const map={};
+  devices.forEach(dev=>{
+    const rows=getDevData(dev);
+    map[dev]={
+      maxT:rows.find(r=>r.maxT)?.maxT||null,
+      minT:rows.find(r=>r.minT)?.minT||null,
+      maxH:rows.find(r=>r.maxH)?.maxH||null,
+      minH:rows.find(r=>r.minH)?.minH||null,
+    };
+  });
+  return map;
+}
 function getDevData(dev,data=filteredData){return dev==='all'?data:data.filter(r=>r.dev===dev);}
 
 function buildOverview(){
@@ -355,39 +471,44 @@ function buildOverview(){
   const alarms=filteredData.filter(r=>r.alarm);
   const st=stats(temps),sh=stats(hums),lim=getLimits(filteredData);
   const compliance=temps.length?Math.round(filteredData.filter(r=>r.t!=null&&lim.maxT&&lim.minT&&r.t<=lim.maxT&&r.t>=lim.minT).length/filteredData.filter(r=>r.t!=null).length*100):0;
+  if(!filteredData.length){
+    $('kpiGrid').innerHTML='<div class="empty-state" style="grid-column:1/-1"><div class="es-icon">📭</div><h3>No Data Available</h3><p>Check connection or adjust date range</p></div>';
+    ['overviewTempChart','overviewHumChart','deviceStatusList','alarmByDevChart'].forEach(id=>{const el=$(id);if(el)el.innerHTML='<div class="empty-state"><div class="es-icon">📊</div><p>No data available</p></div>';});
+    return;
+  }
   const kpis=[
-    {icon:'🌡️',val:st.mean!=null?st.mean.toFixed(1)+'°C':'--',lbl:'متوسط الحرارة',sub:'Min:'+st.min?.toFixed(1)+' Max:'+st.max?.toFixed(1),cls:''},
-    {icon:'💧',val:sh.mean!=null?sh.mean.toFixed(1)+'%':'--',lbl:'متوسط الرطوبة',sub:'Min:'+sh.min?.toFixed(1)+' Max:'+sh.max?.toFixed(1),cls:''},
-    {icon:'📡',val:devices.length,lbl:'عدد الأجهزة',sub:filteredData.length+' إجمالي القراءات',cls:'gray'},
-    {icon:'⚠️',val:alarms.length,lbl:'إجمالي التنبيهات',sub:(alarms.length/Math.max(filteredData.length,1)*100).toFixed(1)+'% من الكل',cls:'red'},
-    {icon:'✅',val:compliance+'%',lbl:'نسبة الامتثال',sub:'ضمن حدود UCL/LCL',cls:compliance>=95?'':'orange'},
-    {icon:'🔋',val:bats.length?Math.round(bats.reduce((a,b)=>a+b,0)/bats.length)+'%':'--',lbl:'متوسط البطارية',sub:'Battery Average',cls:'gray'},
-    {icon:'📏',val:st.std!=null?'±'+st.std.toFixed(2):'--',lbl:'Std Dev — الحرارة',sub:'Standard Deviation',cls:'gray'},
-    {icon:'📏',val:sh.std!=null?'±'+sh.std.toFixed(2):'--',lbl:'Std Dev — الرطوبة',sub:'Standard Deviation',cls:'gray'},
+    {icon:'🌡️',val:st.mean!=null?st.mean.toFixed(1)+'°C':'--',lbl:'Avg Temperature',sub:'Min:'+st.min?.toFixed(1)+' Max:'+st.max?.toFixed(1),cls:''},
+    {icon:'💧',val:sh.mean!=null?sh.mean.toFixed(1)+'%':'--',lbl:'Avg Humidity',sub:'Min:'+sh.min?.toFixed(1)+' Max:'+sh.max?.toFixed(1),cls:''},
+    {icon:'📡',val:devices.length,lbl:'Devices',sub:filteredData.length+' Total Records',cls:'gray'},
+    {icon:'⚠️',val:alarms.length,lbl:'Total Alarms',sub:(alarms.length/Math.max(filteredData.length,1)*100).toFixed(1)+'% of total',cls:'red'},
+    {icon:'✅',val:compliance+'%',lbl:'Compliance Rate',sub:'Within UCL/LCL limits',cls:compliance>=95?'':'orange'},
+    {icon:'🔋',val:bats.length?Math.round(bats.reduce((a,b)=>a+b,0)/bats.length)+'%':'--',lbl:'Avg Battery',sub:'Battery Average',cls:'gray'},
+    {icon:'📏',val:st.std!=null?'±'+st.std.toFixed(2):'--',lbl:'Std Dev — Temperature',sub:'Standard Deviation',cls:'gray'},
+    {icon:'📏',val:sh.std!=null?'±'+sh.std.toFixed(2):'--',lbl:'Std Dev — Humidity',sub:'Standard Deviation',cls:'gray'},
   ];
   $('kpiGrid').innerHTML=kpis.map(k=>'<div class="kpi"><div class="kpi-icon">'+k.icon+'</div><div class="kpi-val '+k.cls+'">'+k.val+'</div><div class="kpi-label">'+k.lbl+'</div><div class="kpi-sub">'+k.sub+'</div></div>').join('');
   const sl=filteredData.slice(-200);
   const lb=sl.map(r=>r.ts.toLocaleTimeString('ar',{hour:'2-digit',minute:'2-digit'}));
   mkChart('overviewTempChart',{type:'line',data:{labels:lb,datasets:[
-    lineDS('🌡️ الحرارة',sl.map(r=>r.t),'#A7CE39',true),
-    {label:'UCL',data:sl.map(()=>lim.maxT),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0},
-    {label:'LCL',data:sl.map(()=>lim.minT),borderColor:'#2196F3',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0},
+    lineDS('🌡️ Temperature',sl.map(r=>r.t),'#A7CE39',true),
+    {label:'UCL',data:sl.map(r=>r.maxT||null),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:true},
+    {label:'LCL',data:sl.map(r=>r.minT||null),borderColor:'#2196F3',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:true},
   ]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},scales:axOpts('°C')}});
   mkChart('overviewHumChart',{type:'line',data:{labels:lb,datasets:[
-    lineDS('💧 الرطوبة',sl.map(r=>r.h),'#EF9600',true),
-    {label:'UCL',data:sl.map(()=>lim.maxH),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0},
-    {label:'LCL',data:sl.map(()=>lim.minH),borderColor:'#00bcd4',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0},
+    lineDS('💧 Humidity',sl.map(r=>r.h),'#EF9600',true),
+    {label:'UCL',data:sl.map(r=>r.maxH||null),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:true},
+    {label:'LCL',data:sl.map(r=>r.minH||null),borderColor:'#00bcd4',borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:true},
   ]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},scales:axOpts('%')}});
   $('deviceStatusList').innerHTML=devices.map((dev,i)=>{
     const rows=getDevData(dev);const last=rows[rows.length-1];
     const al=rows.filter(r=>r.alarm).length;const comp=rows.length?Math.round((rows.length-al)/rows.length*100):0;
     return'<div class="dev-status-row"><div style="width:9px;height:9px;border-radius:50%;background:'+COLORS[i%8]+';flex-shrink:0"></div>'+
-      '<div style="flex:1"><div style="font-weight:800;font-size:13px">'+dev+'</div><div style="font-size:10px;color:var(--sub)">'+rows.length+' قراءة | آخر: '+(last?.ts.toLocaleString('ar')||'--')+'</div></div>'+
-      '<div style="text-align:center;min-width:60px"><div style="font-family:var(--mono);font-size:14px;color:var(--brand-green);font-weight:800">'+(last?.t?.toFixed(1)||'--')+'°C</div><div style="font-size:10px;color:var(--sub)">آخر قراءة</div></div>'+
-      '<div style="text-align:center;min-width:55px"><div style="font-family:var(--mono);font-size:14px;color:var(--brand-green);font-weight:800">'+comp+'%</div><div style="font-size:10px;color:var(--sub)">امتثال</div></div>'+
-      '<div style="text-align:center;min-width:45px"><div style="font-family:var(--mono);font-size:14px;color:#e74c3c;font-weight:800">'+al+'</div><div style="font-size:10px;color:var(--sub)">تنبيه</div></div></div>';
+      '<div style="flex:1"><div style="font-weight:800;font-size:13px">'+dev+'</div><div style="font-size:10px;color:var(--sub)">'+rows.length+' records | Last: '+(last?.ts.toLocaleString('en-GB')||'--')+'</div></div>'+
+      '<div style="text-align:center;min-width:60px"><div style="font-family:var(--mono);font-size:14px;color:var(--brand-green);font-weight:800">'+(last?.t?.toFixed(1)||'--')+'°C</div><div style="font-size:10px;color:var(--sub)">Last<br>Update</div></div>'+
+      '<div style="text-align:center;min-width:55px"><div style="font-family:var(--mono);font-size:14px;color:var(--brand-green);font-weight:800">'+comp+'%</div><div style="font-size:10px;color:var(--sub)">Compliance</div></div>'+
+      '<div style="text-align:center;min-width:45px"><div style="font-family:var(--mono);font-size:14px;color:#e74c3c;font-weight:800">'+al+'</div><div style="font-size:10px;color:var(--sub)">Alarm</div></div></div>';
   }).join('');
-  mkChart('alarmByDevChart',{type:'bar',data:{labels:devices,datasets:[{label:'تنبيهات',
+  mkChart('alarmByDevChart',{type:'bar',data:{labels:devices,datasets:[{label:'Alarms',
     data:devices.map(dev=>getDevData(dev).filter(r=>r.alarm).length),
     backgroundColor:COLORS.map(c=>c+'99'),borderColor:COLORS,borderWidth:1}]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},
@@ -402,7 +523,7 @@ function buildCPK(){
       const rows=getDevData(dev);const lim=getLimits(rows);
       const usl=isH?lim.maxH:lim.maxT;const lsl=isH?lim.minH:lim.minT;
       const st=stats(rows.map(r=>isH?r.h:r.t));
-      if(!st.n||!usl||!lsl)return'<tr><td style="color:var(--brand-green);font-weight:800">'+dev+'</td><td colspan="8" style="color:var(--sub)">لا توجد حدود</td></tr>';
+      if(!st.n||!usl||!lsl)return'<tr><td style="color:var(--brand-green);font-weight:800">'+dev+'</td><td colspan="8" style="color:var(--sub)">No limits defined</td></tr>';
       const c=cpkCalc(st.mean,st.std,usl,lsl);const unit=isH?'%':'°C';
       return'<tr><td style="color:var(--brand-green);font-weight:800">'+dev+'</td><td>'+st.n+'</td><td>'+st.mean.toFixed(2)+'</td><td>'+st.std.toFixed(3)+'</td>'+
         '<td>'+usl+unit+'</td><td>'+lsl+unit+'</td>'+
@@ -411,8 +532,8 @@ function buildCPK(){
         '<td>'+cpkBadge(c.cpk)+'</td></tr>';
     }).join('');
   });
-  buildHistogram('histTempChart',filteredData.map(r=>r.t).filter(v=>v!=null),'🌡️ الحرارة','#A7CE39',filteredData.find(r=>r.maxT)?.maxT,filteredData.find(r=>r.minT)?.minT,'°C');
-  buildHistogram('histHumChart',filteredData.map(r=>r.h).filter(v=>v!=null),'💧 الرطوبة','#EF9600',filteredData.find(r=>r.maxH)?.maxH,filteredData.find(r=>r.minH)?.minH,'%');
+  buildHistogram('histTempChart',filteredData.map(r=>r.t).filter(v=>v!=null),'🌡️ Temperature','#A7CE39',filteredData.find(r=>r.maxT)?.maxT,filteredData.find(r=>r.minT)?.minT,'°C');
+  buildHistogram('histHumChart',filteredData.map(r=>r.h).filter(v=>v!=null),'💧 Humidity','#EF9600',filteredData.find(r=>r.maxH)?.maxH,filteredData.find(r=>r.minH)?.minH,'%');
 }
 function buildHistogram(cid,data,label,color,usl,lsl,unit){
   if(!data.length)return;
@@ -428,22 +549,43 @@ function buildTrends(){
   if(!filteredData.length)return;
   const data=trendRange>0?filteredData.slice(-trendRange):filteredData;
   const labels=data.map(r=>r.ts.toLocaleString('ar',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
-  const lim=getLimits(filteredData);
-  const dsT=devices.map((dev,i)=>{const dr=trendRange>0?getDevData(dev).slice(-trendRange):getDevData(dev);return lineDS(dev,dr.map(r=>r.t),COLORS[i%8]);});
-  if(lim.maxT)dsT.push({label:'UCL',data:data.map(()=>lim.maxT),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[7,3],pointRadius:0,fill:false,tension:0});
-  if(lim.minT)dsT.push({label:'LCL',data:data.map(()=>lim.minT),borderColor:'#2196F3',borderWidth:1.5,borderDash:[7,3],pointRadius:0,fill:false,tension:0});
+  const limMap=getLimitsPerDev();
+  // Temperature datasets — each device line + its own UCL/LCL
+  const dsT=[];
+  devices.forEach((dev,i)=>{
+    const dr=trendRange>0?getDevData(dev).slice(-trendRange):getDevData(dev);
+    dsT.push(lineDS(dev,dr.map(r=>r.t),COLORS[i%8]));
+    const lim=limMap[dev];
+    // Draw limit lines per-device using that device's actual rows as x-axis reference
+    // We map limits onto the full shared labels array by matching timestamps
+    const devTs=new Set(dr.map(r=>r.ts.getTime()));
+    const uclData=data.map(r=>devTs.has(r.ts.getTime())&&lim.maxT!=null?lim.maxT:null);
+    const lclData=data.map(r=>devTs.has(r.ts.getTime())&&lim.minT!=null?lim.minT:null);
+    if(lim.maxT!=null)dsT.push({label:'UCL '+dev+' ('+lim.maxT+'°C)',data:uclData,borderColor:COLORS[i%8],borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:false});
+    if(lim.minT!=null)dsT.push({label:'LCL '+dev+' ('+lim.minT+'°C)',data:lclData,borderColor:COLORS[i%8],borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false,tension:0,spanGaps:false,opacity:.6});
+  });
   mkChart('trendTempChart',{type:'line',data:{labels,datasets:dsT},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},scales:axOpts('°C')}});
-  const dsH=devices.map((dev,i)=>{const dr=trendRange>0?getDevData(dev).slice(-trendRange):getDevData(dev);return lineDS(dev,dr.map(r=>r.h),COLORS[i%8]);});
-  if(lim.maxH)dsH.push({label:'UCL',data:data.map(()=>lim.maxH),borderColor:'#e74c3c',borderWidth:1.5,borderDash:[7,3],pointRadius:0,fill:false,tension:0});
-  if(lim.minH)dsH.push({label:'LCL',data:data.map(()=>lim.minH),borderColor:'#00bcd4',borderWidth:1.5,borderDash:[7,3],pointRadius:0,fill:false,tension:0});
+  // Humidity datasets — each device + its own UCL/LCL
+  const dsH=[];
+  devices.forEach((dev,i)=>{
+    const dr=trendRange>0?getDevData(dev).slice(-trendRange):getDevData(dev);
+    dsH.push(lineDS(dev,dr.map(r=>r.h),COLORS[i%8]));
+    const lim=limMap[dev];
+    const devTs=new Set(dr.map(r=>r.ts.getTime()));
+    const uclData=data.map(r=>devTs.has(r.ts.getTime())&&lim.maxH!=null?lim.maxH:null);
+    const lclData=data.map(r=>devTs.has(r.ts.getTime())&&lim.minH!=null?lim.minH:null);
+    if(lim.maxH!=null)dsH.push({label:'UCL '+dev+' ('+lim.maxH+'%)',data:uclData,borderColor:COLORS[i%8],borderWidth:1.5,borderDash:[6,3],pointRadius:0,fill:false,tension:0,spanGaps:false});
+    if(lim.minH!=null)dsH.push({label:'LCL '+dev+' ('+lim.minH+'%)',data:lclData,borderColor:COLORS[i%8],borderWidth:1,borderDash:[3,3],pointRadius:0,fill:false,tension:0,spanGaps:false});
+  });
   mkChart('trendHumChart',{type:'line',data:{labels,datasets:dsH},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},scales:axOpts('%')}});
+  buildMA();
   mkChart('trendBatChart',{type:'line',data:{labels,datasets:devices.map((dev,i)=>lineDS(dev,getDevData(dev).map(r=>r.b),COLORS[i%8]))},
     options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},
       scales:{x:{ticks:{color:tc(),maxTicksLimit:8},grid:{color:gc()}},y:{ticks:{color:tc()},grid:{color:gc()},min:0,max:100}}}});
 }
 
 function buildStats(){
-  if(!filteredData.length){$('statsContent').innerHTML='<p style="color:var(--sub);padding:20px;text-align:center">لا توجد بيانات</p>';return;}
+  if(!filteredData.length){$('statsContent').innerHTML='<p style="color:var(--sub);padding:20px;text-align:center">No data available</p>';return;}
   let html='';
   devices.forEach((dev,i)=>{
     const rows=getDevData(dev);const st=stats(rows.map(r=>r.t));const sh=stats(rows.map(r=>r.h));
@@ -451,15 +593,15 @@ function buildStats(){
     const comp=rows.filter(r=>r.t!=null).length?Math.round(rows.filter(r=>r.t!=null&&lim.maxT&&r.t<=lim.maxT&&r.t>=lim.minT).length/rows.filter(r=>r.t!=null).length*100):0;
     html+='<div class="sec" style="border-color:'+COLORS[i%8]+'66">'+
       '<div class="sec-hdr"><div><div class="sec-title"><span style="width:10px;height:10px;border-radius:50%;background:'+COLORS[i%8]+';display:inline-block"></span> '+dev+'</div></div>'+
-      '<div style="font-size:11px;color:var(--sub);font-weight:700">'+rows.length+' قراءة | امتثال: <span style="color:var(--brand-green)">'+comp+'%</span> | تنبيهات: <span style="color:#e74c3c">'+al+'</span></div></div>'+
+      '<div style="font-size:11px;color:var(--sub);font-weight:700">'+rows.length+' records | Compliance: <span style="color:var(--brand-green)">'+comp+'%</span> | Alarms: <span style="color:#e74c3c">'+al+'</span></div></div>'+
       '<div class="two-col" style="margin-bottom:0">'+
-      '<div><div style="font-size:11px;font-weight:800;color:var(--brand-green);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)">🌡️ الحرارة (°C)</div><div class="stat-grid">'+
-        sb('المتوسط',st.mean?.toFixed(3))+sb('الوسيط',st.median?.toFixed(3))+sb('الأدنى',st.min?.toFixed(2))+sb('الأقصى',st.max?.toFixed(2))+
-        sb('Std Dev σ',st.std?.toFixed(4))+sb('المدى',st.min!=null?(st.max-st.min).toFixed(3):'--')+
+      '<div><div style="font-size:11px;font-weight:800;color:var(--brand-green);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)">🌡️ Temperature (°C)</div><div class="stat-grid">'+
+        sb('Mean',st.mean?.toFixed(3))+sb('Median',st.median?.toFixed(3))+sb('Min',st.min?.toFixed(2))+sb('Max',st.max?.toFixed(2))+
+        sb('Std Dev σ',st.std?.toFixed(4))+sb('Range',st.min!=null?(st.max-st.min).toFixed(3):'--')+
         sb('UCL',lim.maxT)+sb('LCL',lim.minT)+(lim.maxT&&lim.minT&&st.std?sb('Cpk',cpkCalc(st.mean,st.std,lim.maxT,lim.minT).cpk):'')+'</div></div>'+
-      '<div><div style="font-size:11px;font-weight:800;color:var(--brand-orange);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)">💧 الرطوبة (%)</div><div class="stat-grid">'+
-        sb('المتوسط',sh.mean?.toFixed(3))+sb('الوسيط',sh.median?.toFixed(3))+sb('الأدنى',sh.min?.toFixed(2))+sb('الأقصى',sh.max?.toFixed(2))+
-        sb('Std Dev σ',sh.std?.toFixed(4))+sb('المدى',sh.min!=null?(sh.max-sh.min).toFixed(3):'--')+
+      '<div><div style="font-size:11px;font-weight:800;color:var(--brand-orange);margin-bottom:8px;padding-bottom:5px;border-bottom:1px solid var(--bd)">💧 Humidity (%)</div><div class="stat-grid">'+
+        sb('Mean',sh.mean?.toFixed(3))+sb('Median',sh.median?.toFixed(3))+sb('Min',sh.min?.toFixed(2))+sb('Max',sh.max?.toFixed(2))+
+        sb('Std Dev σ',sh.std?.toFixed(4))+sb('Range',sh.min!=null?(sh.max-sh.min).toFixed(3):'--')+
         sb('UCL',lim.maxH)+sb('LCL',lim.minH)+(lim.maxH&&lim.minH&&sh.std?sb('Cpk',cpkCalc(sh.mean,sh.std,lim.maxH,lim.minH).cpk):'')+'</div></div></div></div>';
   });
   $('statsContent').innerHTML=html;
@@ -470,23 +612,23 @@ function buildAlarms(){
   allAlarms=filteredData.filter(r=>r.alarm);
   mkChart('alarmTypeChart',{type:'doughnut',data:{labels:devices,datasets:[{data:devices.map(dev=>getDevData(dev).filter(r=>r.alarm).length),backgroundColor:COLORS.map(c=>c+'bb'),borderColor:COLORS,borderWidth:1.5}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc(),font:{size:10}}}}}});
   const byH=Array(24).fill(0);allAlarms.forEach(r=>byH[r.ts.getHours()]++);
-  mkChart('alarmTimeChart',{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+':00'),datasets:[{label:'تنبيهات',data:byH,backgroundColor:'#e74c3c66',borderColor:'#e74c3c',borderWidth:1}]},
+  mkChart('alarmTimeChart',{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+':00'),datasets:[{label:'Alarms',data:byH,backgroundColor:'#e74c3c66',borderColor:'#e74c3c',borderWidth:1}]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc(),maxTicksLimit:12}},y:{ticks:{color:tc()},grid:{color:gc()}}}}});
-  mkChart('complianceChart',{type:'doughnut',data:{labels:['ضمن الحدود','تنبيهات'],datasets:[{data:[filteredData.length-allAlarms.length,allAlarms.length],backgroundColor:['#A7CE3988','#e74c3c88'],borderColor:['#A7CE39','#e74c3c'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}}}});
+  mkChart('complianceChart',{type:'doughnut',data:{labels:['Within Limits','Alarms'],datasets:[{data:[filteredData.length-allAlarms.length,allAlarms.length],backgroundColor:['#A7CE3988','#e74c3c88'],borderColor:['#A7CE39','#e74c3c'],borderWidth:2}]},options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}}}});
   renderAlarmLog(allAlarms);
   $('mtbaContent').innerHTML='<div class="three-col" style="margin:0">'+devices.map(dev=>{
     const da=getDevData(dev).filter(r=>r.alarm);
-    if(da.length<2)return'<div class="iso-card"><div class="iso-title">'+dev+'</div><div style="color:var(--sub);font-size:12px">تنبيهات غير كافية</div></div>';
+    if(da.length<2)return'<div class="iso-card"><div class="iso-title">'+dev+'</div><div style="color:var(--sub);font-size:12px">Insufficient alarms</div></div>';
     const avg=da.slice(1).map((r,i)=>(r.ts-da[i].ts)/60000).reduce((a,b)=>a+b,0)/(da.length-1);
-    return'<div class="iso-card"><div class="iso-title">'+dev+'</div><div class="iso-val" style="color:var(--brand-orange)">'+avg.toFixed(0)+' دقيقة</div><div class="iso-desc">متوسط بين التنبيهات | '+da.length+' تنبيه</div></div>';
+    return'<div class="iso-card"><div class="iso-title">'+dev+'</div><div class="iso-val" style="color:var(--brand-orange)">'+avg.toFixed(0)+' min</div><div class="iso-desc">Avg between alarms | '+da.length+' Alarm</div></div>';
   }).join('')+'</div>';
 }
 function renderAlarmLog(data){
   $('alarmLogList').innerHTML=data.slice(-200).reverse().map(r=>
-    '<div class="alarm-row"><span class="ts">'+r.ts.toLocaleString('ar')+'</span><span class="dev">'+r.dev+'</span>'+
-    '<span class="msg">⚠️ '+(r.t!=null&&r.maxT&&r.t>r.maxT?'حرارة مرتفعة':r.t!=null&&r.minT&&r.t<r.minT?'حرارة منخفضة':r.h!=null&&r.maxH&&r.h>r.maxH?'رطوبة مرتفعة':'تنبيه')+'</span>'+
+    '<div class="alarm-row"><span class="ts">'+r.ts.toLocaleString('en-GB')+'</span><span class="dev">'+r.dev+'</span>'+
+    '<span class="msg">⚠️ '+(r.t!=null&&r.maxT&&r.t>r.maxT?'High Temperature':r.t!=null&&r.minT&&r.t<r.minT?'Low Temperature':r.h!=null&&r.maxH&&r.h>r.maxH?'High Humidity':'Alarm')+'</span>'+
     '<span class="val">🌡️'+(r.t?.toFixed(1)||'--')+'°C 💧'+(r.h?.toFixed(0)||'--')+'%</span></div>'
-  ).join('')||'<div style="padding:20px;text-align:center;color:var(--sub)">لا توجد تنبيهات</div>';
+  ).join('')||'<div style="padding:20px;text-align:center;color:var(--sub)">No alarms found</div>';
 }
 function filterAlarmLog(q){renderAlarmLog(allAlarms.filter(r=>!q||r.dev.includes(q)||r.ts.toLocaleString().includes(q)));}
 
@@ -508,12 +650,12 @@ function buildHeatmap(){
     for(let h=0;h<24;h++)html+='<div class="hm-label" style="justify-content:center;font-size:9px">'+h+'</div>';
     for(let d=0;d<7;d++){
       html+='<div class="hm-label">'+DAYS[d].substring(0,3)+'</div>';
-      for(let h=0;h<24;h++){const v=avg(grid[d][h]);html+='<div class="hm-cell" style="background:'+colFn(v)+'" title="'+DAYS[d]+' '+h+':00 — '+(v!=null?v.toFixed(1)+unit:'لا بيانات')+'">'+( v!=null?v.toFixed(0):'')+'</div>';}
+      for(let h=0;h<24;h++){const v=avg(grid[d][h]);html+='<div class="hm-cell" style="background:'+colFn(v)+'" title="'+DAYS[d]+' '+h+':00 — '+(v!=null?v.toFixed(1)+unit:'No data')+'">'+( v!=null?v.toFixed(0):'')+'</div>';}
     }$(cid).innerHTML=html;
   }
   renderHM('heatmapTemp',gT,tCol,'°C');renderHM('heatmapHum',gH,hCol,'%');
   const hourlyT=Array.from({length:24},(_,h)=>{const vals=rows.filter(r=>r.ts.getHours()===h&&r.t!=null).map(r=>r.t);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:null;});
-  mkChart('hourlyChart',{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+':00'),datasets:[{label:'متوسط الحرارة',data:hourlyT,backgroundColor:hourlyT.map(v=>tCol(v)+'cc'),borderColor:'#A7CE39',borderWidth:1}]},
+  mkChart('hourlyChart',{type:'bar',data:{labels:Array.from({length:24},(_,i)=>i+':00'),datasets:[{label:'Avg Temperature',data:hourlyT,backgroundColor:hourlyT.map(v=>tCol(v)+'cc'),borderColor:'#A7CE39',borderWidth:1}]},
     options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},scales:{x:{ticks:{color:tc()}},y:{ticks:{color:tc()},grid:{color:gc()}}}}});
 }
 
@@ -539,7 +681,7 @@ function buildCompare(){
     return'<div class="cmp-card"><div class="cmp-name"><div style="width:10px;height:10px;border-radius:50%;background:'+COLORS[i%8]+'"></div>'+dev+'</div>'+
       '<div class="pbar-wrap"><div class="pbar-lbl"><span>Avg T: '+(st.mean?.toFixed(1)||'--')+'°C</span><span>σ='+(st.std?.toFixed(2)||'--')+'</span></div><div class="pbar"><div class="pbar-fill" style="width:'+tP+'%;background:'+COLORS[i%8]+'"></div></div></div>'+
       '<div class="pbar-wrap"><div class="pbar-lbl"><span>Avg H: '+(sh.mean?.toFixed(1)||'--')+'%</span><span>σ='+(sh.std?.toFixed(2)||'--')+'</span></div><div class="pbar"><div class="pbar-fill" style="width:'+hP+'%;background:var(--brand-orange)"></div></div></div>'+
-      '<div style="font-size:10px;color:var(--sub);margin-top:7px;font-weight:700">⚠️ '+al+'% تنبيهات | 📊 '+rows.length+' قراءة</div></div>';
+      '<div style="font-size:10px;color:var(--sub);margin-top:7px;font-weight:700">⚠️ '+al+'% alarms | 📊 '+rows.length+' records</div></div>';
   }).join('');
   mkChart('scatterChart',{type:'scatter',data:{datasets:devices.map((dev,i)=>({label:dev,data:getDevData(dev).map(r=>({x:r.t,y:r.h})).filter(p=>p.x!=null&&p.y!=null),backgroundColor:COLORS[i%8]+'88',borderColor:COLORS[i%8],pointRadius:3}))},
     options:{responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{labels:{color:tc()}}},
@@ -557,19 +699,19 @@ function buildISO(){
   const compliance=Math.round((filteredData.length-alarms.length)/filteredData.length*100);
   $('isoCompliance').textContent=compliance+'%';
   $('isoCompliance').style.color=compliance>=95?'var(--brand-green)':compliance>=80?'var(--brand-orange)':'#e74c3c';
-  $('isoTraceTable').innerHTML='<table class="cpk-table"><thead><tr><th>المعلمة</th><th>القيمة</th><th>الوحدة</th><th>الحالة</th></tr></thead><tbody>'+
-    ['Mean Temperature,'+st.mean?.toFixed(4)+',°C,✅ موثق','Std Dev Temperature,'+st.std?.toFixed(4)+',°C,Type A',
-     'Expanded Uncertainty (k=2),'+uT+',°C,95% Confidence','Mean Humidity,'+sh.mean?.toFixed(4)+',%RH,✅ موثق',
+  $('isoTraceTable').innerHTML='<table class="cpk-table"><thead><tr><th>Parameter</th><th>Value</th><th>Unit</th><th>Status</th></tr></thead><tbody>'+
+    ['Mean Temperature,'+st.mean?.toFixed(4)+',°C,✅ Documented','Std Dev Temperature,'+st.std?.toFixed(4)+',°C,Type A',
+     'Expanded Uncertainty (k=2),'+uT+',°C,95% Confidence','Mean Humidity,'+sh.mean?.toFixed(4)+',%RH,✅ Documented',
      'Std Dev Humidity,'+sh.std?.toFixed(4)+',%RH,Type A','Expanded Uncertainty (k=2),'+uH+',%RH,95% Confidence',
-     'Total Readings,'+filteredData.length+',—,Sample Size','Alarm Events,'+alarms.length+',—,'+(compliance>=95?'✅ مقبول':'⚠️ مراجعة')]
+     'Total Readings,'+filteredData.length+',—,Sample Size','Alarm Events,'+alarms.length+',—,'+(compliance>=95?'✅ Acceptable':'⚠️ Review Required')]
     .map(r=>{const c=r.split(',');return'<tr>'+c.map(v=>'<td>'+v+'</td>').join('')+'</tr>';}).join('')+'</tbody></table>';
   const checks=[
-    {r:'5.4 — Measurement Methods',ok:filteredData.length>0,n:'بيانات موثقة ومتاحة'},
+    {r:'5.4 — Measurement Methods',ok:filteredData.length>0,n:'Data documented and available'},
     {r:'5.6 — Measurement Traceability',ok:uT!=='--',n:'U = ±'+uT+'°C'},
-    {r:'5.9 — Quality Assurance',ok:compliance>=95,n:'نسبة الامتثال: '+compliance+'%'},
-    {r:'5.10 — Reporting Results',ok:filteredData.length>10,n:filteredData.length+' نتيجة مسجلة'},
-    {r:'7.5 — Technical Records',ok:filteredData.length>0,n:'سجلات بطوابع زمنية'},
-    {r:'8.7 — Corrective Actions',ok:alarms.length<filteredData.length*0.05,n:alarms.length<filteredData.length*0.05?'أقل من 5% تنبيهات':'مراجعة مطلوبة'},
+    {r:'5.9 — Quality Assurance',ok:compliance>=95,n:'Compliance rate: '+compliance+'%'},
+    {r:'5.10 — Reporting Results',ok:filteredData.length>10,n:filteredData.length+' results recorded'},
+    {r:'7.5 — Technical Records',ok:filteredData.length>0,n:'Records with timestamps'},
+    {r:'8.7 — Corrective Actions',ok:alarms.length<filteredData.length*0.05,n:alarms.length<filteredData.length*0.05?'Less than 5% alarms':'Review required'},
   ];
   $('isoChecklist').innerHTML='<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">'+
     checks.map(c=>'<div style="background:'+(c.ok?'rgba(167,206,57,.08)':'rgba(231,76,60,.08)')+';border:1.5px solid '+(c.ok?'rgba(167,206,57,.3)':'rgba(231,76,60,.3)')+';border-radius:10px;padding:11px;display:flex;gap:8px;align-items:center">'+
@@ -579,9 +721,122 @@ function buildISO(){
     '\nTEMPERATURE:\n  Mean     = '+(st.mean?.toFixed(4)||'--')+' °C\n  Std Dev  = '+(st.std?.toFixed(4)||'--')+' °C\n  Range    = ['+(st.min?.toFixed(2)||'--')+', '+(st.max?.toFixed(2)||'--')+'] °C\n  U (k=2)  = ±'+uT+' °C (95%)\n  UCL/LCL  = '+(lim.maxT||'--')+' / '+(lim.minT||'--')+' °C'+
     '\nHUMIDITY:\n  Mean     = '+(sh.mean?.toFixed(4)||'--')+' %RH\n  Std Dev  = '+(sh.std?.toFixed(4)||'--')+' %RH\n  U (k=2)  = ±'+uH+' %RH (95%)\n  UCL/LCL  = '+(lim.maxH||'--')+' / '+(lim.minH||'--')+' %'+
     '\nQUALITY SUMMARY:\n  Total Readings  : '+filteredData.length+'\n  Alarm Events    : '+alarms.length+' ('+(alarms.length/Math.max(filteredData.length,1)*100).toFixed(2)+'%)\n  Compliance Rate : '+compliance+'% '+(compliance>=95?'✅ ACCEPTABLE':'⚠️ ACTION REQUIRED')+
-    '\n  Devices         : '+devices.join(', ')+'\n  Period          : '+(filteredData[0]?.ts.toLocaleDateString('ar')||'--')+' → '+(filteredData[filteredData.length-1]?.ts.toLocaleDateString('ar')||'--')+
-    '\nCONCLUSION: '+(compliance>=95?'✅ النظام يعمل ضمن الحدود المحددة. مطابق لمتطلبات ISO/IEC 17025:2017.':'⚠️ يتطلب النظام إجراء تصحيحي. نسبة الامتثال أقل من 95%.')+
+    '\n  Devices         : '+devices.join(', ')+'\n  Period          : '+(filteredData[0]?.ts.toLocaleDateString('en-GB')||'--')+' → '+(filteredData[filteredData.length-1]?.ts.toLocaleDateString('en-GB')||'--')+
+    '\nCONCLUSION: '+(compliance>=95?'✅ System operating within specified limits. Compliant with ISO/IEC 17025:2017.':'⚠️ System requires corrective action. Compliance below 95% threshold.')+
     '\n'+'═'.repeat(55);
+}
+
+// ── CONTEXT / BREADCRUMB BAR ──
+function updateContextBar(){
+  const dev=$('devFilter').value;
+  const from=$('dateFrom').value||'--';
+  const to=$('dateTo').value||'--';
+  const alarms=filteredData.filter(r=>r.alarm).length;
+  const compliance=filteredData.length?Math.round((filteredData.length-alarms)/filteredData.length*100):0;
+  $('ctxDev').textContent=dev==='all'?'All Devices':dev;
+  $('ctxPeriod').textContent=(from!=='--'||to!=='--')?(from+' → '+to):'All Data';
+  $('ctxCount').textContent=filteredData.length;
+  $('ctxAlarms').textContent=alarms;
+  $('ctxCompliance').textContent=compliance+'%';
+  $('ctxCompliance').style.color=compliance>=95?'var(--brand-green)':compliance>=80?'var(--brand-orange)':'#e74c3c';
+  $('contextBar').style.display='flex';
+  // last update time
+  const now=new Date();
+  $('lastUpdateTime').textContent=now.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  $('lastUpdateBadge').style.display='flex';
+}
+
+// ── CSV EXPORT ──
+function exportCSV(){
+  if(!filteredData.length){toast('No data to export','err');return;}
+  var header='Timestamp,Device,Temperature_C,Humidity_%,Battery_%,Alarm,Note';
+  var lines=filteredData.map(function(r){
+    return[r.ts.toISOString(),r.dev,
+      r.t!=null?r.t:'',r.h!=null?r.h:'',r.b!=null?Math.round(r.b):'',
+      r.alarm?'YES':'NO',(r.note||'').replace(/,/g,';')
+    ].join(',');
+  });
+  var csv=[header].concat(lines).join('\r\n');
+  var blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8'});
+  var a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='USCE_Export_'+new Date().toISOString().slice(0,10)+'.csv';
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  toast('📥 Exported '+filteredData.length+' records','ok');
+}
+
+// ── LOG PAGE ──
+let logCurrentPage=0;const LOG_PG_SIZE=50;
+let logFiltered=[];
+
+function buildLogPage(){logCurrentPage=0;renderLogPage();}
+
+function renderLogPage(){
+  const search=($('logSearch')?.value||'').toLowerCase();
+  const typeF=$('logTypeFilter')?.value||'all';
+  logFiltered=filteredData.filter(r=>{
+    if(typeF==='alarm'&&!r.alarm)return false;
+    if(typeF==='ok'&&r.alarm)return false;
+    if(typeF==='noted'&&!r.note)return false;
+    if(search&&!(r.dev.toLowerCase().includes(search)||
+      r.ts.toLocaleString().toLowerCase().includes(search)||
+      String(r.t||'').includes(search)||
+      (r.note||'').toLowerCase().includes(search)))return false;
+    return true;
+  }).slice().reverse();
+  const total=logFiltered.length;
+  const totalPages=Math.max(1,Math.ceil(total/LOG_PG_SIZE));
+  if(logCurrentPage>=totalPages)logCurrentPage=totalPages-1;
+  const start=logCurrentPage*LOG_PG_SIZE;
+  const page=logFiltered.slice(start,start+LOG_PG_SIZE);
+  $('logPageInfo').textContent=(start+1)+'–'+Math.min(start+LOG_PG_SIZE,total)+' of '+total+' records';
+  $('logTableBody').innerHTML=page.map((r,i)=>{
+    const alarm=r.alarm;
+    const bg=alarm?' style="background:rgba(231,76,60,.05)"':'';
+    return'<tr'+bg+'><td style="color:var(--sub)">'+(start+i+1)+'</td>'+
+      '<td style="font-family:var(--mono);font-size:10px">'+r.ts.toLocaleString('en-GB')+'</td>'+
+      '<td style="color:var(--brand-green);font-weight:800">'+r.dev+'</td>'+
+      '<td style="color:'+(r.t!=null&&r.maxT&&(r.t>r.maxT||r.t<r.minT)?'#e74c3c':'var(--tx)')+'">'+
+        (r.t!=null?r.t.toFixed(2)+'°C':'--')+'</td>'+
+      '<td style="color:'+(r.h!=null&&r.maxH&&(r.h>r.maxH||r.h<r.minH)?'#e74c3c':'var(--tx)')+'">'+
+        (r.h!=null?r.h.toFixed(1)+'%':'--')+'</td>'+
+      '<td>'+(r.b!=null?Math.round(r.b)+'%':'--')+'</td>'+
+      '<td>'+(alarm?'<span style="color:#e74c3c;font-weight:800">⚠️ Alarm</span>':'<span style="color:var(--brand-green);font-weight:700">✅ Normal</span>')+'</td>'+
+      '<td style="color:var(--sub);font-style:italic;font-size:10px">'+(r.note||'')+'</td></tr>';
+  }).join('')||'<tr><td colspan="8" style="text-align:center;color:var(--sub);padding:20px">No Data Available</td></tr>';
+  // Pagination
+  const pg=$('logPagination');
+  if(totalPages<=1){pg.innerHTML='';return;}
+  let html='';
+  const pgBtn=(p,lbl,active)=>'<button onclick="goLogPg('+p+')" style="padding:5px 11px;border:1.5px solid var(--bd);border-radius:7px;background:'+(active?'var(--brand-green)':'transparent')+';color:'+(active?'#fff':'var(--sub)')+';font-size:11px;font-weight:700;cursor:pointer;font-family:inherit">'+lbl+'</button>';
+  if(logCurrentPage>0)html+=pgBtn(logCurrentPage-1,'◀',false);
+  const s=Math.max(0,logCurrentPage-2),e=Math.min(totalPages-1,logCurrentPage+2);
+  for(let p=s;p<=e;p++)html+=pgBtn(p,p+1,p===logCurrentPage);
+  if(logCurrentPage<totalPages-1)html+=pgBtn(logCurrentPage+1,'▶',false);
+  pg.innerHTML=html;
+}
+function goLogPg(p){logCurrentPage=p;renderLogPage();$('logTableBody')?.scrollIntoView({behavior:'smooth',block:'start'});}
+
+// ── MOVING AVERAGE ──
+let maWindow=7;
+function setMAWindow(w){maWindow=w;buildMA();}
+function buildMA(){
+  if(!filteredData.length)return;
+  const data=trendRange>0?filteredData.slice(-trendRange):filteredData;
+  const labels=data.map(r=>r.ts.toLocaleString('ar',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'}));
+  const temps=data.map(r=>r.t);
+  const hums=data.map(r=>r.h);
+  function movAvg(arr,w){return arr.map((_,i)=>{const sl=arr.slice(Math.max(0,i-Math.floor(w/2)),i+Math.floor(w/2)+1).filter(v=>v!=null);return sl.length?sl.reduce((a,b)=>a+b,0)/sl.length:null;});}
+  const maT=movAvg(temps,maWindow);
+  const maH=movAvg(hums,maWindow);
+  mkChart('maChart',{type:'line',data:{labels,datasets:[
+    {label:'Actual Temperature',data:temps,borderColor:'#A7CE3944',backgroundColor:'transparent',tension:.3,pointRadius:0,fill:false,borderWidth:1},
+    {label:'MA-'+maWindow+' Temperature',data:maT,borderColor:'#A7CE39',backgroundColor:'transparent',tension:.5,pointRadius:0,fill:false,borderWidth:2.5},
+    {label:'Actual Humidity',data:hums,borderColor:'#EF960044',backgroundColor:'transparent',tension:.3,pointRadius:0,fill:false,borderWidth:1},
+    {label:'MA-'+maWindow+' Humidity',data:maH,borderColor:'#EF9600',backgroundColor:'transparent',tension:.5,pointRadius:0,fill:false,borderWidth:2.5},
+  ]},options:{responsive:true,maintainAspectRatio:false,animation:false,
+    plugins:{legend:{labels:{color:tc()}}},
+    scales:{x:{ticks:{color:tc(),maxTicksLimit:8},grid:{color:gc()}},y:{ticks:{color:tc()},grid:{color:gc()}}}}});
 }
 
 function showPage(id,btn){
@@ -589,11 +844,94 @@ function showPage(id,btn){
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('on'));
   $('page-'+id).classList.add('on');if(btn)btn.classList.add('on');
   if(id==='heatmap')buildHeatmap();
+  if(id==='log')buildLogPage();
+  if(id==='trends')buildMA();
 }
 
 let toastTmr;
 function toast(msg,type='ok'){const el=$('toast');el.textContent=msg;el.className='show '+type;clearTimeout(toastTmr);toastTmr=setTimeout(()=>el.className='',3500);}
-setInterval(async()=>{await loadData();toast('🔄 تم تحديث البيانات','info');},5*60*1000);
+// Silent background refresh every 2 minutes
+async function silentRefresh(){
+  try{
+    const res=await fetch(SHEETS_URL+'?t='+Date.now());
+    const json=await res.json();
+    if(!Array.isArray(json))return;
+    rawData=json.map(r=>({
+      ts:new Date(r['Timestamp']||r['timestamp']),
+      dev:r['Device']||r['device']||'Unknown',
+      t:parseFloat(r['Temperature (\u00b0C)']||r['t'])||null,
+      maxT:parseFloat(r['Max Temperature (\u00b0C)']||r['maxT'])||null,
+      minT:parseFloat(r['Min Temperature (\u00b0C)']||r['minT'])||null,
+      h:parseFloat(r['Humidity (%)']||r['h'])||null,
+      maxH:parseFloat(r['Max Humidity (%)']||r['maxH'])||null,
+      minH:parseFloat(r['Min Humidity (%)']||r['minH'])||null,
+      b:parseFloat(r['Battery (%)']||r['b'])||null,
+      alarm:(r['Alarm']||'').toString().toUpperCase().includes('YES')||(r['Alarm']||'').includes('\u26a0\ufe0f'),
+      note:r['Note']||''
+    })).filter(r=>r.ts&&!isNaN(r.ts)&&r.dev);
+    rawData.sort((a,b)=>a.ts-b.ts);
+    devices=[...new Set(rawData.map(r=>r.dev))];
+    const curDev=$('devFilter').value;
+    const opts='<option value="all">\u0643\u0644 \u0627\u0644\u0623\u062c\u0647\u0632\u0629</option>'+devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
+    $('devFilter').innerHTML=opts;
+    $('hmDevice').innerHTML=devices.map(d=>'<option value="'+d+'">'+d+'</option>').join('');
+    if(curDev)$('devFilter').value=curDev;
+    applyFilters();
+    toast('\ud83d\udd04 \u062a\u062d\u062f\u064a\u062b \u062a\u0644\u0642\u0627\u0626\u064a — '+rawData.length+' \u0633\u062c\u0644','info');
+  }catch(e){console.warn('Silent refresh failed:',e.message);}
+}
+
+// LICENSE
+function openLicense(){
+  var exp=new Date('2026-12-31');
+  var days=Math.ceil((exp-new Date())/86400000);
+  var eEl=$('licExpiry');
+  if(eEl)eEl.textContent=exp.toLocaleDateString('en-GB',{year:'numeric',month:'long',day:'numeric'});
+  var badge=$('licBadge');
+  if(badge){
+    if(days<0){badge.textContent='Expired';badge.style.background='#e74c3c';}
+    else if(days<=30){badge.textContent='Expires '+days+'d';badge.style.background='var(--brand-orange)';}
+    else{badge.textContent='\u2713 Licensed';badge.style.background='var(--brand-green)';}
+  }
+  $('licenseModal').classList.add('show');
+}
+function closeLicense(){$('licenseModal').classList.remove('show');}
+function copyLicKey(){
+  var k=$('licKeyTxt');
+  if(k&&navigator.clipboard)navigator.clipboard.writeText(k.textContent).then(function(){toast('Copied','info');});
+}
+setInterval(silentRefresh,2*60*1000);
 </script>
+
+<!-- LICENSE MODAL -->
+<div id="licenseModal">
+  <div class="lic-box">
+    <div class="lic-head">
+      <div class="lic-head-name">USCE Lab Analytics</div>
+      <div class="lic-head-sub">Environmental Monitoring Dashboard</div>
+      <div class="lic-badge" id="licBadge">&#10003; Licensed</div>
+    </div>
+    <div class="lic-body">
+      <div class="lic-row">
+        <div class="lic-field"><label>Licensed To</label><div class="lic-val">Savola - USCE</div></div>
+        <div class="lic-field"><label>Department</label><div class="lic-val">Quality Control Lab</div></div>
+        <div class="lic-field"><label>Version</label><div class="lic-val">v6.0.0 (2026)</div></div>
+        <div class="lic-field"><label>Valid Until</label><div class="lic-val" id="licExpiry">Dec 31, 2026</div></div>
+      </div>
+      <div class="lic-field" style="margin-bottom:10px">
+        <label>License Key</label>
+        <div class="lic-val mono"><span id="licKeyTxt">USCE-QLAB-2026-0001-A7CE</span><button class="lic-copy" onclick="copyLicKey()" title="Copy">&#x29C9;</button></div>
+      </div>
+      <div class="lic-field">
+        <label>Support &amp; Contact</label>
+        <div class="lic-val" style="font-family:inherit;font-size:11px">mamahmoud@savola.com &nbsp;|&nbsp; Mahmoud Abou taleb</div>
+      </div>
+    </div>
+    <div class="lic-foot">
+      <div class="lic-notice">Licensed for internal use only.<br>Unauthorized distribution is prohibited.</div>
+      <button class="btn bp bsm" onclick="closeLicense()">&#x2715; Close</button>
+    </div>
+  </div>
+</div>
 </body>
 </html>
